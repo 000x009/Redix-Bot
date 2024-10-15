@@ -1,0 +1,11 @@
+.avatar {
+    width: 25vw;
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+
+.label {
+    color: #888;
+    margin-bottom: 5px;
+}

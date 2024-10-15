@@ -1,0 +1,176 @@
+.post-feedback-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 1rem;
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    overflow-y: auto;
+    padding-bottom: 60px; 
+  }
+  
+  .loading-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+  }
+  
+  .feedback-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .product-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--tg-theme-secondary-bg-color);
+  }
+  
+  .product-image {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1rem;
+    border-radius: 0.25rem;
+    object-fit: cover;
+  }
+  
+  .product-details {
+    flex: 1;
+  }
+  
+  .product-name {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .product-price {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--tg-theme-button-color);
+  }
+  
+  .error-message {
+    color: #ef4444;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .feedback-form {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .rating-container {
+    margin-bottom: 0.5rem;
+  }
+  
+  .rating-label {
+    margin-bottom: 0.25rem;
+    color: var(--tg-theme-hint-color);
+    font-size: 0.875rem;
+  }
+  
+  .star-rating {
+    display: flex;
+  }
+  
+  .star-button {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--tg-theme-hint-color);
+    background: none;
+    border: none;
+    padding: 0;
+    margin-right: 0.25rem;
+    cursor: pointer;
+  }
+  
+  .star-button.active {
+    color: #fbbf24;
+  }
+  
+  .review-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .review-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--tg-theme-hint-color);
+    font-size: 0.875rem;
+  }
+  
+  .review-textarea {
+    width: 100%;
+    height: 150px;
+    resize: none;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--tg-theme-hint-color);
+    border-radius: 8px;
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    flex-grow: 1;
+    min-height: 100px;
+  }
+  
+  .review-textarea.error {
+    border-color: #ef4444;
+  }
+  
+  .character-count {
+    font-size: 0.75rem;
+    color: var(--tg-theme-hint-color);
+    margin-top: 0.25rem;
+  }
+
+
+  .confirmation-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--tg-theme-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .confirmation-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .confirmation-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .confirmation-buttons button:first-child {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .confirmation-buttons button:last-child {
+    background-color: #f44336;
+    color: white;
+  }

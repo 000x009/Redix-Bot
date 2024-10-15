@@ -1,0 +1,76 @@
+.mix-blend-difference {
+    mix-blend-mode: color;
+    transform: none;
+    transform-origin: 50% 50% 0;
+}
+
+
+.z-10 {
+    z-index: 10;
+}
+
+.inset-0 {
+    inset: 0;
+}
+
+
+
+.transition {
+    transition-property: color, font-weight, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition-duration: .15s;
+}
+
+.btn-tab {
+    width: 50%;
+    padding: .5rem 1rem;
+    font-size: 14px;
+    z-index: 1;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+    text-transform: none;
+    color: var(--tg-theme-text-color);
+    font-weight: bolder;
+}
+
+.bg-gray {
+    background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.active-tab {
+    color: var(--tg-theme-text-color) !important;
+}
+
+.bg-lightgray {
+    background-color: rgba(130, 135, 162, 0.48);
+}
+
+.rounded {
+    border-radius: 10px;
+}
+
+.text-white {
+    color: red !important;
+}
+
+.icon {
+    height: 1.5rem;
+    align-self: center;
+}
+
+.icon-md {
+    height: 1.3rem;
+    align-self: center;
+}
+
+.icon-container {
+    width: 2rem;
+}
+
+.ms-auto {
+    margin-left: auto;
+}

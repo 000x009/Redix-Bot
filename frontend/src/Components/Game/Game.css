@@ -1,0 +1,43 @@
+.card__1x1 {
+    width: calc(50% - (var(--px) * 2));
+    height: 100%;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: all .2s;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.card__1x1:hover {
+    background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.image_container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.card__1x1__image {
+    width: calc(50vw - (2 * var(--px)));
+    height: calc(50vw - (2 * var(--px)));
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    border-radius: 1.5rem;
+}
+
+.card__1x1__title {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.text__center {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+h4 {
+    margin: 0;
+}

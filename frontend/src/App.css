@@ -1,0 +1,274 @@
+body {
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.App {
+    text-align: center;
+}
+
+:root {
+    --px: 1.5rem;
+}
+
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.flex {
+    display: flex;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.horizontal-padding {
+    padding-left: var(--px);
+    padding-right: var(--px);
+}
+
+.vertical-padding {
+    padding-top: var(--px);
+    padding-bottom: var(--px);
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+h2 {
+    margin: 0;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.align-stretch {
+    align-items: stretch;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.w-50 {
+    width: 50%;
+}
+
+.py-08 {
+    padding-top: .8rem;
+    padding-bottom: .8rem;
+}
+
+.py-04 {
+    padding-top: .4rem;
+    padding-bottom: .4rem;
+}
+
+.px-08 {
+    padding-left: .8rem !important;
+    padding-right: .8rem !important;
+}
+
+.px-04 {
+    padding-left: .4rem;
+    padding-right: .4rem;
+}
+
+.text-blue {
+    color: var(--tg-theme-link-color);
+}
+
+.subtitle {
+    color: var(--tg-theme-subtitle-text-color);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.align-self-center {
+    align-self: center;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+}
+
+.gap-1 {
+    gap: calc(var(--px) / 2);
+}
+
+.gap-05 {
+    gap: calc(var(--px) / 4);
+}
+
+.mt-05 {
+    margin-top: calc(var(--px) / 2);
+}
+
+.mt-auto {
+    margin-top: auto;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.h-full {
+    max-height: 100vh;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.relative {
+    position: relative;
+}
+
+.sticky {
+    position: sticky;
+}
+
+
+.left-0 {
+    left: 0;
+}
+
+.bottom-0 {
+    bottom: 0;
+}
+
+.input-text {
+    background-color: var(--tg-theme-secondary-bg-color);
+    outline: none;
+    color: var(--tg-theme-text-color);
+    border: solid 3px var(--tg-theme-section-separator-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+}
+
+.input-invalid {
+    border-color: indianred;
+}
+
+.text-invalid {
+    color: indianred;
+}
+
+.input-valid {
+    border-color: #267926;
+}
+
+.text-valid {
+    color: #267926;
+}
+
+/*noinspection ALL*/
+.text-wrap {
+    text-wrap: wrap;
+}
+
+mark {
+    background-color: lightgray;
+}
+
+.gap-2 {
+    gap: var(--px);
+}
+
+input[type="radio"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    /* Remove most all native input styles */
+    appearance: none;
+    /* For iOS < 15 */
+    /* Not removed via appearance */
+    margin: 0;
+
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.1em solid #3d89f6;
+    border-radius: 50%;
+    transform: translateY(-0.075em);
+
+    display: grid;
+    place-content: center;
+}
+
+input[type="radio"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #3d89f6;
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+.rounded-1 {
+    border-radius: 10px !important;
+}
+
+.word-pre {
+    white-space: pre-line;
+}
