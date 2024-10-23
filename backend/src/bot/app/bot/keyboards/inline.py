@@ -8,11 +8,11 @@ from src.bot.app.main.config import dev_config
 main_keyboard_markup = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text="Открыть Магазин", web_app=WebAppInfo(url="https://paradox-shop.ru/"))
+            InlineKeyboardButton(text="Открыть Магазин", web_app=WebAppInfo(url="https://redixshop.com/"))
         ],
         [
             InlineKeyboardButton(text="Поддержка", callback_data="support"),
-            InlineKeyboardButton(text="Правила", url="https://telegra.ph/ParadoxShop-06-03"),
+            InlineKeyboardButton(text="Правила", url="https://teletype.in/@redixempire/RedixShopBotFaq"),
         ],
     ]
 )
