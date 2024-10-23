@@ -8,6 +8,8 @@ from .feedback_service import FeedbackService
 from .bilee_service import BileeService
 from .game_service import GameService
 from .storage_client import YandexStorageClient
+from .category_service import CategoryService
+
 
 __all__ = [
     'ProductService',
@@ -20,4 +22,5 @@ __all__ = [
     'BileeService',
     'GameService',
     'YandexStorageClient',
+    'CategoryService',
 ]

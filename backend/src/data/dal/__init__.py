@@ -5,6 +5,7 @@ from .transaction_dal import TransactionDAL
 from .promo_dal import PromoDAL
 from .feedback_dal import FeedbackDAL
 from .game_dal import GameDAL
+from .category_dal import CategoryDAL
 
 __all__ = [
     'UserDAL',
@@ -14,4 +15,5 @@ __all__ = [
     'PromoDAL',
     'FeedbackDAL',
     'GameDAL',
+    'CategoryDAL',
 ]

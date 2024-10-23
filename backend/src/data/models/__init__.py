@@ -6,6 +6,7 @@ from .order import OrderModel
 from .product import ProductModel
 from .transaction import TransactionModel
 from .game import GameModel
+from .category import CategoryModel
 
 __all__ = [
     'UserModel',
@@ -16,4 +17,5 @@ __all__ = [
     'ProductModel',
     'TransactionModel',
     'GameModel',
+    'CategoryModel',
 ]

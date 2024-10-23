@@ -4,6 +4,7 @@ from .feedback import Feedback
 from .product import Product
 from .order import Order
 from .transaction import Transaction
+from .category import Category
 
 
 __all__ = [
@@ -13,5 +14,6 @@ __all__ = [
     'Feedback',
     'Product',
     'Order',
-    'Transaction'
+    'Transaction',
+    'Category',
 ]

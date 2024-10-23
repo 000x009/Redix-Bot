@@ -18,7 +18,8 @@ class FeedbackModel(Base):
     stars: Mapped[int] = mapped_column(Integer, nullable=True)
     time: Mapped[datetime.datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False, default=datetime.datetime.now(datetime.UTC))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    
+    image: Mapped[str] = mapped_column(String, nullable=True)
+
     user = relationship('UserModel', back_populates='feedbacks')
     product = relationship('ProductModel', back_populates='feedbacks')
     order = relationship('OrderModel', back_populates='feedbacks')
