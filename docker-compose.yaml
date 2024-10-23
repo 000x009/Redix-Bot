@@ -9,15 +9,15 @@ services:
       - './nginx.conf:/etc/nginx/nginx.conf'
       - '/etc/letsencrypt:/etc/letsencrypt'
     depends_on:
-      - paradox_backend
-      - paradox_frontend
+      - redix_backend
+      - redix_frontend
     networks:
       - default
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
-  paradox_db:
+  redix_db:
     image: postgres:15.8-alpine
-    container_name: paradox_db
+    container_name: redix_db
     ports:
       - "5432:5432"
     environment:
@@ -36,7 +36,7 @@ services:
       timeout: 5s
       retries: 5
 
-  paradox_backend:
+  redix_backend:
     build:
       context: ./backend
       dockerfile: Dockerfile.backend
@@ -45,7 +45,7 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_HOST=paradox_db
+      - DB_HOST=redix_db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - BILEE_SHOP_ID=${BILEE_SHOP_ID}
@@ -57,21 +57,21 @@ services:
       - YANDEX_STORAGE_SECRET=${YANDEX_STORAGE_SECRET}
       - YANDEX_STORAGE_BUCKET_NAME=${YANDEX_STORAGE_BUCKET_NAME}
     restart: on-failure
-    container_name: paradox_backend
+    container_name: redix_backend
     ports:
       - 8000:8000
     depends_on:
-      paradox_db:
+      redix_db:
         condition: service_healthy
     command: sh -c "alembic upgrade head && uvicorn src.main.main:app --host 0.0.0.0 --port 8000 --reload & python -m src.bot.app.main"
     networks:
       - default
 
-  paradox_frontend:
+  redix_frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile.frontend
-    container_name: paradox_frontend
+    container_name: redix_frontend
     ports:
       - "3000:3000"
     volumes:
@@ -79,9 +79,9 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - paradox_backend
+      - redix_backend
     environment:
-      - API_URL=http://paradox_backend:8000
+      - API_URL=http://redix_backend:8000
     networks:
       - default
   
@@ -96,5 +96,5 @@ volumes:
 
 networks:
   default:
-    name: paradox_network
+    name: redix_network
     driver: bridge
