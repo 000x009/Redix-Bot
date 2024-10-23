@@ -12,7 +12,7 @@ from aiogram.enums import ContentType
 
 from dishka import FromDishka
 
-from src.services import GameService, ProductService, YandexStorageClient
+from src.services import GameService, ProductService, YandexStorageClient, CategoryService
 from src.main.config import settings
 from .inject_wrappers import inject_getter
 
@@ -55,19 +55,33 @@ async def games_getter(
 async def one_game_getter(
     dialog_manager: DialogManager,
     game_service: FromDishka[GameService],
-    product_service: FromDishka[ProductService],
+    category_service: FromDishka[CategoryService],
     **kwargs,
 ) -> dict:
     game_id = dialog_manager.dialog_data["game_id"]
     game = await game_service.get_game(id=int(game_id))
-    products = await product_service.get_products(game_id=int(game_id))
-
-    if game.id in [15, 16, 17, 18]:
-        game.name += "⭐"
+    categories = await category_service.get_categories(game_id=int(game_id))
 
     return {
-        "products": products,
         "game": game,
+        "categories": categories,
+    }
+
+
+@inject_getter
+async def one_category_getter(
+    dialog_manager: DialogManager,
+    category_service: FromDishka[CategoryService],
+    product_service: FromDishka[ProductService],
+    **kwargs,
+) -> dict:
+    category_id = dialog_manager.dialog_data["category_id"]
+    category = await category_service.get_category(id=int(category_id))
+    products = await product_service.get_products(category_id=int(category_id))
+
+    return {
+        "category": category,
+        "products": products,
     }
 
 

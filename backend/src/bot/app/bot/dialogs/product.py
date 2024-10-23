@@ -7,7 +7,7 @@ from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram.enums.content_type import ContentType
 
 from src.bot.app.bot.states.product import ProductManagementSG
-from .getter import games_getter, one_game_getter, one_product_getter
+from .getter import games_getter, one_game_getter, one_product_getter, one_category_getter
 from .handlers import (
     selected_game,
     selected_product,
@@ -31,6 +31,11 @@ from .handlers import (
     on_product_instruction_new_product,
     on_product_price_new_product,
     message_input_fixing,
+    add_category,
+    selected_category,
+    on_category_thread_id,
+    on_input_photo_new_category,
+    on_category_name,
 )
 
 
@@ -76,6 +81,47 @@ product_management_dialog = Dialog(
         Format("Игра: {game.name}"),
         ScrollingGroup(
             Select(
+                id="category_select",
+                items="categories",
+                item_id_getter=lambda item: item.id,
+                text=Format("🔴 | {item.name}"),
+                on_click=selected_category,
+            ),
+            id="category_group",
+            height=10,
+            width=2,
+            hide_on_single_page=True,
+            hide_pager=True,
+            when="categories"
+        ),
+        Button(
+            id='add_category',
+            text=Format("Добавить категорию"),
+            on_click=add_category,
+        ),
+        Row(
+            PrevPage(
+                scroll="category_group", text=Format("◀️"),
+            ),
+            CurrentPage(
+                scroll="category_group", text=Format("{current_page1}"),
+            ),
+            NextPage(
+                scroll="category_group", text=Format("▶️"),
+            ),
+            when="categories"
+        ),
+        MessageInput(
+            func=message_input_fixing
+        ),
+        Back(Format("◀️ Назад")),
+        state=ProductManagementSG.GAME_MANAGEMENT,
+        getter=one_game_getter,
+    ),
+    Window(
+        Format("Категория: {category.name}"),
+        ScrollingGroup(
+            Select(
                 id="product_select",
                 items="products",
                 item_id_getter=lambda item: item.id,
@@ -110,8 +156,8 @@ product_management_dialog = Dialog(
             func=message_input_fixing
         ),
         Back(Format("◀️ Назад")),
-        state=ProductManagementSG.GAME_MANAGEMENT,
-        getter=one_game_getter,
+        state=ProductManagementSG.CATEGORY_MANAGEMENT,
+        getter=one_category_getter,
     ),
     Window(
         DynamicMedia(selector="photo"),
@@ -238,6 +284,27 @@ product_management_dialog = Dialog(
         Const("Отправьте фото нового товара"),
         MessageInput(on_input_photo_new_product, content_types=[ContentType.PHOTO]),
         state=ProductManagementSG.ADD_PRODUCT_PHOTO,
+    ),
+    Window(
+        Const("Введите название новой категории"),
+        TextInput(
+            id="add_category_name_text",
+            on_success=on_category_name,
+        ),
+        state=ProductManagementSG.ADD_CATEGORY_NAME,
+    ),
+    Window(
+        Const("Отправьте фото новой категории"),
+        MessageInput(on_input_photo_new_category, content_types=[ContentType.PHOTO]),
+        state=ProductManagementSG.ADD_CATEGORY_PHOTO,
+    ),
+    Window(
+        Const("Введите ID темы в супергруппе телеграм. (Последняя цифра в ссылке после слэша на тему)"),
+        TextInput(
+            id="add_category_thread_id_text",
+            on_success=on_category_thread_id,
+        ),
+        state=ProductManagementSG.ADD_CATEGORY_THREAD_ID,
     ),
     on_process_result=close_dialog,
 )

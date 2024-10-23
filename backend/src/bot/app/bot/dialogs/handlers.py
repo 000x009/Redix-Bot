@@ -12,7 +12,7 @@ from dishka import FromDishka
 
 from src.bot.app.bot.states.product import ProductManagementSG
 from .inject_wrappers import inject_on_click
-from src.services import ProductService, YandexStorageClient
+from src.services import ProductService, YandexStorageClient, CategoryService
 
 
 async def message_input_fixing(
@@ -29,6 +29,70 @@ async def add_product(
     dialog_manager: DialogManager,
 ):
     await dialog_manager.switch_to(ProductManagementSG.ADD_PRODUCT_NAME)
+
+
+async def add_category(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+):
+    await dialog_manager.switch_to(ProductManagementSG.ADD_CATEGORY_NAME)
+
+
+async def on_category_name(
+    callback_query: CallbackQuery,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+):
+    dialog_manager.dialog_data["category_name"] = value
+    await dialog_manager.switch_to(ProductManagementSG.ADD_CATEGORY_PHOTO)
+
+
+@inject_on_click
+async def on_input_photo_new_category(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+    yandex_storage_client: FromDishka[YandexStorageClient],
+):
+    bot = dialog_manager.middleware_data.get("bot")
+    file = await bot.get_file(message.photo[-1].file_id)
+    photo_bytes = await bot.download_file(file.file_path)
+    
+    image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+    dialog_manager.dialog_data["category_photo"] = image_url
+    await dialog_manager.switch_to(ProductManagementSG.ADD_CATEGORY_THREAD_ID)
+
+
+@inject_on_click
+async def on_category_thread_id(
+    callback_query: CallbackQuery,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+    category_service: FromDishka[CategoryService],
+):
+    dialog_manager.dialog_data["category_thread_id"] = int(value)
+    await category_service.add_category(
+        game_id=int(dialog_manager.dialog_data["game_id"]),
+        name=dialog_manager.dialog_data["category_name"],
+        is_visible=True,
+        image=dialog_manager.dialog_data["category_photo"],
+        thread_id=int(dialog_manager.dialog_data["category_thread_id"]),
+    )
+    await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
+
+
+async def selected_category(
+    callback_query: CallbackQuery,
+    widget: Select,
+    dialog_manager: DialogManager,
+    item_id: str,
+):
+    dialog_manager.show_mode = ShowMode.EDIT
+    dialog_manager.dialog_data["category_id"] = item_id
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
 async def selected_game(
@@ -260,34 +324,21 @@ async def on_input_photo_new_product(
 
         games_dict = {
             "1": "Brawl Stars",
-            "2": "Squad Busters",
-            "3": "Clash of Clans",
-            "4": "Clash Royale",
-            "5": "Roblox",
-            "6": "Fortnite",
-            "7": "PUBG",
-            "8": "FIFA Mobile",
-            "9": "Minecraft",
-            "10": "Stumble Guys",
-            "11": "My Singing Monsters",
-            "12": "World of Tanks [Евро]",
-            "13": "Blockman Go",
-            "14": "Supercell Store",
-            "15": "Brawl Stars",
-            "16": "Squad Busters",
-            "17": "Clash of Clans",
-            "18": "Clash Royale",
+            "5": "Squad Busters",
+            "2": "Clash of Clans",
+            "3": "Clash Royale",
+            "4": "Hay Day",
         }
 
         image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
         await product_service.create_product(
             id=uuid.uuid4(),
+            category_id=int(dialog_manager.dialog_data["category_id"]),
             name=dialog_manager.dialog_data["product_name"],
             description=dialog_manager.dialog_data["product_description"],
             instruction=dialog_manager.dialog_data["product_instruction"],
             price=int(dialog_manager.dialog_data["product_price"]),
             image_url=image_url,
-            category="something",
             game_id=int(dialog_manager.dialog_data["game_id"]),
             game_name=games_dict[dialog_manager.dialog_data["game_id"]],
         )
@@ -295,4 +346,4 @@ async def on_input_photo_new_product(
     except Exception as e:
         print(e)
     finally:
-        await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
+        await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)

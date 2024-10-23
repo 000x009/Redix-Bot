@@ -4,6 +4,11 @@ from aiogram.fsm.state import State, StatesGroup
 class ProductManagementSG(StatesGroup):
     GAMES = State()
     GAME_MANAGEMENT = State()
+    CATEGORIES = State()
+    CATEGORY_MANAGEMENT = State()
+    ADD_CATEGORY_NAME = State()
+    ADD_CATEGORY_PHOTO = State()
+    ADD_CATEGORY_THREAD_ID = State()
     PRODUCT = State()
     EDIT_PRODUCT_NAME = State()
     EDIT_PRODUCT_DESCRIPTION = State()

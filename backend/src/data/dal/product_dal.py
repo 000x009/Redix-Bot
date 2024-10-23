@@ -77,6 +77,7 @@ class ProductDAL:
             return Product(
                 id=db_product.id,
                 game_id=db_product.game_id,
+                category_id=db_product.category_id,
                 name=db_product.name,
                 description=db_product.description,
                 price=db_product.price,
@@ -84,7 +85,10 @@ class ProductDAL:
                 purchase_count=db_product.purchase_count,
                 image_url=db_product.image_url,
                 game_name=db_product.game_name,
-                category=db_product.category,
+                purchase_limit=db_product.purchase_limit,
+                is_auto_purchase=db_product.is_auto_purchase,
+                is_manual=db_product.is_manual,
+                auto_purchase_text=db_product.auto_purchase_text,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Product]]:
@@ -103,7 +107,11 @@ class ProductDAL:
                     purchase_count=db_product.purchase_count,
                     game_name=db_product.game_name,
                     image_url=db_product.image_url,
-                    category=db_product.category,
+                    category_id=db_product.category_id,
+                    purchase_limit=db_product.purchase_limit,
+                    is_auto_purchase=db_product.is_auto_purchase,
+                    is_manual=db_product.is_manual,
+                    auto_purchase_text=db_product.auto_purchase_text,
                 )
                 for db_product in db_products
             ]
@@ -137,7 +145,11 @@ class ProductDAL:
                 instruction=db_product.instruction,
                 purchase_count=db_product.purchase_count,
                 game_name=db_product.game_name,
-                category=db_product.category,
+                category_id=db_product.category_id,
+                purchase_limit=db_product.purchase_limit,
+                is_auto_purchase=db_product.is_auto_purchase,
+                is_manual=db_product.is_manual,
+                auto_purchase_text=db_product.auto_purchase_text,
                 image_url=db_product.image_url,
             )
             for db_product in products

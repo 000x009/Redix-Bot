@@ -25,13 +25,13 @@ class CategoryDAL:
         await self.session.commit()
 
     async def get(self, **kwargs: Optional[Any]) -> CategoryModel:
-        query = select(CategoryModel).where(*kwargs)
+        query = select(CategoryModel).filter_by(**kwargs)
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
 
     async def get_all(self, **kwargs: Optional[Any]) -> List[CategoryModel]:
         if kwargs:
-            query = select(CategoryModel).where(*kwargs)
+            query = select(CategoryModel).filter_by(**kwargs)
         else:
             query = select(CategoryModel)
         result = await self.session.execute(query)
