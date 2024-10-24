@@ -13,7 +13,7 @@ function Category({item}) {
     } = item;
 
     return <div onClick={() => {
-        navigate(`/products?id=${id}`)
+        navigate(`/category?id=${id}`)
     }} className='card horizontal-padding' >
         <div className="image_container">
             <img className='card__image' src={image_url} alt={name}/>

@@ -20,6 +20,16 @@ export function getUser(initData) {
     return db_user;
 }
 
+
+export function getCategories(game_id) {
+  const response = axios.get(`${API_URL}/category/`, {
+    params: {
+      game_id: game_id
+    }
+  });
+  return response.data;
+}
+
 export async function getUserFeedbacks(user_id) {
   try {
     const response = await axios.get(`${API_URL}/feedback/user/${user_id}`);
@@ -284,10 +294,10 @@ export async function removeFeedback(feedback_id, initData) {
 }
 
 
-export async function getProducts(game_id) {
+export async function getProducts(category_id) {
   const response = await axios.get(`${API_URL}/products/`, {
     params: {
-      game_id: game_id
+      category_id: category_id
     },
     headers: {
       'Cache-Control': 'no-cache',

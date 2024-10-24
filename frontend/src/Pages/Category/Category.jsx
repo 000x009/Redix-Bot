@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {getProducts} from "../../db/db";
+import {getCategories} from "../../db/db";
 import { useLocation } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import { Category as CategoryCard } from '../../Components/Category/Category';
@@ -28,7 +28,7 @@ function Category() {
     setItems([]);
 
     const fetchData = async () => {
-        const data = await getProducts(game_id);
+        const data = await getCategories(game_id);
         setItems(data);
     };
     fetchData();

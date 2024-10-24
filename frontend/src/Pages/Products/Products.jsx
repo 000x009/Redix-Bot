@@ -19,7 +19,7 @@ function Products() {
   const [game_name, setGameName] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'purchase_count', direction: 'descending' });
   const location = useLocation();
-  const game_id = new URLSearchParams(location.search).get("id");
+  const category_id = new URLSearchParams(location.search).get("id");
   const { tg } = useTelegram();
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +39,7 @@ function Products() {
     setItems([]);
     setLoading(true);
 
-    if (game_id === '14') {
+    if (category_id === '14') {
       const fetchGames = async () => {
         const data = await getGamesAPI();
         console.log(data);
@@ -49,7 +49,7 @@ function Products() {
       fetchGames();
       setLoading(false);
     }
-  }, [game_id]);
+  }, [category_id]);
 
   const sortValues = {
       'purchase_count': 'по популярности',
@@ -60,24 +60,24 @@ function Products() {
   useEffect(() => {
     setItems([]);
 
-    if (game_id !== '14') {
+    if (category_id !== '14') {
       const fetchData = async () => {
-        const data = await getProducts(game_id);
+        const data = await getProducts(category_id);
         setItems(data);
       };
       fetchData();
       setLoading(false);
     }
     // return () => setItems([]);
-  }, [game_id]);
+  }, [category_id]);
 
   useEffect(() => {
     const fetchGameName = async () => {
-      const data = await getGame(game_id);
+      const data = await getGame(category_id);
       setGameName(data.name);
     };
     fetchGameName();
-  }, [game_id]);
+  }, [category_id]);
 
   const sortedItems = useMemo(() => {
     let sortableItems = [...items];

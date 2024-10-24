@@ -17,9 +17,10 @@ router = APIRouter(
 
 @router.get("/")
 async def get_categories(
+    game_id: int,
     category_service: FromDishka[CategoryService],
 ) -> List[Category]:
-    return await category_service.get_categories(is_visible=True)
+    return await category_service.get_categories(game_id=game_id, is_visible=True)
 
 
 @router.get("/{id}")

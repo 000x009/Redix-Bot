@@ -48,10 +48,10 @@ async def search_products(
 # @cache(expire=60 * 60 * 24)
 async def get_products(
     product_service: FromDishka[ProductService],
-    game_id: Optional[int] = None,
+    category_id: Optional[int] = None,
 ) -> List[Product] | JSONResponse:
-    if game_id:
-        products = await product_service.get_products(game_id=game_id)
+    if category_id:
+        products = await product_service.get_products(category_id=category_id)
     else:
         products = await product_service.get_products()
 
