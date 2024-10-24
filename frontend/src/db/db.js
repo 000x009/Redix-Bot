@@ -24,7 +24,7 @@ export function getUser(initData) {
 export async function getCategories(game_id) {
   const response = await axios.get(`${API_URL}/category/`, {
     params: {
-      game_id: game_id
+      game_id: parseInt(game_id)
     }
   });
   return response.data;
