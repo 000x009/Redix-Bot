@@ -26,8 +26,8 @@ async def support_handler(query: CallbackQuery, bot: Bot, event_chat: Chat) -> N
 @router.callback_query(F.data == "main_menu")
 async def main_menu(query: CallbackQuery, bot: Bot, event_chat: Chat) -> None:
     media = InputMediaPhoto(
-        media=FSInputFile(os.path.normpath("src/bot/app/bot/files/paradox.jpg")),
-        caption="🛍 <a href='https://t.me/loudly_club1'>Paradox Shop</a> - сервис внутриигровых покупок и услуг!\n\n🔰 Наш приоритет дать возможность купить любую игровую валюту по лучшим ценам, а также предоставить вам скорейшее получение доната с гарантией безопасности вашего аккаунта",
+        media=FSInputFile(os.path.normpath("src/bot/app/bot/files/redix.jpg")),
+        caption="🌟 Добро пожаловать!\n\n🐱 <a href='https://t.me/RedixEmpire'>Redix Shop</a> - это сервис для покупки различных внутриигровых товаров. Мы делаем всё возможное, чтобы обеспечить быструю, надёжную и качественную выдачу товаров по лучшим ценам, что подтверждается нашими <a href='https://t.me/redixempire_otz'>отзывами</a>",
     )
     await bot.edit_message_media(
         media=media,
