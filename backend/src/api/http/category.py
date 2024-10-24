@@ -29,3 +29,4 @@ async def get_one_category(
     category_service: FromDishka[CategoryService],
 ) -> Category:
     return await category_service.get_category(id=id)
+ 

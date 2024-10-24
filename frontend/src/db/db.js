@@ -21,8 +21,8 @@ export function getUser(initData) {
 }
 
 
-export function getCategories(game_id) {
-  const response = axios.get(`${API_URL}/category/`, {
+export async function getCategories(game_id) {
+  const response = await axios.get(`${API_URL}/category/`, {
     params: {
       game_id: game_id
     }
