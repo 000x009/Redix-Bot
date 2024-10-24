@@ -184,7 +184,7 @@ function Products() {
       );
     }
 
-    if (game_id === '14') {
+    if (category_id === '14') {
       return (
         <div className="flex align-stretch flex-wrap w-100">
           {games.map((game) => {

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {getCategories} from "../../db/db";
 import { useLocation } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
-import { CategoryCard } from '../../Components/CategoryCard/CategoryCard';
+import CategoryCard from '../../Components/CategoryCard/CategoryCard';
 import CircularProgress from '@mui/material/CircularProgress';
 
 function Category() {
