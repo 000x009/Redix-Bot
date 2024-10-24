@@ -1,5 +1,5 @@
 import React from 'react';
-import './Category.css';
+import './CategoryCard.css';
 import {useNavigate} from "react-router-dom";
 
 
