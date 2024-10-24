@@ -3,7 +3,7 @@ import './Category.css';
 import {useNavigate} from "react-router-dom";
 
 
-function Category({item}) {
+function CategoryCard({item}) {
     const navigate = useNavigate();
     const {
         id,
@@ -29,4 +29,4 @@ function Category({item}) {
     </div>
 }
 
-export default Category;
+export default CategoryCard;
