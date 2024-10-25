@@ -161,7 +161,7 @@ product_management_dialog = Dialog(
         getter=one_category_getter,
     ),
     Window(
-        DynamicMedia(selector="photo"),
+        DynamicMedia(selector="photo", when="photo"),
         Const("Выберите изменение"),
         Row(
             Button(
