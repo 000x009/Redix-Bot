@@ -17,6 +17,16 @@ main_keyboard_markup = InlineKeyboardMarkup(
     ]
 )
 
+def cancel_without_reason_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Без причины", callback_data=f"cancel_order:{order_id}")
+            ]
+        ]
+    )
+
+
 back_to_main_menu_markup = InlineKeyboardMarkup(
     inline_keyboard=[
         [
@@ -111,8 +121,18 @@ def order_confirmation_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
                 InlineKeyboardButton(text='✅ Подтвердить', callback_data=f'confirm_order:{order_id}'),
             ],
             [
-                InlineKeyboardButton(text='❌ Отменить', callback_data=f'cancel_order:{order_id}'),
+                InlineKeyboardButton(text='❌ Отменить', callback_data=f'cancel_order_reason:{order_id}'),
             ],
+        ]
+    )
+
+
+def take_order_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text='Взяться за заказ', callback_data=f'take_order:{order_id}')
+            ]
         ]
     )
 

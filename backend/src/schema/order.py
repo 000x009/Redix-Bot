@@ -2,7 +2,7 @@ import datetime
 from enum import StrEnum
 from uuid import UUID
 from dataclasses import dataclass, field
-from typing import Mapping, Any
+from typing import Mapping, Any, Optional
 
 
 class OrderStatus(StrEnum):
@@ -21,4 +21,5 @@ class Order:
     name: str
     additional_data: Mapping[str, Any]
     status: OrderStatus = field(default=OrderStatus.PROGRESS)
+    cancel_reason: Optional[str] = field(default=None)
     time: datetime.datetime = field(default=datetime.datetime.now(datetime.UTC))

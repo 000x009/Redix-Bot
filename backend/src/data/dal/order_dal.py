@@ -84,6 +84,7 @@ class OrderDAL:
                 time=db_order.time,
                 name=db_order.name,
                 additional_data=db_order.additional_data,
+                cancel_reason=db_order.cancel_reason,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Order]]:
@@ -101,6 +102,7 @@ class OrderDAL:
                     time=db_order.time,
                     name=db_order.name,
                     additional_data=db_order.additional_data,
+                    cancel_reason=db_order.cancel_reason,
                 )
                 for db_order in db_orders
             ]

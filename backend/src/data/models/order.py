@@ -28,6 +28,7 @@ class OrderModel(Base):
         default=datetime.datetime.now(datetime.UTC),
     )
     additional_data: Mapped[Mapping[str, Any]] = mapped_column(JSON, nullable=True)
+    cancel_reason: Mapped[str] = mapped_column(String, nullable=True)
 
     user = relationship('UserModel', back_populates='orders')
     product = relationship('ProductModel', back_populates='orders')
