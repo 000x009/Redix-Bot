@@ -24,10 +24,11 @@ class CategoryDAL:
         await self.session.execute(query)
         await self.session.commit()
 
-    async def get(self, **kwargs: Optional[Any]) -> CategoryModel:
+    async def get(self, **kwargs: Optional[Any]) -> Category:
         query = select(CategoryModel).filter_by(**kwargs)
         result = await self.session.execute(query)
         db_result = result.scalar_one_or_none()
+
         return Category(
             id=db_result.id,
             game_id=db_result.game_id,
@@ -44,6 +45,7 @@ class CategoryDAL:
             query = select(CategoryModel)
         result = await self.session.execute(query)
         results = result.scalars().all()
+
         return [
             Category(
                 id=result.id,

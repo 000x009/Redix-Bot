@@ -79,6 +79,8 @@ class GameDAL:
                 id=db_game.id,
                 name=db_game.name,
                 image_url=db_game.image_url,
+                web_app_place=db_game.web_app_place,
+                supergroup_id=db_game.supergroup_id,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Game]]:
@@ -90,7 +92,9 @@ class GameDAL:
                 Game(
                     id=db_game.id,
                     name=db_game.name,
-                    image_url=db_game.image_url
+                    image_url=db_game.image_url,
+                    web_app_place=db_game.web_app_place,
+                    supergroup_id=db_game.supergroup_id,
                 )
                 for db_game in db_games
             ]
