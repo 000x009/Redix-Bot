@@ -50,7 +50,12 @@ const PostFeedback = () => {
       if (is_posted) {
         setError('Вы уже оставили отзыв на этот товар');
       } else {
-        await postFeedback(order.id, product.id, rating, review.trim(), tg.initData, photos);
+        const photoFiles = await Promise.all(photos.map(async (photoUrl) => {
+          const response = await fetch(photoUrl);
+          const blob = await response.blob();
+          return new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+        }));
+        await postFeedback(order.id, product.id, rating, review.trim(), photoFiles, tg.initData);
         navigate('/');
       }
     } catch (err) {

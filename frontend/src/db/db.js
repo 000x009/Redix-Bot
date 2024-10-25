@@ -281,13 +281,16 @@ export async function postFeedback(order_id, product_id, stars, text, images, in
   try {
     const maxFileSize = 5 * 1024 * 1024;
     
-    for (let file of images) {
-      if (file.size > maxFileSize) {
-        throw new Error('File size exceeds 5MB limit.');
+    let feedback_image_urls = [];
+    if (Array.isArray(images) && images.length > 0) {
+      for (let file of images) {
+        if (file.size > maxFileSize) {
+          throw new Error('File size exceeds 5MB limit.');
+        }
       }
+      feedback_image_urls = await uploadFiles(images);
     }
 
-    const feedback_image_urls = await uploadFiles(images);
     const response = await axios.post(`${API_URL}/feedback/post/`, {
       product: {id: product_id},
       order_id: order_id,
