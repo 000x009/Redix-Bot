@@ -265,13 +265,9 @@ export async function uploadFiles(files) {
 
 export async function postFeedback(order_id, product_id, stars, text, images, initData) {
   try {
-    const validFileTypes = ['image/jpeg', 'image/png'];
     const maxFileSize = 5 * 1024 * 1024;
     
     for (let file of images) {
-      if (!validFileTypes.includes(file.type)) {
-        throw new Error('Invalid file type. Only JPEG and PNG are allowed.');
-      }
       if (file.size > maxFileSize) {
         throw new Error('File size exceeds 5MB limit.');
       }
