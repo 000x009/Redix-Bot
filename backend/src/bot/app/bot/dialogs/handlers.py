@@ -338,7 +338,8 @@ async def on_input_photo_new_product(
         "4": "Hay Day",
     }
     product_instruction_photo_file_id = dialog_manager.dialog_data["product_instruction_photo"]
-    instruction_photo_bytes = await bot.download_file(f"{product_instruction_photo_file_id}.jpg")
+    instruction_file = await bot.get_file(product_instruction_photo_file_id)
+    instruction_photo_bytes = await bot.download_file(instruction_file.file_path)
     instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
     image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
     await product_service.create_product(
