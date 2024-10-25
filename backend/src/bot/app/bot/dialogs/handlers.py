@@ -290,13 +290,13 @@ async def on_product_description_new_product(
 
 
 async def on_product_instruction_new_product(
-    callback_query: CallbackQuery,
-    widget: TextInput,
+    message: Message,
+    widget: MessageInput,
     dialog_manager: DialogManager,
-    value: str,
 ):
-    dialog_manager.dialog_data["product_instruction"] = value
-    await dialog_manager.switch_to(ProductManagementSG.ADD_PRODUCT_INSTRUCTION_PHOTO)
+    dialog_manager.dialog_data["product_instruction_photo"] = message.photo[-1].file_id
+    dialog_manager.dialog_data["product_instruction"] = message.text
+    await dialog_manager.switch_to(ProductManagementSG.ADD_PRODUCT_PRICE)
 
 
 async def on_product_instruction_photo_new_product(

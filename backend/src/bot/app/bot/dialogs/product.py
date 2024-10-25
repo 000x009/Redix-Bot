@@ -267,16 +267,10 @@ product_management_dialog = Dialog(
     ),
     Window(
         Const("Введите инструкцию нового товара"),
-        TextInput(
-            id="add_product_instruction_text",
-            on_success=on_product_instruction_new_product,
+        MessageInput(
+            func=on_product_instruction_new_product,
         ),
         state=ProductManagementSG.ADD_PRODUCT_INSTRUCTION,
-    ),
-    Window(
-        Const("Отправьте фото инструкции нового товара"),
-        MessageInput(on_product_instruction_photo_new_product, content_types=[ContentType.PHOTO]),
-        state=ProductManagementSG.ADD_PRODUCT_INSTRUCTION_PHOTO,
     ),
     Window(
         Const("Введите цену нового товара"),
