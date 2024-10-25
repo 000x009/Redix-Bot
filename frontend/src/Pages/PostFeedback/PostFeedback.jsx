@@ -53,7 +53,7 @@ const PostFeedback = () => {
         const photoFiles = await Promise.all(photos.map(async (photoUrl) => {
           const response = await fetch(photoUrl);
           const blob = await response.blob();
-          return new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+          return new File([blob], `photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
         }));
         await postFeedback(order.id, product.id, rating, review.trim(), photoFiles, tg.initData);
         navigate('/');

@@ -260,8 +260,8 @@ export async function setReferralCode(referral_code, initData) {
 
 export async function uploadFiles(files) {
   const formData = new FormData();
-  files.forEach(file => {
-    formData.append('files', file);
+  files.forEach((file, index) => {
+    formData.append(`file${index}`, file, file.name);
   });
 
   try {
