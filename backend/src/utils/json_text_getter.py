@@ -24,7 +24,7 @@ def get_json_text(key: str) -> Optional[str]:
 def get_order_info_text(
     user_id: int,
     order_id: uuid.UUID,
-    order_data: CreateOrderDTO,
+    order_data: CreateOrderDTO | dict,
     product: Product,
     category: str,
 ) -> Optional[str]:
@@ -35,8 +35,8 @@ def get_order_info_text(
             game=product.game_name,
             product_name=product.name,
             product_price=product.price,
-            email=order_data.additional_data.email,
-            code=order_data.additional_data.code,
+            email=order_data.additional_data.email if not isinstance(order_data, dict) else order_data.get('email'),
+            code=order_data.additional_data.code if not isinstance(order_data, dict) else order_data.get('code'),
             category=category,
         )
     elif product.game_name == 'Roblox':
@@ -47,8 +47,8 @@ def get_order_info_text(
             product_name=product.name,
             product_price=product.price,
             email=order_data.additional_data.login,
-            password=order_data.additional_data.password,
-            two_factor_code=order_data.additional_data.two_factor_code if order_data.additional_data.two_factor_code else '-',
+            password=order_data.additional_data.password if not isinstance(order_data, dict) else order_data.get('password'),
+            two_factor_code=order_data.additional_data.two_factor_code if not isinstance(order_data, dict) else order_data.get('two_factor_code'),
             category=category,
         )
     elif product.game_name == 'PUBG':
@@ -58,7 +58,7 @@ def get_order_info_text(
             game=product.game_name,
             product_name=product.name,
             product_price=product.price,
-            pubg_id=order_data.additional_data.pubg_id,
+            pubg_id=order_data.additional_data.pubg_id if not isinstance(order_data, dict) else order_data.get('pubg_id'),
             category=category,
         )
     elif product.game_name == 'Stumble Guys':
@@ -68,7 +68,7 @@ def get_order_info_text(
             game=product.game_name,
             product_name=product.name,
             product_price=product.price,
-            nickname=order_data.additional_data.nickname,
+            nickname=order_data.additional_data.nickname if not isinstance(order_data, dict) else order_data.get('nickname'),
             category=category,
         )
     else:
@@ -78,7 +78,7 @@ def get_order_info_text(
             game=product.game_name,
             product_name=product.name,
             product_price=product.price,
-            login=order_data.additional_data.login,
-            password=order_data.additional_data.password,
+            login=order_data.additional_data.login if not isinstance(order_data, dict) else order_data.get('login'),
+            password=order_data.additional_data.password if not isinstance(order_data, dict) else order_data.get('password'),
             category=category,
         )
