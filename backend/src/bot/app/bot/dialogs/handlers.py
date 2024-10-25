@@ -326,36 +326,32 @@ async def on_input_photo_new_product(
     product_service: FromDishka[ProductService],
     yandex_storage_client: FromDishka[YandexStorageClient],
 ):  
-    try:
-        bot = dialog_manager.middleware_data.get("bot")
-        file = await bot.get_file(message.photo[-1].file_id)
-        photo_bytes = await bot.download_file(file.file_path)
+    bot = dialog_manager.middleware_data.get("bot")
+    file = await bot.get_file(message.photo[-1].file_id)
+    photo_bytes = await bot.download_file(file.file_path)
 
-        games_dict = {
-            "1": "Brawl Stars",
-            "5": "Squad Busters",
-            "2": "Clash of Clans",
-            "3": "Clash Royale",
-            "4": "Hay Day",
-        }
-        product_instruction_photo_file_id = dialog_manager.dialog_data["product_instruction_photo"]
-        instruction_photo_bytes = await bot.download_file(f"{product_instruction_photo_file_id}.jpg")
-        instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
-        image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
-        await product_service.create_product(
-            id=uuid.uuid4(),
-            category_id=int(dialog_manager.dialog_data["category_id"]),
-            name=dialog_manager.dialog_data["product_name"],
-            description=dialog_manager.dialog_data["product_description"],
-            instruction=dialog_manager.dialog_data["product_instruction"],
-            price=int(dialog_manager.dialog_data["product_price"]),
-            image_url=image_url,
-            game_id=int(dialog_manager.dialog_data["game_id"]),
-            game_name=games_dict[dialog_manager.dialog_data["game_id"]],
-            instruction_image_url=instruction_image_url,
-        )
-        await message.delete()
-    except Exception as e:
-        print(e)
-    finally:
-        await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+    games_dict = {
+        "1": "Brawl Stars",
+        "5": "Squad Busters",
+        "2": "Clash of Clans",
+        "3": "Clash Royale",
+        "4": "Hay Day",
+    }
+    product_instruction_photo_file_id = dialog_manager.dialog_data["product_instruction_photo"]
+    instruction_photo_bytes = await bot.download_file(f"{product_instruction_photo_file_id}.jpg")
+    instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
+    image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+    await product_service.create_product(
+        id=uuid.uuid4(),
+        category_id=int(dialog_manager.dialog_data["category_id"]),
+        name=dialog_manager.dialog_data["product_name"],
+        description=dialog_manager.dialog_data["product_description"],
+        instruction=dialog_manager.dialog_data["product_instruction"],
+        price=int(dialog_manager.dialog_data["product_price"]),
+        image_url=image_url,
+        game_id=int(dialog_manager.dialog_data["game_id"]),
+        game_name=games_dict[dialog_manager.dialog_data["game_id"]],
+        instruction_image_url=instruction_image_url,
+    )
+    await message.delete()
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
