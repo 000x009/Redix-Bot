@@ -1,3 +1,4 @@
+import io
 from typing import List
 
 from fastapi import APIRouter, File, UploadFile
@@ -20,6 +21,8 @@ async def upload_files(
 ) -> List[str]:
     file_urls = []
     for file in files:
-        file_urls.append(await yandex_storage_client.upload_file(file, file.filename))
+        content = await file.read()
+        file_like_object = io.BytesIO(content)
+        file_urls.append(await yandex_storage_client.upload_file(file_like_object, file.filename))
 
     return file_urls
