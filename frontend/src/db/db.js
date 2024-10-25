@@ -30,6 +30,12 @@ export async function getCategories(game_id) {
   return response.data;
 }
 
+
+export async function getOneCategory(category_id) {
+  const response = await axios.get(`${API_URL}/category/${category_id}`);
+  return response.data;
+}
+
 export async function getUserFeedbacks(user_id) {
   try {
     const response = await axios.get(`${API_URL}/feedback/user/${user_id}`);

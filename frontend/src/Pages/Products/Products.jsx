@@ -7,7 +7,7 @@ import {MenuButton as BaseMenuButton} from '@mui/base/MenuButton';
 import {MenuItem as BaseMenuItem, menuItemClasses} from '@mui/base/MenuItem';
 import {blue, grey} from "@mui/material/colors";
 import {styled} from "@mui/material";
-import {getProducts, getGame, getGamesAPI} from "../../db/db";
+import {getProducts, getGame, getGamesAPI, getOneCategory} from "../../db/db";
 import { useLocation } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import Game from "../../Components/Game/Game";
@@ -15,8 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function Products() {
   const [items, setItems] = useState([]);
-  const [games, setGamesState] = useState([]);
-  const [game_name, setGameName] = useState(null);
+  const [category_name, setCategoryName] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'purchase_count', direction: 'descending' });
   const location = useLocation();
   const category_id = new URLSearchParams(location.search).get("id");
@@ -35,22 +34,6 @@ function Products() {
     };
   }, []);
 
-  useEffect(() => {
-    setItems([]);
-    setLoading(true);
-
-    if (category_id === '14') {
-      const fetchGames = async () => {
-        const data = await getGamesAPI();
-        console.log(data);
-        const filteredGames = data.filter(game => ['15', '16', '17', '18'].includes(game.id.toString()));
-        setGamesState(filteredGames);
-      };
-      fetchGames();
-      setLoading(false);
-    }
-  }, [category_id]);
-
   const sortValues = {
       'purchase_count': 'по популярности',
       'price_lower': 'по убыванию цены',
@@ -59,24 +42,20 @@ function Products() {
 
   useEffect(() => {
     setItems([]);
-
-    if (category_id !== '14') {
-      const fetchData = async () => {
-        const data = await getProducts(category_id);
-        setItems(data);
-      };
-      fetchData();
-      setLoading(false);
-    }
-    // return () => setItems([]);
+    const fetchData = async () => {
+      const data = await getProducts(category_id);
+      setItems(data);
+    };
+    fetchData();
+    setLoading(false);
   }, [category_id]);
 
   useEffect(() => {
-    const fetchGameName = async () => {
-      const data = await getGame(category_id);
-      setGameName(data.name);
+    const fetchCategoryName = async () => {
+      const data = await getOneCategory(category_id);
+      setCategoryName(data.name);
     };
-    fetchGameName();
+    fetchCategoryName();
   }, [category_id]);
 
   const sortedItems = useMemo(() => {
@@ -184,20 +163,10 @@ function Products() {
       );
     }
 
-    if (category_id === '14') {
-      return (
-        <div className="flex align-stretch flex-wrap w-100">
-          {games.map((game) => {
-            return <Game id={game.id} name={game.name} image_url={game.image_url} key={game.id}/>;
-          })}
-        </div>
-      );
-    }
-
     return (
       <div>
        <div className="flex justify-between py-08 horizontal-padding">
-            <h2>{game_name}</h2>
+            <h2>{category_name}</h2>
             <div className="relative">
                 <Dropdown
                     sx={{
