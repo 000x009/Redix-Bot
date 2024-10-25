@@ -296,6 +296,15 @@ async def on_product_instruction_new_product(
     value: str,
 ):
     dialog_manager.dialog_data["product_instruction"] = value
+    await dialog_manager.switch_to(ProductManagementSG.ADD_PRODUCT_INSTRUCTION_PHOTO)
+
+
+async def on_product_instruction_photo_new_product(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+):
+    dialog_manager.dialog_data["product_instruction_photo"] = message.photo[-1].file_id
     await dialog_manager.switch_to(ProductManagementSG.ADD_PRODUCT_PRICE)
 
 
@@ -329,7 +338,9 @@ async def on_input_photo_new_product(
             "3": "Clash Royale",
             "4": "Hay Day",
         }
-
+        product_instruction_photo_file_id = dialog_manager.dialog_data["product_instruction_photo"]
+        instruction_photo_bytes = await bot.download_file(f"{product_instruction_photo_file_id}.jpg")
+        instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
         image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
         await product_service.create_product(
             id=uuid.uuid4(),
@@ -341,6 +352,7 @@ async def on_input_photo_new_product(
             image_url=image_url,
             game_id=int(dialog_manager.dialog_data["game_id"]),
             game_name=games_dict[dialog_manager.dialog_data["game_id"]],
+            instruction_image_url=instruction_image_url,
         )
         await message.delete()
     except Exception as e:

@@ -36,6 +36,7 @@ from .handlers import (
     on_category_thread_id,
     on_input_photo_new_category,
     on_category_name,
+    on_input_photo_new_product_instruction,
 )
 
 
@@ -271,6 +272,11 @@ product_management_dialog = Dialog(
             on_success=on_product_instruction_new_product,
         ),
         state=ProductManagementSG.ADD_PRODUCT_INSTRUCTION,
+    ),
+    Window(
+        Const("Отправьте фото инструкции нового товара"),
+        MessageInput(on_input_photo_new_product_instruction, content_types=[ContentType.PHOTO]),
+        state=ProductManagementSG.ADD_PRODUCT_INSTRUCTION_PHOTO,
     ),
     Window(
         Const("Введите цену нового товара"),

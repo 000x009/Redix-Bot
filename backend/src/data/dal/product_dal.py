@@ -89,6 +89,7 @@ class ProductDAL:
                 is_auto_purchase=db_product.is_auto_purchase,
                 is_manual=db_product.is_manual,
                 auto_purchase_text=db_product.auto_purchase_text,
+                instruction_image_url=db_product.instruction_image_url,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Product]]:
@@ -112,6 +113,7 @@ class ProductDAL:
                     is_auto_purchase=db_product.is_auto_purchase,
                     is_manual=db_product.is_manual,
                     auto_purchase_text=db_product.auto_purchase_text,
+                    instruction_image_url=db_product.instruction_image_url,
                 )
                 for db_product in db_products
             ]
@@ -151,6 +153,7 @@ class ProductDAL:
                 is_manual=db_product.is_manual,
                 auto_purchase_text=db_product.auto_purchase_text,
                 image_url=db_product.image_url,
+                instruction_image_url=db_product.instruction_image_url,
             )
             for db_product in products
         ]

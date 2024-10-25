@@ -19,3 +19,4 @@ class Product:
     is_manual: bool = field(default=False)
     is_auto_purchase: bool = field(default=False)
     auto_purchase_text: str = field(default=None)
+    instruction_image_url: str = field(default=None)

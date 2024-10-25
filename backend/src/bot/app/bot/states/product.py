@@ -18,5 +18,6 @@ class ProductManagementSG(StatesGroup):
     ADD_PRODUCT_NAME = State()
     ADD_PRODUCT_DESCRIPTION = State()
     ADD_PRODUCT_INSTRUCTION = State()
+    ADD_PRODUCT_INSTRUCTION_PHOTO = State()
     ADD_PRODUCT_PRICE = State()
     ADD_PRODUCT_PHOTO = State()
