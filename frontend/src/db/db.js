@@ -259,8 +259,22 @@ export async function setReferralCode(referral_code, initData) {
 
 
 export async function uploadFiles(files) {
-  const response = await axios.post(`${API_URL}/cloud-storage/upload-files`, files);
-  return response.data;
+  const formData = new FormData();
+  files.forEach(file => {
+    formData.append('files', file);
+  });
+
+  try {
+    const response = await axios.post(`${API_URL}/cloud-storage/upload-files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error uploading files:', error);
+    throw error;
+  }
 }
 
 export async function postFeedback(order_id, product_id, stars, text, images, initData) {
