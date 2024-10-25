@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
-
+ 
 from dishka import make_async_container
 from dishka.integrations.fastapi import setup_dishka
 
@@ -67,14 +67,6 @@ async def validation_exception_handler(request: Request, exc: ValidationExceptio
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content=jsonable_encoder({"detail": exc.errors()}),
     )
-
-
-# @app.exception_handler(DBAPIError)
-# async def validation_exception_handler(request: Request, exc: DBAPIError):
-#     return JSONResponse(
-#         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-#         content=jsonable_encoder({"detail": "Wrong SQL statement or params."}),
-#     )
 
 
 app.include_router(product.router)

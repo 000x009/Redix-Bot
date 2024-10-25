@@ -4,11 +4,15 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from fastapi_cache.decorator import cache
 
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 
+from aiogram import Bot
+from aiogram.types import BufferedInputFile
+from aiogram.utils.media_group import MediaGroupBuilder
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from aiogram.utils.web_app import WebAppInitData
 
 from src.services import FeedbackService, UserService
@@ -18,6 +22,7 @@ from src.api.dependencies import user_provider
 from src.bot.app.main.config import dev_config
 from src.api.http.exceptions import MethodNotAllowedError
 from src.schema import User
+from src.bot.app.main.config import settings
 
 router = APIRouter(
     prefix="/feedback",
@@ -42,7 +47,25 @@ async def post_feedback(
         time=datetime.now(tz=UTC),
         images=data.images,
     )
+    feedback_group_id = 2348273294
+    bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     
+    media_group = MediaGroupBuilder(caption=f"""
+Рейтинг: {"⭐" * data.stars}
+Покупатель: @{user_data.user.username}
+Дата: {datetime.now(tz=UTC).strftime("%d.%m.%Y %H:%M")}
+
+Отзыв:
+{data.text}
+""")
+    
+    for image_url in data.images:
+        image_content = await bot.session.get(image_url)
+        image_bytes = await image_content.read()
+        file = BufferedInputFile(image_bytes, filename=f"feedback_image_{uuid.uuid4()}.jpg")
+        media_group.add_photo(media=file)
+    
+    await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
 
     return JSONResponse(
         status_code=200,

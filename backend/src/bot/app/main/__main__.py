@@ -19,7 +19,6 @@ from src.bot.app.main.config import settings
 from src.main.ioc import DatabaseProvider, DALProvider, ServiceProvider
 from src.bot.app.bot.handlers import message_handlers
 from src.bot.app.bot.callbacks import callback_handlers
-from src.bot.app.bot.middlewares import UserMiddleware
 from src.bot.app.bot.dialogs.product import product_management_dialog
 from src.bot.app.bot.dialogs.getter import YandexStorageMedia
 
@@ -48,8 +47,6 @@ async def main() -> None:
     container = make_async_container(DatabaseProvider(), DALProvider(), ServiceProvider())
     setup_dishka(container=container, router=dispatcher, auto_inject=True)
 
-    # dispatcher.message.middleware.register(UserMiddleware(dishka_container=container))
-    # dispatcher.callback_query.middleware.register(UserMiddleware(dishka_container=container))
     TTLCacheAlbumMiddleware(router=dispatcher)
 
     try:

@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-from fastapi_cache.decorator import cache
+# from fastapi_cache.decorator import cache
 
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
@@ -34,7 +34,7 @@ router = APIRouter(
 
 
 @router.get('/search')
-@cache(expire=60 * 60 * 24)
+# @cache(expire=60 * 60 * 24)
 async def search_products(
     search: str,
     product_service: FromDishka[ProductService]

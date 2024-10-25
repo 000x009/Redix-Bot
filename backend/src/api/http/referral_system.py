@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi_cache.decorator import cache
+# from fastapi_cache.decorator import cache
 
 from aiogram.utils.web_app import WebAppInitData
 
@@ -35,7 +35,7 @@ async def check_code(
 
 
 @router.get("/get_code", response_model=ReferralCode)
-@cache(expire=60 * 60 * 24)
+# @cache(expire=60 * 60 * 24)
 async def get_referral_code(
     user_service: FromDishka[UserService],
     user_data: WebAppInitData = Depends(user_provider),

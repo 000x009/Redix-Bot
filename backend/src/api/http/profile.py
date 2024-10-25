@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
-from fastapi_cache.decorator import cache
+# from fastapi_cache.decorator import cache
 
 from aiogram.utils.web_app import WebAppInitData
 
@@ -47,7 +47,7 @@ async def get_user_orders(
 
 
 @router.get("/orders/{order_id}", response_model=Order)
-@cache(expire=60 * 60 * 24)
+# @cache(expire=60 * 60 * 24)
 async def get_one_order(
     order_id: uuid.UUID,
     order_service: FromDishka[OrderService],
