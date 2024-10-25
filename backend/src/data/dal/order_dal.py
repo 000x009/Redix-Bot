@@ -1,4 +1,5 @@
 import uuid
+import json
 from typing import Optional, TypeAlias, List, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -75,6 +76,7 @@ class OrderDAL:
 
         if res:
             db_order = res.scalar_one_or_none()
+
             return Order(
                 id=db_order.id,
                 user_id=db_order.user_id,
@@ -83,7 +85,7 @@ class OrderDAL:
                 price=db_order.price,
                 time=db_order.time,
                 name=db_order.name,
-                additional_data=db_order.additional_data,
+                additional_data=json.loads(db_order.additional_data.json()),
                 cancel_reason=db_order.cancel_reason,
             )
 
@@ -101,7 +103,7 @@ class OrderDAL:
                     price=db_order.price,
                     time=db_order.time,
                     name=db_order.name,
-                    additional_data=db_order.additional_data,
+                    additional_data=json.loads(db_order.additional_data.json()),
                     cancel_reason=db_order.cancel_reason,
                 )
                 for db_order in db_orders
