@@ -15,7 +15,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.utils.web_app import WebAppInitData
 
-from src.services import FeedbackService, UserService
+from src.services import FeedbackService, UserService, YandexStorageClient
 from src.api.schema.feedback import CreateFeedback
 from src.schema import Feedback
 from src.api.dependencies import user_provider
@@ -35,6 +35,7 @@ router = APIRouter(
 async def post_feedback(
     data: CreateFeedback,
     feedback_service: FromDishka[FeedbackService],
+    yandex_storage_client: FromDishka[YandexStorageClient],
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
     await feedback_service.add_feedback(
@@ -60,9 +61,8 @@ async def post_feedback(
 """)
     
     for image_url in data.images:
-        image_content = await bot.session.get(image_url)
-        image_bytes = await image_content.read()
-        file = BufferedInputFile(image_bytes, filename=f"feedback_image_{uuid.uuid4()}.jpg")
+        image_content = await yandex_storage_client.get_file(image_url)
+        file = BufferedInputFile(image_content, filename=f"feedback_image_{uuid.uuid4()}.jpg")
         media_group.add_photo(media=file)
     
     await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
