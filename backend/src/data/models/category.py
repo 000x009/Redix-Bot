@@ -18,6 +18,7 @@ class CategoryModel(Base):
     image: Mapped[str] = mapped_column(String(255), nullable=True)
     is_visible: Mapped[bool] = mapped_column(Boolean, default=True)
     thread_id: Mapped[int] = mapped_column(Integer, nullable=True)
+    web_app_place: Mapped[int] = mapped_column(Integer, nullable=True, autoincrement=True)
 
     game = relationship('GameModel', back_populates='categories')
     products: Mapped[List["ProductModel"]] = relationship(back_populates="category", uselist=True)

@@ -35,14 +35,15 @@ class CategoryDAL:
             name=db_result.name,
             image=db_result.image,
             is_visible=db_result.is_visible,
-            thread_id=db_result.thread_id
+            thread_id=db_result.thread_id,
+            web_app_place=db_result.web_app_place
         )
 
     async def get_all(self, **kwargs: Optional[Any]) -> List[Category]:
         if kwargs:
-            query = select(CategoryModel).filter_by(**kwargs)
+            query = select(CategoryModel).filter_by(**kwargs).order_by(CategoryModel.web_app_place)
         else:
-            query = select(CategoryModel)
+            query = select(CategoryModel).order_by(CategoryModel.web_app_place)
         result = await self.session.execute(query)
         results = result.scalars().all()
 
@@ -53,7 +54,8 @@ class CategoryDAL:
                 name=result.name,
                 image=result.image,
                 is_visible=result.is_visible,
-                thread_id=result.thread_id
+                thread_id=result.thread_id,
+                web_app_place=result.web_app_place
             )
             for result in results
         ]

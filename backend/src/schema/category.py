@@ -9,3 +9,4 @@ class Category:
     image: str = field(default=None)
     is_visible: bool = field(default=True)
     thread_id: int = field(default=None)
+    web_app_place: int = field(default=None)
