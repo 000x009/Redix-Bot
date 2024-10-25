@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, UTC
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
@@ -71,7 +71,7 @@ async def is_user_posted_feedback(
     order_id: uuid.UUID,
     feedback_service: FromDishka[FeedbackService],
     user_data: WebAppInitData = Depends(user_provider),
-) -> Feedback:
+) -> Optional[Feedback]:
     return await feedback_service.get_one_feedback(user_id=user_data.user.id, order_id=order_id)
 
 
