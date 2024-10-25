@@ -1,5 +1,5 @@
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, Field
 
@@ -13,3 +13,4 @@ class CreateFeedback(BaseModel):
     order_id: UUID
     stars: Optional[int] = Field(le=5, default=None)
     text: str = Field(max_length=500)
+    images: Optional[List[str]] = Field(default=None)

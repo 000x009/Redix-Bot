@@ -1,3 +1,4 @@
+import json
 from typing import Optional, TypeAlias, List, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -83,6 +84,7 @@ class FeedbackDAL:
                 stars=db_feedback.stars,
                 time=db_feedback.time,
                 is_active=db_feedback.is_active,
+                images=json.loads(db_feedback.images) if db_feedback.images else None,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Feedback]]:
@@ -100,6 +102,7 @@ class FeedbackDAL:
                     stars=db_feedback.stars,
                     time=db_feedback.time,
                     is_active=db_feedback.is_active,
+                    images=json.loads(db_feedback.images) if db_feedback.images else None,
                 )
                 for db_feedback in db_feedbacks
             ]

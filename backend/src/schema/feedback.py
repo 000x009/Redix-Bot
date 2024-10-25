@@ -13,3 +13,4 @@ class Feedback:
     stars: int = field(default=None)
     time: datetime.datetime = field(default=datetime.datetime.now(datetime.UTC))
     is_active: bool = field(default=True)
+    images: list[str] = field(default=None)

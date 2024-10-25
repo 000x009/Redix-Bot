@@ -258,18 +258,42 @@ export async function setReferralCode(referral_code, initData) {
 }
 
 
-export async function postFeedback(order_id, product_id, stars, text, initData) {
-  const response = await axios.post(`${API_URL}/feedback/post/`, {
-    product: {id: product_id},
-    order_id: order_id,
-    stars: stars,
-    text: text
-  }, {
-    headers: {
-      'Authorization': initData
-    }
-  });
+export async function uploadFiles(files) {
+  const response = await axios.post(`${API_URL}/cloud-storage/upload-files`, files);
   return response.data;
+}
+
+export async function postFeedback(order_id, product_id, stars, text, images, initData) {
+  try {
+    const validFileTypes = ['image/jpeg', 'image/png'];
+    const maxFileSize = 5 * 1024 * 1024;
+    
+    for (let file of images) {
+      if (!validFileTypes.includes(file.type)) {
+        throw new Error('Invalid file type. Only JPEG and PNG are allowed.');
+      }
+      if (file.size > maxFileSize) {
+        throw new Error('File size exceeds 5MB limit.');
+      }
+    }
+
+    const feedback_image_urls = await uploadFiles(images);
+    const response = await axios.post(`${API_URL}/feedback/post/`, {
+      product: {id: product_id},
+      order_id: order_id,
+      stars: stars,
+      text: text,
+      images: feedback_image_urls
+    }, {
+      headers: {
+        'Authorization': initData
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error posting feedback:', error);
+    throw error;
+  }
 }
 
 

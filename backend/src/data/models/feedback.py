@@ -1,7 +1,7 @@
 import uuid
 import datetime
 
-from sqlalchemy import UUID, String, ForeignKey, Integer, TIMESTAMP, Boolean, BigInteger
+from sqlalchemy import UUID, String, ForeignKey, Integer, TIMESTAMP, Boolean, BigInteger, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.data.models import Base
@@ -18,7 +18,7 @@ class FeedbackModel(Base):
     stars: Mapped[int] = mapped_column(Integer, nullable=True)
     time: Mapped[datetime.datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False, default=datetime.datetime.now(datetime.UTC))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    image: Mapped[str] = mapped_column(String, nullable=True)
+    images: Mapped[list[str]] = mapped_column(JSON, nullable=True)
 
     user = relationship('UserModel', back_populates='feedbacks')
     product = relationship('ProductModel', back_populates='feedbacks')

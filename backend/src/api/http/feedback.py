@@ -39,7 +39,8 @@ async def post_feedback(
         user_id=user_data.user.id,
         text=data.text,
         stars=data.stars,
-        time=datetime.now(tz=UTC)
+        time=datetime.now(tz=UTC),
+        images=data.images,
     )
     
 
