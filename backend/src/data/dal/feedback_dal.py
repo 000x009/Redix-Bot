@@ -72,9 +72,9 @@ class FeedbackDAL:
 
     async def get_one(self, **kwargs: Optional[Any]) -> Optional[Feedback]:
         res = await self._get(**kwargs)
+        db_feedback = res.scalar_one_or_none()
 
-        if res:
-            db_feedback = res.scalar_one_or_none()
+        if db_feedback:
             return Feedback(
                 id=db_feedback.id,
                 product_id=db_feedback.product_id,
@@ -86,6 +86,7 @@ class FeedbackDAL:
                 is_active=db_feedback.is_active,
                 images=json.loads(db_feedback.images) if db_feedback.images else None,
             )
+        return None
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Feedback]]:
         res = await self._get(**kwargs)
