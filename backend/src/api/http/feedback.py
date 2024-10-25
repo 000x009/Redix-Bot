@@ -48,7 +48,7 @@ async def post_feedback(
         time=datetime.now(tz=UTC),
         images=data.images,
     )
-    feedback_group_id = 2348273294
+    feedback_group_id = -1002348273294
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     
     media_group = MediaGroupBuilder(caption=f"""
@@ -64,8 +64,10 @@ async def post_feedback(
         image_content = yandex_storage_client.get_file(image_url)
         file = BufferedInputFile(image_content, filename=f"feedback_image_{uuid.uuid4()}.jpg")
         media_group.add_photo(media=file)
-    
-    await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
+    try:
+        await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
+    finally:
+        await bot.session.close()
 
     return JSONResponse(
         status_code=200,
