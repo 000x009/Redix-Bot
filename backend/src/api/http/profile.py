@@ -36,7 +36,6 @@ async def get_user(
     
     
 @router.get("/orders", response_model=List[Order])
-# @cache(expire=60 * 60 * 24)
 async def get_user_orders(
     order_service: FromDishka[OrderService],
     user_data: WebAppInitData = Depends(user_provider),
@@ -47,11 +46,9 @@ async def get_user_orders(
 
 
 @router.get("/orders/{order_id}", response_model=Order)
-@cache(expire=60 * 60 * 24)
 async def get_one_order(
     order_id: uuid.UUID,
     order_service: FromDishka[OrderService],
-    user_data: WebAppInitData = Depends(user_provider),
 ) -> Optional[Order]:
     order = await order_service.get_one_order(id=order_id)
     return order
@@ -68,14 +65,11 @@ async def get_user_transactions(
 
 
 @router.get("/transactions/{transaction_id}", response_model=Transaction)
-@cache(expire=60 * 60 * 24)
 async def get_one_transaction(
     transaction_id: uuid.UUID,
     transaction_service: FromDishka[TransactionService],
-    user_data: WebAppInitData = Depends(user_provider),
 ) -> Optional[Transaction]:
     transaction = await transaction_service.get_one_transaction(
-        user_id=user_data.user.id,
         id=transaction_id,
     )
     return transaction
