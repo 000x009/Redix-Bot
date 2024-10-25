@@ -168,9 +168,9 @@ const PostFeedback = () => {
           ></textarea>
           <p className="character-count">{review.length}/500 символов</p>
           <div className="photo-upload">
-            <button className="photo-upload-button">
+            <label htmlFor="photo-input" className="photo-upload-button">
               Прикрепить фото (макс. 10)
-            </button>
+            </label>
             <input
               id="photo-input"
               type="file"
