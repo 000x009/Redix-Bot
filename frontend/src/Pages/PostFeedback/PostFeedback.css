@@ -174,3 +174,18 @@
     background-color: #f44336;
     color: white;
   }
+
+  .photo-upload-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+  }
+  
+  .photo-upload-button:hover {
+    background-color: #45a049;
+  }

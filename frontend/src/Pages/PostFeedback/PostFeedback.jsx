@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { postFeedback, getOneProduct, isUserPostedFeedback, getOneOrder } from '../../db/db';
 import { useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
-import AttachPhoto from '../../images/attach.png';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const PostFeedback = () => {
@@ -169,10 +168,9 @@ const PostFeedback = () => {
           ></textarea>
           <p className="character-count">{review.length}/500 символов</p>
           <div className="photo-upload">
-            <label htmlFor="photo-input" className="photo-upload-label">
-              <img src={AttachPhoto} alt="Прикрепить фото" />
+            <button className="photo-upload-button">
               Прикрепить фото (макс. 10)
-            </label>
+            </button>
             <input
               id="photo-input"
               type="file"
@@ -185,7 +183,7 @@ const PostFeedback = () => {
           <div className="photo-preview">
             {photos.map((photo, index) => (
               <div key={index} className="photo-item">
-                <img src={photo} alt={`Фото ${index + 1}`} />
+                <img src={photo} alt={`Фото ${index + 1}`} style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
                 <button onClick={() => removePhoto(index)}>Удалить</button>
               </div>
             ))}
