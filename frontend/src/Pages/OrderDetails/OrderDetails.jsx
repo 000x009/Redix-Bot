@@ -58,7 +58,7 @@ function OrderDetails() {
     const renderAdditionalFields = () => {
         if (!order || !order.additional_data) return null;
     
-        const additionalData = JSON.parse(order.additional_data);
+        const additionalData = order.additional_data;
 
         const gameSpecificFields = {
             'Brawl Stars': [['email', 'Почта'], ['code', 'Код']],
