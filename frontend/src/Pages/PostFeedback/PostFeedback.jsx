@@ -59,6 +59,7 @@ const PostFeedback = () => {
         navigate('/');
       }
     } catch (err) {
+      console.error('Error submitting review:', err);
       setError('Произошла ошибка при отправке отзыва. Пожалуйста, попробуйте еще раз.');
     }
   };

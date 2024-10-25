@@ -283,12 +283,20 @@ export async function postFeedback(order_id, product_id, stars, text, images, in
     
     let feedback_image_urls = [];
     if (Array.isArray(images) && images.length > 0) {
-      for (let file of images) {
+      const formData = new FormData();
+      images.forEach((file, index) => {
         if (file.size > maxFileSize) {
-          throw new Error('File size exceeds 5MB limit.');
+          throw new Error(`File ${index + 1} exceeds 5MB limit.`);
         }
-      }
-      feedback_image_urls = await uploadFiles(images);
+        formData.append('files', file);
+      });
+      
+      const uploadResponse = await axios.post(`${API_URL}/cloud-storage/upload-files`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      feedback_image_urls = uploadResponse.data;
     }
 
     const response = await axios.post(`${API_URL}/feedback/post/`, {
@@ -308,7 +316,6 @@ export async function postFeedback(order_id, product_id, stars, text, images, in
     throw error;
   }
 }
-
 
 export async function getFeedbacks() {
   const response = await axios.get(`${API_URL}/feedback/`, {
