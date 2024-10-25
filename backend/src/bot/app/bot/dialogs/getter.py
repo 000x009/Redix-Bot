@@ -42,10 +42,6 @@ async def games_getter(
 ) -> dict:
     games = await game_service.get_all_games()
     
-    for game in games:
-        if game.id in [15, 16, 17, 18]:
-            game.name += "⭐"
-    
     return {
         "games": games,
     }
@@ -93,7 +89,7 @@ async def one_product_getter(
 ) -> dict:
     product_id = dialog_manager.dialog_data["product_id"]
     product = await product_service.get_one_product(id=uuid.UUID(product_id))
-    print(product)
+    print("product:", product, flush=True)
     return {
         "photo": MediaAttachment(
            url=product.image_url,
