@@ -33,7 +33,6 @@ def get_order_info_text(
             order_id=order_id,
             user_id=user_id,
             game=product.game_name,
-            category=product.category,
             product_name=product.name,
             product_price=product.price,
             email=order_data.additional_data.email,
