@@ -458,7 +458,7 @@ const OrderForm = () => {
               />
             )}
             {product.instruction && product.instruction.trim() !== '' && (
-              <div className="word-pre" style={{ marginTop: '1rem' }}>
+              <div className="word-pre" style={{ marginTop: product.instruction_image_url ? '1rem' : '0' }}>
                 {makeLinksClickable(product.instruction)}
               </div>
             )}

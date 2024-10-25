@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { postFeedback, getOneProduct, isUserPostedFeedback, getOneOrder } from '../../db/db';
 import { useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
+import AttachPhoto from '../../images/attach.png';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const PostFeedback = () => {
@@ -17,6 +18,7 @@ const PostFeedback = () => {
   const navigate = useNavigate();
   const { tg } = useTelegram();
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
     setIsWebApp(!!window.Telegram?.WebApp);
@@ -41,7 +43,7 @@ const PostFeedback = () => {
     } else {
       submitReview();
     }
-  }, [review, product, rating, tg.initData, navigate]);
+  }, [review, product, rating, tg.initData, navigate, photos]);
   
   const submitReview = async () => {
     try {
@@ -49,12 +51,26 @@ const PostFeedback = () => {
       if (is_posted) {
         setError('Вы уже оставили отзыв на этот товар');
       } else {
-        await postFeedback(order.id, product.id, rating, review.trim(), tg.initData);
+        await postFeedback(order.id, product.id, rating, review.trim(), tg.initData, photos);
         navigate('/');
       }
     } catch (err) {
       setError('Произошла ошибка при отправке отзыва. Пожалуйста, попробуйте еще раз.');
     }
+  };
+
+  const handlePhotoUpload = (event) => {
+    const files = Array.from(event.target.files);
+    if (photos.length + files.length > 10) {
+      setError('Максимальное количество фотографий - 10');
+      return;
+    }
+    const newPhotos = files.map(file => URL.createObjectURL(file));
+    setPhotos(prevPhotos => [...prevPhotos, ...newPhotos]);
+  };
+
+  const removePhoto = (index) => {
+    setPhotos(prevPhotos => prevPhotos.filter((_, i) => i !== index));
   };
 
   const ConfirmationPopup = ({ onConfirm, onCancel }) => (
@@ -152,6 +168,28 @@ const PostFeedback = () => {
             maxLength={500}
           ></textarea>
           <p className="character-count">{review.length}/500 символов</p>
+          <div className="photo-upload">
+            <label htmlFor="photo-input" className="photo-upload-label">
+              <img src={AttachPhoto} alt="Прикрепить фото" />
+              Прикрепить фото (макс. 10)
+            </label>
+            <input
+              id="photo-input"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handlePhotoUpload}
+              style={{ display: 'none' }}
+            />
+          </div>
+          <div className="photo-preview">
+            {photos.map((photo, index) => (
+              <div key={index} className="photo-item">
+                <img src={photo} alt={`Фото ${index + 1}`} />
+                <button onClick={() => removePhoto(index)}>Удалить</button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       {showConfirmation && (

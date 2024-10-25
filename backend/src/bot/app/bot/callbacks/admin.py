@@ -314,4 +314,5 @@ async def take_order_handler(
         ),
         reply_markup=inline.order_confirmation_kb_markup(order_id=order_id)
     )
+    await bot.delete_message(chat_id=event_chat.id, message_id=query.message.message_id)
 

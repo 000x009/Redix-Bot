@@ -89,7 +89,6 @@ async def one_product_getter(
 ) -> dict:
     product_id = dialog_manager.dialog_data["product_id"]
     product = await product_service.get_one_product(id=uuid.UUID(product_id))
-    print("product:", product, flush=True)
 
     return {
         "photo": MediaAttachment(
