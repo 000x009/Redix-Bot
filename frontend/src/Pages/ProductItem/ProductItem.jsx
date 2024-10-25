@@ -74,13 +74,17 @@ function ProductItem() {
 
     const renderDescription = (text) => {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.split(urlRegex).map((part, index) => 
-            urlRegex.test(part) ? (
-                <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a>
-            ) : (
-                part
-            )
-        );
+        return text.split('\n').map((paragraph, paragraphIndex) => (
+            <p key={paragraphIndex}>
+                {paragraph.split(urlRegex).map((part, partIndex) => 
+                    urlRegex.test(part) ? (
+                        <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer">{part}</a>
+                    ) : (
+                        part
+                    )
+                )}
+            </p>
+        ));
     };
 
     if (loading) {
@@ -108,8 +112,20 @@ function ProductItem() {
                         <h3>Описание</h3>
                     </div>
                     <div className="bg-lightgray rounded px-08 py-08" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
-                        {renderDescription(product.description)}
+                        <div className="description-text">
+                            {renderDescription(product.description)}
+                        </div>
                     </div>
+                    <style>
+                        {`
+                        .description-text p {
+                            margin-bottom: 0.5rem;
+                        }
+                        .description-text p:last-child {
+                            margin-bottom: 0;
+                        }
+                        `}
+                    </style>
                 </div>
             </div>
         </div>

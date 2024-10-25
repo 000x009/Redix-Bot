@@ -15,7 +15,7 @@ from aiogram.utils.web_app import WebAppInitData
 
 from src.api.http.exceptions.user import MethodNotAllowedError
 from src.schema import Product
-from src.services import ProductService, UserService, OrderService, TransactionService
+from src.services import ProductService, UserService, OrderService, TransactionService, GameService, CategoryService
 from src.api.schema.order import CreateOrderDTO
 from src.api.schema.product import CreateProduct
 from src.main.config import settings
@@ -82,10 +82,14 @@ async def purchase_product(
     user_service: FromDishka[UserService],
     order_service: FromDishka[OrderService],
     transaction_service: FromDishka[TransactionService],
+    game_service: FromDishka[GameService],
+    category_service: FromDishka[CategoryService],
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
     user = await user_service.get_one_user(user_id=user_data.user.id)
     product = await product_service.get_one_product(id=order_data.product_id)
+    game = await game_service.get_game(id=product.game_id)
+    category = await category_service.get_category(id=product.category_id)
 
     if not product:
         return JSONResponse(status_code=404, content='Product not found.')
@@ -122,19 +126,18 @@ async def purchase_product(
 
     try:
         bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-        admins = dev_config.admin.admins
-
-        for user_id in admins:
-            await bot.send_message(
-                chat_id=user_id,
-                text=json_text_getter.get_order_info_text(
-                    user_id=user.user_id,
-                    order_id=order_id,
-                    order_data=order_data,
-                    product=product,
-                ),
-                reply_markup=inline.order_confirmation_kb_markup(order_id=order_id)
-                )
+        await bot.send_message(
+            chat_id=game.supergroup_id,
+            text=json_text_getter.get_order_info_text(
+                user_id=user.user_id,
+                order_id=order_id,
+                order_data=order_data,
+                product=product,
+                category=category.name,
+            ),
+            message_thread_id=category.thread_id,
+            reply_markup=inline.order_confirmation_kb_markup(order_id=order_id)
+        )
     except Exception as ex:
         print(ex)
     finally:

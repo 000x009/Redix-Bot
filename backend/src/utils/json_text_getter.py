@@ -11,7 +11,7 @@ from src.api.schema.order import (
     PubgData,
     StumbleGuysData,
 )
-from src.schema import Product
+from src.schema import Product, Category
 
 
 def get_json_text(key: str) -> Optional[str]:
@@ -26,6 +26,7 @@ def get_order_info_text(
     order_id: uuid.UUID,
     order_data: CreateOrderDTO,
     product: Product,
+    category: str,
 ) -> Optional[str]:
     if product.game_name in ('Clash of Clans', 'Clash Royale', 'Brawl Stars', 'Squad Busters'):
         return get_json_text('supercell_order').format(
@@ -37,6 +38,7 @@ def get_order_info_text(
             product_price=product.price,
             email=order_data.additional_data.email,
             code=order_data.additional_data.code,
+            category=category,
         )
     elif product.game_name == 'Roblox':
         return get_json_text('roblox_order').format(
@@ -49,6 +51,7 @@ def get_order_info_text(
             email=order_data.additional_data.login,
             password=order_data.additional_data.password,
             two_factor_code=order_data.additional_data.two_factor_code if order_data.additional_data.two_factor_code else '-',
+            category=category,
         )
     elif product.game_name == 'PUBG':
         return get_json_text('pubg_order').format(
@@ -59,6 +62,7 @@ def get_order_info_text(
             product_name=product.name,
             product_price=product.price,
             pubg_id=order_data.additional_data.pubg_id,
+            category=category,
         )
     elif product.game_name == 'Stumble Guys':
         return get_json_text('stumble_guys_order').format(
@@ -69,6 +73,7 @@ def get_order_info_text(
             product_name=product.name,
             product_price=product.price,
             nickname=order_data.additional_data.nickname,
+            category=category,
         )
     else:
         return get_json_text('base_order').format(
@@ -80,4 +85,5 @@ def get_order_info_text(
             product_price=product.price,
             login=order_data.additional_data.login,
             password=order_data.additional_data.password,
+            category=category,
         )
