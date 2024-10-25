@@ -20,6 +20,6 @@ async def upload_files(
 ) -> List[str]:
     file_urls = []
     for file in files:
-        file_urls.append(await yandex_storage_client.upload_file(await file.read(), file.filename))
+        file_urls.append(await yandex_storage_client.upload_file(file, file.filename))
 
     return file_urls
