@@ -61,7 +61,7 @@ async def post_feedback(
 """)
     
     for image_url in data.images:
-        image_content = await yandex_storage_client.get_file(image_url)
+        image_content = yandex_storage_client.get_file(image_url)
         file = BufferedInputFile(image_content, filename=f"feedback_image_{uuid.uuid4()}.jpg")
         media_group.add_photo(media=file)
     
