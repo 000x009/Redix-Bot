@@ -85,7 +85,7 @@ class OrderDAL:
                 price=db_order.price,
                 time=db_order.time,
                 name=db_order.name,
-                additional_data=json.loads(db_order.additional_data.json()),
+                additional_data=json.loads(db_order.additional_data),
                 cancel_reason=db_order.cancel_reason,
             )
 
@@ -103,7 +103,7 @@ class OrderDAL:
                     price=db_order.price,
                     time=db_order.time,
                     name=db_order.name,
-                    additional_data=json.loads(db_order.additional_data.json()),
+                    additional_data=json.loads(db_order.additional_data),
                     cancel_reason=db_order.cancel_reason,
                 )
                 for db_order in db_orders
