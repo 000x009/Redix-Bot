@@ -84,7 +84,7 @@ class FeedbackDAL:
                 stars=db_feedback.stars,
                 time=db_feedback.time,
                 is_active=db_feedback.is_active,
-                images=json.loads(db_feedback.images) if db_feedback.images else None,
+                images=db_feedback.images,
             )
         return None
 
@@ -103,7 +103,7 @@ class FeedbackDAL:
                     stars=db_feedback.stars,
                     time=db_feedback.time,
                     is_active=db_feedback.is_active,
-                    images=json.loads(db_feedback.images) if db_feedback.images else None,
+                    images=db_feedback.images,
                 )
                 for db_feedback in db_feedbacks
             ]

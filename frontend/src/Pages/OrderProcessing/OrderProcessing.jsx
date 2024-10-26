@@ -448,22 +448,20 @@ const OrderForm = () => {
     <div style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '1rem', backgroundColor: 'var(--tg-theme-bg-color)', color: 'var(--tg-theme-text-color)', overflow: 'hidden', maxWidth: '100vw'}}>
       <h1 style={{fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem'}}>Оформление заказа</h1>
       <div style={{flexGrow: 1, display: 'flex', flexDirection: 'column'}}>
-        {(product.instruction_image_url || (product.instruction && product.instruction.trim() !== '')) && (
-          <div className="bg-lightgray rounded px-08 py-08" style={{ marginBottom: '1.5rem' }}>
-            {product.instruction_image_url && (
-              <img 
-                src={product.instruction_image_url} 
-                alt="Instruction" 
-                style={{width: '100%', maxHeight: '200px', objectFit: 'cover', marginBottom: '1rem'}}
-              />
-            )}
-            {product.instruction && product.instruction.trim() !== '' && (
-              <div className="word-pre" style={{ marginTop: product.instruction_image_url ? '1rem' : '0' }}>
-                {makeLinksClickable(product.instruction)}
-              </div>
-            )}
-          </div>
-        )}
+        <div className="bg-lightgray rounded px-08 py-08" style={{ marginBottom: '1.5rem' }}>
+          {product.instruction_image_url && (
+            <img 
+              src={product.instruction_image_url} 
+              alt="Instruction" 
+              style={{width: '100%', maxHeight: '200px', objectFit: 'cover', marginBottom: '1rem'}}
+            />
+          )}
+          {product.instruction && product.instruction.trim() !== '' && (
+            <div className="word-pre" style={{ marginTop: product.instruction_image_url ? '1rem' : '0' }}>
+              {makeLinksClickable(product.instruction)}
+            </div>
+          )}
+        </div>
         {renderFormFields()}
       </div>
       <MainButton text={isSubmitting ? "Обработка..." : "Продолжить"} onClick={handleSubmit} disabled={isSubmitting} />
