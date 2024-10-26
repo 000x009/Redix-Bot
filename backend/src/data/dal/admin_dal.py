@@ -3,7 +3,7 @@ from typing import Optional, List, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, delete
 
-from src.schema import Admin
+from src.schema.admin import Admin
 from src.data.models import AdminModel
 
 
