@@ -226,9 +226,8 @@ product_management_dialog = Dialog(
     ),
     Window(
         Const("Введите новую инструкцию товара"),
-        TextInput(
-            id="edit_product_instruction_text",
-            on_success=on_product_instruction,
+        MessageInput(
+            func=on_product_instruction,
         ),
         Back(Format("◀️ Назад"), on_click=back_to_product),
         state=ProductManagementSG.EDIT_PRODUCT_INSTRUCTION,
