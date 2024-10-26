@@ -8,7 +8,7 @@ from dishka import FromDishka
 
 from src.services import AdminService
 from src.bot.app.bot.states.admin import AdminManagementSG
-from .inject_wrappers import inject_on_click
+from .inject_wrappers import inject_on_click, inject_on_process_result
 from src.data.models.admin import AdminRole
 
 
@@ -35,7 +35,7 @@ async def remove_admin(
     await dialog_manager.switch_to(AdminManagementSG.ADMIN_LIST)
 
 
-@inject_on_click
+@inject_on_process_result
 async def on_new_admin_user_id(
     message: Message,
     widget: TextInput,
