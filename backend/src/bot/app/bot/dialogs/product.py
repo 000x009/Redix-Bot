@@ -149,13 +149,13 @@ product_management_dialog = Dialog(
             id='hide_category',
             text=Format("Скрыть категорию"),
             on_click=hide_category,
-            when=F['category']['is_visible']
+            when=F['category'].is_visible
         ),
         Button(
             id='show_category',
             text=Format("Показать категорию"),
             on_click=show_category,
-            when=~F['category']['is_visible']
+            when=~F['category'].is_visible
         ),
         Row(
             PrevPage(
@@ -219,13 +219,13 @@ product_management_dialog = Dialog(
             id="hide_product",
             text=Format("Скрыть товар"),
             on_click=hide_product,
-            when=F['product']['is_visible']
+            when=F['product'].is_visible
         ),
         Button(
             id="show_product",
             text=Format("Показать товар"),
             on_click=show_product,
-            when=~F['product']['is_visible']
+            when=~F['product'].is_visible
         ),
         Back(Format("◀️ Назад")),
         MessageInput(
