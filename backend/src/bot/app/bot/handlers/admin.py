@@ -10,7 +10,6 @@ from aiogram_album.album_message import AlbumMessage
 
 from dishka import FromDishka
 
-from src.bot.app.bot.filters import AdminFilter
 from src.bot.app.bot.keyboards import inline
 from src.bot.app.bot.states import MailingSG, UpdateUserSG
 from src.services import UserService, TransactionService, AdminService
@@ -18,7 +17,6 @@ from src.schema.transaction import TransactionCause, TransactionType
 
 
 router = Router()
-router.message.filter(AdminFilter())
 
 
 @router.message(Command("admin"))
@@ -28,13 +26,16 @@ async def admin_panel_handler(
     event_chat: Chat,
     admin_service: FromDishka[AdminService],
 ) -> None:
-    admin = await admin_service.get(user_id=message.from_user.id)
+    admins = await admin_service.get_all()
+    admin_ids = [admin.user_id for admin in admins]
 
-    await bot.send_message(
-        chat_id=event_chat.id,
-        text="Админ-меню",
-        reply_markup=inline.admin_menu_kb_markup(admin.permissions),
-    )
+    if message.from_user.id in admin_ids:
+        admin = await admin_service.get(user_id=message.from_user.id)
+        await bot.send_message(
+            chat_id=event_chat.id,
+            text="Админ-меню",
+            reply_markup=inline.admin_menu_kb_markup(admin.permissions),
+        )
 
 
 # MAILING HANDLERS
