@@ -21,3 +21,4 @@ class ProductManagementSG(StatesGroup):
     ADD_PRODUCT_INSTRUCTION_PHOTO = State()
     ADD_PRODUCT_PRICE = State()
     ADD_PRODUCT_PHOTO = State()
+    SET_AUTO_PURCHASE_TEXT = State()

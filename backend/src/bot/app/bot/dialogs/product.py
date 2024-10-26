@@ -1,6 +1,16 @@
 from aiogram_dialog import Window, Dialog, DialogManager
 from aiogram_dialog.widgets.input import MessageInput, TextInput
-from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Select, Back, PrevPage, CurrentPage, NextPage, Row
+from aiogram_dialog.widgets.kbd import (
+    Button,
+    ScrollingGroup,
+    Select,
+    Back,
+    PrevPage,
+    CurrentPage,
+    NextPage,
+    Row,
+    SwitchTo,
+)
 from aiogram_dialog.widgets.text import Format, Const
 from aiogram_dialog.widgets.media import DynamicMedia
 
@@ -41,6 +51,8 @@ from .handlers import (
     show_category,
     hide_product,
     show_product,
+    disable_auto_delivery,
+    on_auto_purchase_text,
 )
 
 
@@ -227,6 +239,18 @@ product_management_dialog = Dialog(
             on_click=show_product,
             when=~F['product'].is_visible
         ),
+        SwitchTo(
+            id="enable_auto_delivery",
+            text=Format("Включить автовыдачу"),
+            when=~F['product'].is_auto_purchase,
+            state=ProductManagementSG.SET_AUTO_PURCHASE_TEXT
+        ),
+        Button(
+            id="disable_auto_delivery",
+            text=Format("Выключить автовыдачу"),
+            on_click=disable_auto_delivery,
+            when=F['product'].is_auto_purchase,
+        ),
         Back(Format("◀️ Назад")),
         MessageInput(
             func=message_input_fixing
@@ -242,6 +266,19 @@ product_management_dialog = Dialog(
         ),
         Back(Format("◀️ Назад")),
         state=ProductManagementSG.EDIT_PRODUCT_NAME,
+    ),
+    Window(
+        Const("Введите текст для автовыдачи"),
+        TextInput(
+            id="set_auto_purchase_text",
+            on_success=on_auto_purchase_text,
+        ),
+        SwitchTo(
+            id="back_to_product",
+            text=Format("◀️ Назад"),
+            state=ProductManagementSG.PRODUCT
+        ),
+        state=ProductManagementSG.SET_AUTO_PURCHASE_TEXT,
     ),
     Window(
         Const("Введите новое описание товара"),

@@ -98,6 +98,31 @@ async def show_product(
 
 
 @inject_on_click
+async def disable_auto_delivery(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    product_service: FromDishka[ProductService],
+) -> None:
+    product_id = dialog_manager.dialog_data["product_id"]
+    await product_service.update_product(product_id=product_id, is_auto_purchase=False)
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
+
+
+@inject_on_click
+async def on_auto_purchase_text(
+    callback_query: CallbackQuery,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+    product_service: FromDishka[ProductService],
+) -> None:
+    product_id = dialog_manager.dialog_data["product_id"]
+    await product_service.update_product(product_id=product_id, auto_purchase_text=value, is_auto_purchase=True)
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
+
+
+@inject_on_click
 async def on_input_photo_new_category(
     message: Message,
     widget: MessageInput,
