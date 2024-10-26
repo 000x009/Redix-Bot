@@ -159,10 +159,8 @@ class ProductDAL:
             for db_product in products
         ]
 
-    async def get_purchase_count(self, days: Optional[int] = None) -> int:
+    async def get_purchase_count(self) -> int:
         query = select(func.sum(ProductModel.purchase_count))
-        if days:
-            query = query.filter(ProductModel.created_at >= func.now() - timedelta(days=days))
         result = await self.session.execute(query)
         return result.scalar_one() or 0
     

@@ -28,15 +28,9 @@ class ProductService:
         await self.__product_dal.delete(id=product_id)
 
     async def get_purchase_count(self) -> dict[str, int]:
-        today = await self.__product_dal.get_purchase_count(1)
-        week = await self.__product_dal.get_purchase_count(7)
-        month = await self.__product_dal.get_purchase_count(30)
         all_time = await self.__product_dal.get_purchase_count()
 
         return {
-            "today": today,
-            "week": week,
-            "month": month,
             "all_time": all_time
         }
     
