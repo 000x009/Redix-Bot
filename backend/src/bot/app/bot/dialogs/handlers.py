@@ -82,7 +82,7 @@ async def hide_product(
 ):
     product_id = dialog_manager.dialog_data["product_id"]
     await product_service.update_product(product_id=product_id, is_visible=False)
-    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
 
 
 @inject_on_click
@@ -94,7 +94,7 @@ async def show_product(
 ):
     product_id = dialog_manager.dialog_data["product_id"]
     await product_service.update_product(product_id=product_id, is_visible=True)
-    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
 
 
 @inject_on_click
