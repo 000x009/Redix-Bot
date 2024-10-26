@@ -34,7 +34,7 @@ async def close_dialog(_, __, dialog_manager: DialogManager, **kwargs):
     await dialog_manager.done()
 
 
-product_management_dialog = Dialog(
+admin_management_dialog = Dialog(
     Window(
         Const("Список администраторов"),
         ScrollingGroup(
