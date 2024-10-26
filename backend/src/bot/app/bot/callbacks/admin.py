@@ -322,6 +322,8 @@ async def take_order_handler(
 @router.callback_query(F.data == 'bot_statistics')
 async def bot_statistics_handler(
     query: CallbackQuery,
+    bot: Bot,
+    event_chat: Chat,
     product_service: FromDishka[ProductService],
     user_service: FromDishka[UserService],
 ) -> None:
@@ -329,7 +331,8 @@ async def bot_statistics_handler(
     total_purchase_amount = await product_service.get_total_purchase_amount()
     users_count = await user_service.get_new_users_amount()
 
-    await query.message.answer(
+    await bot.edit_message_text(
+        chat_id=event_chat.id,
         text=f"""
 <b>Статистика бота</b>
 
@@ -345,6 +348,8 @@ async def bot_statistics_handler(
 За месяц: {users_count['month']}
 За все время: {users_count['all_time']}
 """,
+        message_id=query.message.message_id,
+        reply_markup=inline.back_to_apanel_kb_markup,
     )
 
 
