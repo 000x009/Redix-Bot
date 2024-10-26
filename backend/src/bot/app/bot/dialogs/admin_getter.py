@@ -25,7 +25,7 @@ async def one_admin_getter(
     admin_service: FromDishka[AdminService],
     **kwargs
 ) -> dict:
-    admin = await admin_service.get(user_id=dialog_manager.dialog_data["admin_user_id"])
+    admin = await admin_service.get(user_id=int(dialog_manager.dialog_data["admin_user_id"]))
     dialog_manager.dialog_data["permissions"] = admin.permissions    
 
     return {
