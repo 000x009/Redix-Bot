@@ -1,15 +1,18 @@
-from typing import Sequence, Optional
-
 from aiogram.types import Message
 from aiogram.filters import BaseFilter
 
-from src.bot.app.main.config import dev_config
+from src.services import AdminService
 
 
 class AdminFilter(BaseFilter):
-    def __init__(self, admin_ids: Optional[Sequence] = None) -> None:
-        self.admin_ids = admin_ids if admin_ids else dev_config.admin.admins
+    def __init__(
+        self,
+        admin_service: AdminService,
+    ) -> None:
+        self.admin_service = admin_service
 
     async def __call__(self, message: Message) -> bool:
-        return message.from_user.id in self.admin_ids
+        admins = await self.admin_service.get_all()
+        admin_ids = [admin.user_id for admin in admins]
+        return message.from_user.id in admin_ids
     
