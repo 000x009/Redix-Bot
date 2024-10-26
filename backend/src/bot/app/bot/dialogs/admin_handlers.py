@@ -35,11 +35,12 @@ async def remove_admin(
     await dialog_manager.switch_to(AdminManagementSG.ADMIN_LIST)
 
 
-@inject_on_process_result
+@inject_on_click
 async def on_new_admin_user_id(
     message: Message,
     widget: TextInput,
     dialog_manager: DialogManager,
+    value: str,
     admin_service: FromDishka[AdminService],
 ) -> None:
     if message.text.isdigit():
