@@ -51,9 +51,9 @@ async def get_products(
     category_id: Optional[int] = None,
 ) -> List[Product] | JSONResponse:
     if category_id:
-        products = await product_service.get_products(category_id=category_id)
+        products = await product_service.get_products(category_id=category_id, is_visible=True)
     else:
-        products = await product_service.get_products()
+        products = await product_service.get_products(is_visible=True)
 
     if not products:
         return JSONResponse(
