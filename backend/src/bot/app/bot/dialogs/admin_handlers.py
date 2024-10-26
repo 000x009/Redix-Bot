@@ -70,7 +70,7 @@ async def switch_mailing_permission(
 ) -> None:
     admin_permissions = dialog_manager.dialog_data["permissions"]
     admin_permissions["mailing"] = True if admin_permissions["mailing"] is False else False
-    await admin_service.update(user_id=dialog_manager.dialog_data["admin_user_id"], permissions=admin_permissions)
+    await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
 
     await callback_query.answer("Разрешение на рассылку изменено", show_alert=True)
 
@@ -84,7 +84,7 @@ async def switch_products_permission(
 ) -> None:
     admin_permissions = dialog_manager.dialog_data["permissions"]
     admin_permissions["products"] = not admin_permissions["products"]
-    await admin_service.update(user_id=dialog_manager.dialog_data["admin_user_id"], permissions=admin_permissions)
+    await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
 
     await callback_query.answer("Разрешение на управление товарами изменено", show_alert=True)
 
@@ -98,7 +98,7 @@ async def switch_users_permission(
 ) -> None:
     admin_permissions = dialog_manager.dialog_data["permissions"]
     admin_permissions["users"] = not admin_permissions["users"]
-    await admin_service.update(user_id=dialog_manager.dialog_data["admin_user_id"], permissions=admin_permissions)
+    await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
 
     await callback_query.answer("Разрешение на управление пользователями изменено", show_alert=True)
 
@@ -112,5 +112,5 @@ async def switch_promos_permission(
 ) -> None:
     admin_permissions = dialog_manager.dialog_data["permissions"]
     admin_permissions["promos"] = not admin_permissions["promos"]
-    await admin_service.update(user_id=dialog_manager.dialog_data["admin_user_id"], permissions=admin_permissions)
+    await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
     await callback_query.answer("Разрешение на управление промокодами изменено", show_alert=True)

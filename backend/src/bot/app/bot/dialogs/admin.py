@@ -77,7 +77,7 @@ admin_management_dialog = Dialog(
         getter=admins_getter,
     ),
     Window(
-        Format("Администратор: {admin.user_id}\nРоль: {admin.role}"),
+        Format("Администратор: {admin.user_id}\nРоль: {admin.role.value}"),
         Button(
             id="mailing_permission",
             text=Format("🔴 Рассылка", when=~F['permissions']['mailing']),
