@@ -62,10 +62,10 @@ admin_management_dialog = Dialog(
                 scroll="admin_group", text=Format("▶️"),
             ),
         ),
-        Button(
+        SwitchTo(
             id='add_admin',
             text=Format("Добавить администратора"),
-            on_click=SwitchTo(AdminManagementSG.ADD_ADMIN),
+            state=AdminManagementSG.ADD_ADMIN,
         ),
         MessageInput(
             func=message_input_fixing
