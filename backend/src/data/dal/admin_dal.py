@@ -24,7 +24,7 @@ class AdminDAL:
     async def get(self, **kwargs: Optional[Any]) -> Admin:
         query = select(AdminModel).filter_by(**kwargs)
         result = await self.session.execute(query)
-        db_result = result.scalar_one_or_none()
+        db_result = result.scalar_one()
 
         return Admin(
             id=db_result.id,
