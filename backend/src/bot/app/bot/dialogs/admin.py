@@ -36,7 +36,8 @@ async def close_dialog(_, __, dialog_manager: DialogManager, **kwargs):
 
 admin_management_dialog = Dialog(
     Window(
-        Const("Список администраторов"),
+        Const("Список администраторов", when=F['admins']),
+        Const("Список администраторов пуст", when=~F['admins']),
         ScrollingGroup(
             Select(
                 id="admin_select",
@@ -49,7 +50,8 @@ admin_management_dialog = Dialog(
             height=10,
             width=2,
             hide_on_single_page=True,
-            hide_pager=True
+            hide_pager=True,
+            when=F['admins']
         ),
         Row(
             PrevPage(
@@ -61,6 +63,7 @@ admin_management_dialog = Dialog(
             NextPage(
                 scroll="admin_group", text=Format("▶️"),
             ),
+            when=F['admins']
         ),
         SwitchTo(
             id='add_admin',
