@@ -46,6 +46,10 @@ admin_menu_kb_markup = InlineKeyboardMarkup(
             InlineKeyboardButton(text="Управление товарами", callback_data="product_management"),
             InlineKeyboardButton(text="Управление пользователями", callback_data="user_management"),
         ],
+        [
+            InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management"),
+            InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics"),
+        ],
     ]
 )
 

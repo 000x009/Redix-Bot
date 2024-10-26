@@ -16,6 +16,8 @@ from src.schema.order import OrderStatus
 from src.bot.app.bot.states.product import ProductManagementSG
 from src.utils import json_text_getter
 from src.bot.app.bot.states.order import CancelOrderSG
+from src.bot.app.bot.states.admin import AdminManagementSG
+
 
 router = Router()
 router.callback_query.filter(AdminFilter)
@@ -316,3 +318,49 @@ async def take_order_handler(
     )
     await bot.delete_message(chat_id=event_chat.id, message_id=query.message.message_id)
 
+
+@router.callback_query(F.data == 'bot_statistics')
+async def bot_statistics_handler(
+    query: CallbackQuery,
+    product_service: FromDishka[ProductService],
+    user_service: FromDishka[UserService],
+) -> None:
+    purchase_count = await product_service.get_purchase_count()
+    total_purchase_amount = await product_service.get_total_purchase_amount()
+    users_count = await user_service.get_new_users_amount()
+
+    await query.message.answer(
+        text=f"""
+<b>Статистика бота</b>
+
+<b>Количество покупок:</b>
+За день: {purchase_count['today']}
+За неделю: {purchase_count['week']}
+За месяц: {purchase_count['month']}
+За все время: {purchase_count['all_time']}
+
+<b>Сумма покупок:</b>
+За день: {total_purchase_amount['today']}
+За неделю: {total_purchase_amount['week']}
+За месяц: {total_purchase_amount['month']}
+За все время: {total_purchase_amount['all_time']}
+
+<b>Количество пришедших пользователей:</b>
+За день: {users_count['today']}
+За неделю: {users_count['week']}
+За месяц: {users_count['month']}
+За все время: {users_count['all_time']}
+""",
+    )
+
+
+@router.callback_query(F.data == 'admin_management')
+async def admin_management_handler(
+    query: CallbackQuery,
+    dialog_manager: DialogManager,
+) -> None:
+    await dialog_manager.start(
+        AdminManagementSG.ADMIN_LIST,
+        mode=StartMode.RESET_STACK,
+        show_mode=ShowMode.DELETE_AND_SEND,
+    )

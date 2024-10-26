@@ -36,7 +36,6 @@ from .handlers import (
     on_category_thread_id,
     on_input_photo_new_category,
     on_category_name,
-    on_product_instruction_photo_new_product,
 )
 
 

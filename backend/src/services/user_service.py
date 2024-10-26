@@ -23,3 +23,15 @@ class UserService:
     async def exists(self, **params) -> bool:
         return await self.__user_dal.exists(**params)
     
+    async def get_new_users_amount(self) -> dict[str, int]:
+        today = await self.__user_dal.get_new_users_amount(1)
+        week = await self.__user_dal.get_new_users_amount(7)
+        month = await self.__user_dal.get_new_users_amount(30)
+        all_time = await self.__user_dal.get_new_users_amount()
+
+        return {
+            "today": today,
+            "week": week,
+            "month": month,
+            "all_time": all_time
+        }

@@ -9,6 +9,7 @@ from .bilee_service import BileeService
 from .game_service import GameService
 from .storage_client import YandexStorageClient
 from .category_service import CategoryService
+from .admin_service import AdminService
 
 
 __all__ = [
@@ -23,4 +24,5 @@ __all__ = [
     'GameService',
     'YandexStorageClient',
     'CategoryService',
+    'AdminService',
 ]

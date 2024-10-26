@@ -1,9 +1,13 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+from datetime import datetime
 
-from sqlalchemy import Integer, DECIMAL, JSON, String, BigInteger
+from sqlalchemy import Integer, DECIMAL, JSON, String, BigInteger, TIMESTAMP, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.data.models import Base
+
+if TYPE_CHECKING:
+    from src.data.models.admin import AdminModel
 
 
 class UserModel(Base):
@@ -16,7 +20,9 @@ class UserModel(Base):
     referral_code: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     nickname: Mapped[str] = mapped_column(String, nullable=True)
     profile_photo: Mapped[str] = mapped_column(String, nullable=True)
+    joined_at: Mapped[datetime] = mapped_column(TIMESTAMP, nullable=False, default=datetime.now(), server_default=func.now())
 
     transactions = relationship('TransactionModel', back_populates='user')
     orders = relationship('OrderModel', back_populates='user')
     feedbacks = relationship('FeedbackModel', back_populates='user')
+    admin: Mapped["AdminModel"] = relationship(back_populates="user")

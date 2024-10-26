@@ -1,5 +1,6 @@
 from typing import Optional, TypeAlias, List, Any
 from uuid import UUID
+from datetime import timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, exists, delete, Result, func, or_
@@ -157,3 +158,29 @@ class ProductDAL:
             )
             for db_product in products
         ]
+
+    async def get_purchase_count(self, days: Optional[int] = None) -> int:
+        if days is not None:
+            query = (
+                select(func.count()).select_from(ProductModel.purchase_count)
+                .filter(ProductModel.purchase_count > func.now() - timedelta(days=days))
+            )
+        else:
+            query = select(func.count()).select_from(ProductModel.purchase_count)
+        result = await self.session.execute(query)
+
+        return result.scalar_one_or_none() or 0
+    
+    async def get_total_purchase_amount(self, days: Optional[int] = None) -> float:
+        if days is not None:
+            query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
+                ProductModel.purchase_count > 0,
+                ProductModel.purchase_count > func.now() - timedelta(days=days)
+            )
+        else:
+            query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
+                ProductModel.purchase_count > 0
+            )
+        result = await self.session.execute(query)
+
+        return result.scalar_one_or_none() or 0.0

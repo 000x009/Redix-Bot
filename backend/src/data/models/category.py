@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import String, ForeignKey, Integer, Boolean
+from sqlalchemy import String, ForeignKey, Integer, Boolean, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.data.models import Base
@@ -19,6 +19,7 @@ class CategoryModel(Base):
     is_visible: Mapped[bool] = mapped_column(Boolean, default=True)
     thread_id: Mapped[int] = mapped_column(Integer, nullable=True)
     web_app_place: Mapped[int] = mapped_column(Integer, nullable=True, autoincrement=True)
+    required_fields: Mapped[List[str]] = mapped_column(JSON, nullable=True)
 
     game = relationship('GameModel', back_populates='categories')
     products: Mapped[List["ProductModel"]] = relationship(back_populates="category", uselist=True)

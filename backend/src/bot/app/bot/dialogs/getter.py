@@ -5,7 +5,7 @@ from aiogram import Bot
 from aiogram.types import InputFile
 from aiogram_dialog import DialogManager
 from aiogram_dialog.manager.message_manager import MessageManager
-from aiogram_dialog.api.entities import MediaAttachment, MediaId
+from aiogram_dialog.api.entities import MediaAttachment
 
 from aiogram.types import BufferedInputFile
 from aiogram.enums import ContentType

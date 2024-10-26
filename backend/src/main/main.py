@@ -23,6 +23,7 @@ from src.api.http import (
     game,
     category,
     cloud_storage,
+    admin,
 )
 from src.main.ioc import DALProvider, DatabaseProvider, ServiceProvider
 
@@ -79,6 +80,7 @@ app.include_router(payment_system.router)
 app.include_router(game.router)
 app.include_router(category.router)
 app.include_router(cloud_storage.router)
+app.include_router(admin.router)
 
 container = make_async_container(DALProvider(), DatabaseProvider(), ServiceProvider())
 setup_dishka(container, app)

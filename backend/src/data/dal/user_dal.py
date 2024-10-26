@@ -1,7 +1,8 @@
+from datetime import timedelta
 from typing import Optional, TypeAlias, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, update, select, exists, delete, Result
+from sqlalchemy import insert, update, select, exists, delete, Result, func
 
 from src.schema import User
 from src.data.models import UserModel
@@ -78,6 +79,7 @@ class UserDAL:
                 used_coupons=db_user.used_coupons,
                 nickname=db_user.nickname,
                 profile_photo=db_user.profile_photo,
+                joined_at=db_user.joined_at,
             )
 
     async def get_all(self, **kwargs) -> Optional[List[User]]:
@@ -94,6 +96,7 @@ class UserDAL:
                     used_coupons=db_user.used_coupons,
                     nickname=db_user.nickname,
                     profile_photo=db_user.profile_photo,
+                    joined_at=db_user.joined_at,
                 )
                 for db_user in db_users
             ]
@@ -102,3 +105,15 @@ class UserDAL:
         query = delete(UserModel).filter_by(**kwargs)
         await self.session.execute(query)
         await self.session.commit()
+
+    async def get_new_users_amount(self, days: Optional[int] = None) -> int:
+        if days is not None:
+            query = (
+                select(func.count()).select_from(UserModel)
+                .filter(UserModel.joined_at > func.now() - timedelta(days=days))
+            )
+        else:
+            query = select(func.count()).select_from(UserModel)
+        result = await self.session.execute(query)
+
+        return result.scalar_one_or_none() or 0

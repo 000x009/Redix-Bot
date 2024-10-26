@@ -1,5 +1,6 @@
 from typing import Mapping, Sequence, Optional, Literal
 from dataclasses import dataclass, field
+from datetime import datetime
 
 
 @dataclass(frozen=True)
@@ -11,3 +12,4 @@ class User:
     used_coupons: Optional[Mapping[Literal['coupons'], Sequence]] = field(default=None)
     nickname: Optional[str] = field(default=None)
     profile_photo: Optional[str] = field(default=None)
+    joined_at: datetime = field(default=datetime.now())
