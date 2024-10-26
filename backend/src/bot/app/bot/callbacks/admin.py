@@ -337,9 +337,6 @@ async def bot_statistics_handler(
 За все время: {purchase_count['all_time']}
 
 <b>Сумма покупок:</b>
-За день: {total_purchase_amount['today']}
-За неделю: {total_purchase_amount['week']}
-За месяц: {total_purchase_amount['month']}
 За все время: {total_purchase_amount['all_time']}
 
 <b>Количество пришедших пользователей:</b>

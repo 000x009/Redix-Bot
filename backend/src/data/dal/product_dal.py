@@ -164,16 +164,10 @@ class ProductDAL:
         result = await self.session.execute(query)
         return result.scalar_one() or 0
     
-    async def get_total_purchase_amount(self, days: Optional[int] = None) -> float:
-        if days is not None:
-            query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
-                ProductModel.purchase_count > 0,
-                ProductModel.created_at >= func.now() - timedelta(days=days)
-            )
-        else:
-            query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
-                ProductModel.purchase_count > 0
-            )
+    async def get_total_purchase_amount(self) -> float:
+        query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
+            ProductModel.purchase_count > 0
+        )
         result = await self.session.execute(query)
 
         return result.scalar_one_or_none() or 0.0
