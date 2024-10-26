@@ -30,7 +30,7 @@ async def remove_admin(
     dialog_manager: DialogManager,
     admin_service: FromDishka[AdminService],
 ) -> None:
-    await admin_service.delete(user_id=dialog_manager.dialog_data["admin_user_id"])
+    await admin_service.delete(user_id=int(dialog_manager.dialog_data["admin_user_id"]))
     await callback_query.answer("Администратор успешно удален", show_alert=True)
     await dialog_manager.switch_to(AdminManagementSG.ADMIN_LIST)
 
