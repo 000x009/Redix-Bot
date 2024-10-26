@@ -168,7 +168,7 @@ class ProductDAL:
         if days is not None:
             query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
                 ProductModel.purchase_count > 0,
-                ProductModel.purchase_count > func.now() - timedelta(days=days)
+                ProductModel.created_at >= func.now() - timedelta(days=days)
             )
         else:
             query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
