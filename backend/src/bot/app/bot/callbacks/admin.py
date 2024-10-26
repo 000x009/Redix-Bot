@@ -8,7 +8,6 @@ from dishka import FromDishka
 
 from aiogram_dialog import DialogManager, StartMode, ShowMode
 
-from src.bot.app.bot.filters import AdminFilter
 from src.bot.app.bot.keyboards import inline
 from src.bot.app.bot.states import MailingSG, UpdateUserSG
 from src.services import OrderService, ProductService, UserService, CategoryService
@@ -20,7 +19,6 @@ from src.bot.app.bot.states.admin import AdminManagementSG
 
 
 router = Router()
-router.callback_query.filter(AdminFilter)
 
 
 @router.callback_query(F.data == 'back_apanel')

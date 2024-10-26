@@ -9,10 +9,8 @@ from dishka import FromDishka
 from src.bot.app.bot.keyboards import inline
 from src.bot.app.bot.states import CreatePromoSG, EditPromoSG, DeletePromoSG, InfoPromoSG
 from src.services import PromoService
-from src.bot.app.bot.filters import AdminFilter
 
 router = Router()
-router.message.filter(AdminFilter())
 
 
 #CREATE PROMO HANDLERS
