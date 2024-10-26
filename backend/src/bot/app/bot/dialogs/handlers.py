@@ -57,7 +57,7 @@ async def hide_category(
     category_service: FromDishka[CategoryService],
 ):
     category_id = dialog_manager.dialog_data["category_id"]
-    await category_service.update_category(category_id=category_id, is_visible=False)
+    await category_service.update_category(category_id=int(category_id), is_visible=False)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -69,7 +69,7 @@ async def show_category(
     category_service: FromDishka[CategoryService],
 ):
     category_id = dialog_manager.dialog_data["category_id"]
-    await category_service.update_category(category_id=category_id, is_visible=True)
+    await category_service.update_category(category_id=int(category_id), is_visible=True)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
