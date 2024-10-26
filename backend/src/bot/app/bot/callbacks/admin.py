@@ -10,7 +10,7 @@ from aiogram_dialog import DialogManager, StartMode, ShowMode
 
 from src.bot.app.bot.keyboards import inline
 from src.bot.app.bot.states import MailingSG, UpdateUserSG
-from src.services import OrderService, ProductService, UserService, CategoryService
+from src.services import OrderService, ProductService, UserService, CategoryService, AdminService
 from src.schema.order import OrderStatus
 from src.bot.app.bot.states.product import ProductManagementSG
 from src.utils import json_text_getter
@@ -26,12 +26,14 @@ async def admin_panel_handler(
     query: CallbackQuery,
     bot: Bot,
     event_chat: Chat,
+    admin_service: FromDishka[AdminService],
 ) -> None:
+    admin = await admin_service.get(user_id=query.from_user.id)
     await bot.edit_message_text(
         message_id=query.message.message_id,
         chat_id=event_chat.id,
         text="Админ-меню",
-        reply_markup=inline.admin_menu_kb_markup,
+        reply_markup=inline.admin_menu_kb_markup(admin.permissions),
     )
 
 
