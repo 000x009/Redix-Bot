@@ -50,6 +50,54 @@ async def on_category_name(
 
 
 @inject_on_click
+async def hide_category(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    category_service: FromDishka[CategoryService],
+):
+    category_id = dialog_manager.dialog_data["category_id"]
+    await category_service.update_category(category_id=category_id, is_visible=False)
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
+async def show_category(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    category_service: FromDishka[CategoryService],
+):
+    category_id = dialog_manager.dialog_data["category_id"]
+    await category_service.update_category(category_id=category_id, is_visible=True)
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
+async def hide_product(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    product_service: FromDishka[ProductService],
+):
+    product_id = dialog_manager.dialog_data["product_id"]
+    await product_service.update_product(product_id=product_id, is_visible=False)
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
+async def show_product(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    product_service: FromDishka[ProductService],
+):
+    product_id = dialog_manager.dialog_data["product_id"]
+    await product_service.update_product(product_id=product_id, is_visible=True)
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
 async def on_input_photo_new_category(
     message: Message,
     widget: MessageInput,

@@ -4,6 +4,7 @@ from aiogram_dialog.widgets.kbd import Button, ScrollingGroup, Select, Back, Pre
 from aiogram_dialog.widgets.text import Format, Const
 from aiogram_dialog.widgets.media import DynamicMedia
 
+from aiogram import F
 from aiogram.enums.content_type import ContentType
 
 from src.bot.app.bot.states.product import ProductManagementSG
@@ -36,6 +37,10 @@ from .handlers import (
     on_category_thread_id,
     on_input_photo_new_category,
     on_category_name,
+    hide_category,
+    show_category,
+    hide_product,
+    show_product,
 )
 
 
@@ -140,6 +145,18 @@ product_management_dialog = Dialog(
             text=Format("Добавить товар"),
             on_click=add_product,
         ),
+        Button(
+            id='hide_category',
+            text=Format("Скрыть категорию"),
+            on_click=hide_category,
+            when=F['category']['is_visible']
+        ),
+        Button(
+            id='show_category',
+            text=Format("Показать категорию"),
+            on_click=show_category,
+            when=~F['category']['is_visible']
+        ),
         Row(
             PrevPage(
                 scroll="product_group", text=Format("◀️"),
@@ -197,6 +214,18 @@ product_management_dialog = Dialog(
             id="delete_product",
             text=Format("🗑️ Удалить товар"),
             on_click=delete_product,
+        ),
+        Button(
+            id="hide_product",
+            text=Format("Скрыть товар"),
+            on_click=hide_product,
+            when=F['product']['is_visible']
+        ),
+        Button(
+            id="show_product",
+            text=Format("Показать товар"),
+            on_click=show_product,
+            when=~F['product']['is_visible']
         ),
         Back(Format("◀️ Назад")),
         MessageInput(

@@ -17,3 +17,6 @@ class CategoryService:
     
     async def add_category(self, **params) -> None:
         await self.__category_dal.add(**params)
+    
+    async def update_category(self, category_id: int, **params) -> None:
+        await self.__category_dal.update(category_id=category_id, **params)

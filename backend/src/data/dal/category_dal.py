@@ -19,8 +19,8 @@ class CategoryDAL:
         await self.session.execute(query)
         await self.session.commit()
 
-    async def update(self, id: int, **kwargs) -> None:
-        query = update(CategoryModel).where(CategoryModel.id == id).values(**kwargs)
+    async def update(self, category_id: int, **kwargs) -> None:
+        query = update(CategoryModel).where(CategoryModel.id == category_id).values(**kwargs)
         await self.session.execute(query)
         await self.session.commit()
 

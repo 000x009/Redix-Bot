@@ -26,6 +26,7 @@ class ProductModel(Base):
     auto_purchase_text: Mapped[str] = mapped_column(String, nullable=True)
     is_manual: Mapped[bool] = mapped_column(Boolean, default=False)
     instruction_image_url: Mapped[str] = mapped_column(String, nullable=True)
+    is_visible: Mapped[bool] = mapped_column(Boolean, default=True)
 
     orders = relationship('OrderModel', back_populates='product')
     feedbacks = relationship('FeedbackModel', back_populates='product')
