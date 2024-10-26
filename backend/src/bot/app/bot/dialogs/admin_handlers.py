@@ -1,7 +1,8 @@
 from aiogram.types import CallbackQuery, Message
 from aiogram_dialog import DialogManager
 from aiogram_dialog.api.entities import ShowMode
-from aiogram_dialog.widgets.kbd import Select, Button, TextInput
+from aiogram_dialog.widgets.kbd import Select, Button
+from aiogram_dialog.widgets.input import TextInput
 
 from dishka import FromDishka
 
