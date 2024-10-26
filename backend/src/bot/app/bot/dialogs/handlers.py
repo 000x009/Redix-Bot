@@ -218,18 +218,26 @@ async def on_product_description(
 
 @inject_on_click
 async def on_product_instruction(
-    callback_query: CallbackQuery,
-    widget: TextInput,
+    message: Message,
+    widget: MessageInput,
     dialog_manager: DialogManager,
-    value: str,
     product_service: FromDishka[ProductService],
+    yandex_storage_client: FromDishka[YandexStorageClient],
 ):  
+    bot = dialog_manager.middleware_data.get("bot")
+    instruction_image_url = None
+    if message.photo:
+        instruction_file = await bot.get_file(message.photo[-1].file_id)
+        instruction_photo_bytes = await bot.download_file(instruction_file.file_path)
+        instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
     await product_service.update_product(
         product_id=dialog_manager.dialog_data["product_id"],
-        instruction=value,
+        instruction=message.caption if message.caption else message.text,
+        instruction_image_url=instruction_image_url,
     )
     await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
-    await callback_query.answer("Инструкция товара успешно изменена", show_alert=True)
+    await message.delete()
+    await message.answer("Инструкция товара успешно изменена", show_alert=True)
 
 
 @inject_on_click
@@ -295,7 +303,7 @@ async def on_product_instruction_new_product(
     dialog_manager: DialogManager,
 ):
     dialog_manager.dialog_data["product_instruction_photo"] = message.photo[-1].file_id
-    dialog_manager.dialog_data["product_instruction"] = message.text
+    dialog_manager.dialog_data["product_instruction"] = message.caption if message.caption else message.text
     await dialog_manager.switch_to(ProductManagementSG.ADD_PRODUCT_PRICE)
 
 
@@ -337,10 +345,12 @@ async def on_input_photo_new_product(
         "3": "Clash Royale",
         "4": "Hay Day",
     }
-    product_instruction_photo_file_id = dialog_manager.dialog_data["product_instruction_photo"]
-    instruction_file = await bot.get_file(product_instruction_photo_file_id)
-    instruction_photo_bytes = await bot.download_file(instruction_file.file_path)
-    instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
+    product_instruction_photo_file_id = dialog_manager.dialog_data.get("product_instruction_photo")
+    instruction_image_url = None
+    if product_instruction_photo_file_id:
+        instruction_file = await bot.get_file(product_instruction_photo_file_id)
+        instruction_photo_bytes = await bot.download_file(instruction_file.file_path)
+        instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
     image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
     await product_service.create_product(
         id=uuid.uuid4(),
