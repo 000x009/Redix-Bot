@@ -17,6 +17,7 @@ from src.services import (
     GameService,
     CategoryService,
     YandexStorageClient,
+    AdminService,
 )
 from src.data.dal import (
     UserDAL,
@@ -27,6 +28,7 @@ from src.data.dal import (
     FeedbackDAL,
     GameDAL,
     CategoryDAL,
+    AdminDAL,
 )
 
 
@@ -57,6 +59,7 @@ class DALProvider(Provider):
     feedback_dal = provide(FeedbackDAL, scope=Scope.REQUEST, provides=FeedbackDAL)
     game_dal = provide(GameDAL, scope=Scope.REQUEST, provides=GameDAL)
     category_dal = provide(CategoryDAL, scope=Scope.REQUEST, provides=CategoryDAL)
+    admin_dal = provide(AdminDAL, scope=Scope.REQUEST, provides=AdminDAL)
 
 class ServiceProvider(Provider):
     user_service = provide(UserService, scope=Scope.REQUEST, provides=UserService)
@@ -69,7 +72,8 @@ class ServiceProvider(Provider):
     bilee_service = provide(BileeService, scope=Scope.REQUEST, provides=BileeService)
     game_service = provide(GameService, scope=Scope.REQUEST, provides=GameService)
     category_service = provide(CategoryService, scope=Scope.REQUEST, provides=CategoryService)
-    
+    admin_service = provide(AdminService, scope=Scope.REQUEST, provides=AdminService)
+
     @provide(scope=Scope.REQUEST, provides=YandexStorageClient)
     def get_yandex_storage_client(self) -> YandexStorageClient:
         return YandexStorageClient(settings.YANDEX_STORAGE_TOKEN, settings.YANDEX_STORAGE_SECRET, settings.YANDEX_STORAGE_BUCKET_NAME)
