@@ -42,7 +42,7 @@ admin_management_dialog = Dialog(
             Select(
                 id="admin_select",
                 items="admins",
-                item_id_getter=lambda item: item.id,
+                item_id_getter=lambda item: item.user_id,
                 text=Format("{item.user_id}"),
                 on_click=selected_admin,
             ),

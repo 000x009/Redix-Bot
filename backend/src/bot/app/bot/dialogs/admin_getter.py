@@ -26,7 +26,6 @@ async def one_admin_getter(
     **kwargs
 ) -> dict:
     admin_user_id = dialog_manager.dialog_data["admin_user_id"]
-    print("ADMIN USER ID", admin_user_id, flush=True)
     admin = await admin_service.get(user_id=int(admin_user_id))
     dialog_manager.dialog_data["permissions"] = admin.permissions    
 
