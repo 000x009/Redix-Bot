@@ -13,7 +13,7 @@ from dishka import FromDishka
 from src.bot.app.bot.filters import AdminFilter
 from src.bot.app.bot.keyboards import inline
 from src.bot.app.bot.states import MailingSG, UpdateUserSG
-from src.services import UserService, TransactionService
+from src.services import UserService, TransactionService, AdminService
 from src.schema.transaction import TransactionCause, TransactionType
 
 
@@ -26,11 +26,14 @@ async def admin_panel_handler(
     message: Message,
     bot: Bot,
     event_chat: Chat,
+    admin_service: FromDishka[AdminService],
 ) -> None:
+    admin = await admin_service.get(user_id=message.from_user.id)
+
     await bot.send_message(
         chat_id=event_chat.id,
         text="Админ-меню",
-        reply_markup=inline.admin_menu_kb_markup,
+        reply_markup=inline.admin_menu_kb_markup(admin.permissions),
     )
 
 

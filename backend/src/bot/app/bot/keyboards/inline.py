@@ -36,22 +36,22 @@ back_to_main_menu_markup = InlineKeyboardMarkup(
 )
 
 
-admin_menu_kb_markup = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(text="Рассылка", callback_data="admin_mailing"),
-            InlineKeyboardButton(text="Промокоды", callback_data="admin_promo"),
-        ],
-        [
-            InlineKeyboardButton(text="Управление товарами", callback_data="product_management"),
-            InlineKeyboardButton(text="Управление пользователями", callback_data="user_management"),
-        ],
-        [
-            InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management"),
-            InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics"),
-        ],
-    ]
-)
+def admin_menu_kb_markup(admin_permissions: dict[str, bool]) -> InlineKeyboardMarkup:
+    keyboard = []
+    if admin_permissions["mailing"]:
+        keyboard.append([InlineKeyboardButton(text="Рассылка", callback_data="admin_mailing")])
+    if admin_permissions["promos"]:
+        keyboard.append([InlineKeyboardButton(text="Промокоды", callback_data="admin_promo")])
+    if admin_permissions["products"]:
+        keyboard.append([InlineKeyboardButton(text="Управление товарами", callback_data="product_management")])
+    if admin_permissions["users"]:
+        keyboard.append([InlineKeyboardButton(text="Управление пользователями", callback_data="user_management")])
+    if admin_permissions["admins"]:
+        keyboard.append([InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management")])
+    if admin_permissions["statistics"]:
+        keyboard.append([InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics")])
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 
 back_to_apanel_kb_markup = InlineKeyboardMarkup(

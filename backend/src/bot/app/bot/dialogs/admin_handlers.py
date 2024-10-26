@@ -49,6 +49,8 @@ async def on_new_admin_user_id(
             "promos": True,
             "products": True,
             "users": True,
+            "admins": True,
+            "statistics": True,
         }
         await admin_service.add(
             user_id=int(message.text),
@@ -73,6 +75,30 @@ async def switch_mailing_permission(
     await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
 
     await callback_query.answer("Разрешение на рассылку изменено", show_alert=True)
+
+
+@inject_on_click
+async def switch_statistics_permission(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    admin_service: FromDishka[AdminService],
+) -> None:
+    admin_permissions = dialog_manager.dialog_data["permissions"]
+    admin_permissions["statistics"] = True if admin_permissions["statistics"] is False else False
+    await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
+
+
+@inject_on_click
+async def switch_admins_permission(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    admin_service: FromDishka[AdminService],
+) -> None:
+    admin_permissions = dialog_manager.dialog_data["permissions"]
+    admin_permissions["admins"] = True if admin_permissions["admins"] is False else False
+    await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
 
 
 @inject_on_click

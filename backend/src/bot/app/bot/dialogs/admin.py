@@ -25,6 +25,8 @@ from .admin_handlers import (
     switch_products_permission,
     switch_users_permission,
     switch_promos_permission,
+    switch_statistics_permission,
+    switch_admins_permission,
 )
 from .admin_getter import admins_getter, one_admin_getter
 
@@ -117,6 +119,26 @@ admin_management_dialog = Dialog(
             id="promos_permission",
             text=Format("🟢 Управление промокодами", when=F['permissions']['promos']),
             on_click=switch_promos_permission,
+        ),
+        Button(
+            id="statistics_permission",
+            text=Format("🔴 Управление статистикой", when=~F['permissions']['statistics']),
+            on_click=switch_statistics_permission,
+        ),
+        Button(
+            id="statistics_permission",
+            text=Format("🟢 Управление статистикой", when=F['permissions']['statistics']),
+            on_click=switch_statistics_permission,
+        ),
+        Button(
+            id="admins_permission",
+            text=Format("🔴 Управление администраторами", when=~F['permissions']['admins']),
+            on_click=switch_admins_permission,
+        ),
+        Button(
+            id="admins_permission",
+            text=Format("🟢 Управление администраторами", when=F['permissions']['admins']),
+            on_click=switch_admins_permission,
         ),
         Button(
             id='remove_admin',
