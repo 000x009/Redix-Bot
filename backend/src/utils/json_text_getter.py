@@ -3,15 +3,8 @@ import os
 import uuid
 from typing import Optional
 
-from src.api.schema.order import (
-    CreateOrderDTO,
-    SupercellData,
-    RobloxData,
-    BaseAdditionalData,
-    PubgData,
-    StumbleGuysData,
-)
-from src.schema import Product, Category
+from src.api.schema.order import CreateOrderDTO
+from src.schema import Product
 
 
 def get_json_text(key: str) -> Optional[str]:
