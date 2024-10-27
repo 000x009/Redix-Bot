@@ -53,6 +53,8 @@ from .handlers import (
     show_product,
     disable_auto_delivery,
     on_auto_purchase_text,
+    disable_purchase_limit,
+    on_set_purchase_limit,
 )
 
 
@@ -245,6 +247,18 @@ product_management_dialog = Dialog(
             when=~F['product'].is_auto_purchase,
             state=ProductManagementSG.SET_AUTO_PURCHASE_TEXT
         ),
+        SwitchTo(
+            id="purchase_limit_on",
+            text=Format("Включить ограничение на количество покупок"),
+            when=~F['product'].purchase_limit,
+            state=ProductManagementSG.SET_PURCHASE_LIMIT
+        ),
+        Button(
+            id="purchase_limit_off",
+            text=Format("Выключить ограничение на количество покупок"),
+            on_click=disable_purchase_limit,
+            when=F['product'].purchase_limit,
+        ),
         Button(
             id="disable_auto_delivery",
             text=Format("Выключить автовыдачу"),
@@ -266,6 +280,19 @@ product_management_dialog = Dialog(
         ),
         Back(Format("◀️ Назад")),
         state=ProductManagementSG.EDIT_PRODUCT_NAME,
+    ),
+    Window(
+        Const("Введите ограничение на количество покупок (число)"),
+        TextInput(
+            id="set_purchase_limit_text",
+            on_success=on_set_purchase_limit,
+            type=int,
+        ),
+        SwitchTo(
+            id="back_to_product",
+            text=Format("◀️ Назад"),
+            state=ProductManagementSG.PRODUCT
+        ),
     ),
     Window(
         Const("Введите текст для автовыдачи"),

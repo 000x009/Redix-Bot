@@ -123,6 +123,30 @@ async def on_auto_purchase_text(
 
 
 @inject_on_click
+async def disable_purchase_limit(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    product_service: FromDishka[ProductService],
+) -> None:
+    product_id = dialog_manager.dialog_data["product_id"]
+    await product_service.update_product(product_id=product_id, purchase_limit=None)
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
+
+
+@inject_on_click
+async def on_set_purchase_limit(
+    callback_query: CallbackQuery,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+    product_service: FromDishka[ProductService],
+) -> None:
+    await product_service.update_product(product_id=dialog_manager.dialog_data["product_id"], purchase_limit=int(value))
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
+
+
+@inject_on_click
 async def on_input_photo_new_category(
     message: Message,
     widget: MessageInput,
