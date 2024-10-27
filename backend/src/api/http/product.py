@@ -126,6 +126,11 @@ async def purchase_product(
 
     try:
         bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+        if product.is_auto_purchase:
+            await bot.send_message(
+                chat_id=user_data.user.id,
+                text=f'Текст Авто-выдачи:\n\n{product.auto_purchase_text}',
+            )
         await bot.send_message(
             chat_id=game.supergroup_id,
             text=json_text_getter.get_order_info_text(

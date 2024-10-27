@@ -21,3 +21,4 @@ class Product:
     auto_purchase_text: str = field(default=None)
     instruction_image_url: str = field(default=None)
     is_visible: bool = field(default=True)
+    auto_purchase_image_url: str = field(default=None)

@@ -23,6 +23,7 @@ class ProductModel(Base):
     image_url: Mapped[str] = mapped_column(String, nullable=True)
     purchase_limit: Mapped[int] = mapped_column(Integer, nullable=True)
     is_auto_purchase: Mapped[bool] = mapped_column(Boolean, default=False)
+    auto_purchase_image_url: Mapped[str] = mapped_column(String, nullable=True)
     auto_purchase_text: Mapped[str] = mapped_column(String, nullable=True)
     is_manual: Mapped[bool] = mapped_column(Boolean, default=False)
     instruction_image_url: Mapped[str] = mapped_column(String, nullable=True)

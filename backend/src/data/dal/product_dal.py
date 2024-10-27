@@ -1,6 +1,5 @@
 from typing import Optional, TypeAlias, List, Any
 from uuid import UUID
-from datetime import timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, exists, delete, Result, func, or_
@@ -92,6 +91,7 @@ class ProductDAL:
                 auto_purchase_text=db_product.auto_purchase_text,
                 instruction_image_url=db_product.instruction_image_url,
                 is_visible=db_product.is_visible,
+                auto_purchase_image_url=db_product.auto_purchase_image_url,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Product]]:
@@ -117,6 +117,7 @@ class ProductDAL:
                     auto_purchase_text=db_product.auto_purchase_text,
                     instruction_image_url=db_product.instruction_image_url,
                     is_visible=db_product.is_visible,
+                    auto_purchase_image_url=db_product.auto_purchase_image_url,
                 )
                 for db_product in db_products
             ]
@@ -158,6 +159,7 @@ class ProductDAL:
                 image_url=db_product.image_url,
                 instruction_image_url=db_product.instruction_image_url,
                 is_visible=db_product.is_visible,
+                auto_purchase_image_url=db_product.auto_purchase_image_url,
             )
             for db_product in products
         ]
