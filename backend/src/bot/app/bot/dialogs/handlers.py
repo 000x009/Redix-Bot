@@ -68,7 +68,7 @@ async def on_edit_category_required_fields(
     category_service: FromDishka[CategoryService],
 ) -> None:
     required_fields = value.replace(" ", "").split(",")
-    await category_service.update_category(category_id=dialog_manager.dialog_data["category_id"], required_fields=required_fields)
+    await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), required_fields=required_fields)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
