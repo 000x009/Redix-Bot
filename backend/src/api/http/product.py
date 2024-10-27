@@ -114,7 +114,7 @@ async def purchase_product(
         product_id=order_data.product_id,
         name=product.name,
         price=product.price,
-        additional_data=order_data.additional_data.model_dump_json(),
+        additional_data=order_data.additional_data,
     )
     await user_service.update_user(user_id=user.user_id, balance=user.balance - product.price)
     await transaction_service.add_transaction(
