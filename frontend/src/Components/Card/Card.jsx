@@ -15,7 +15,7 @@ function Card({item}) {
         <div className="card__title">
             <h4>
                 {item.name}
-                {item.purchase_limit && ` (${item.purchase_count}/${item.purchase_limit})`}
+                {item.purchase_limit && ` (Осталось в наличии: ${item.purchase_limit - item.purchase_count})`}
             </h4>
             <h4>{item.price} ₽</h4>
         </div>
