@@ -55,6 +55,8 @@ from .handlers import (
     on_auto_purchase_text,
     disable_purchase_limit,
     on_set_purchase_limit,
+    on_category_required_fields,
+    on_edit_category_required_fields,
 )
 
 
@@ -170,6 +172,11 @@ product_management_dialog = Dialog(
             text=Format("Показать категорию"),
             on_click=show_category,
             when=~F['category'].is_visible
+        ),
+        SwitchTo(
+            id='edit_category',
+            text=Format("Изменить обязательные поля"),
+            state=ProductManagementSG.EDIT_CATEGORY_REQUIRED_FIELDS,
         ),
         Row(
             PrevPage(
@@ -385,6 +392,14 @@ product_management_dialog = Dialog(
         state=ProductManagementSG.ADD_CATEGORY_NAME,
     ),
     Window(
+        Const("Введите обязательные поля для заполнения одним сообщением через запятую"),
+        TextInput(
+            id="add_category_required_fields_text",
+            on_success=on_category_required_fields,
+        ),
+        state=ProductManagementSG.ADD_CATEGORY_REQUIRED_FIELDS,
+    ),
+    Window(
         Const("Отправьте фото новой категории"),
         MessageInput(on_input_photo_new_category, content_types=[ContentType.PHOTO]),
         state=ProductManagementSG.ADD_CATEGORY_PHOTO,
@@ -396,6 +411,14 @@ product_management_dialog = Dialog(
             on_success=on_category_thread_id,
         ),
         state=ProductManagementSG.ADD_CATEGORY_THREAD_ID,
+    ),
+    Window(
+        Const("Введите новые обязательные поля для заполнения одним сообщением через запятую"),
+        TextInput(
+            id="edit_category_required_fields_text",
+            on_success=on_edit_category_required_fields,
+        ),
+        state=ProductManagementSG.EDIT_CATEGORY_REQUIRED_FIELDS,
     ),
     on_process_result=close_dialog,
 )

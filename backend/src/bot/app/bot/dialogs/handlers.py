@@ -46,7 +46,30 @@ async def on_category_name(
     value: str,
 ):
     dialog_manager.dialog_data["category_name"] = value
+    await dialog_manager.switch_to(ProductManagementSG.ADD_CATEGORY_REQUIRED_FIELDS)
+
+
+async def on_category_required_fields(
+    message: Message,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+) -> None:
+    dialog_manager.dialog_data["category_required_fields"] = value.replace(" ", "").split(",")
     await dialog_manager.switch_to(ProductManagementSG.ADD_CATEGORY_PHOTO)
+
+
+@inject_on_click
+async def on_edit_category_required_fields(
+    message: Message,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+    category_service: FromDishka[CategoryService],
+) -> None:
+    required_fields = value.replace(" ", "").split(",")
+    await category_service.update_category(category_id=dialog_manager.dialog_data["category_id"], required_fields=required_fields)
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
 @inject_on_click
@@ -183,6 +206,7 @@ async def on_category_thread_id(
         is_visible=True,
         image=dialog_manager.dialog_data["category_photo"],
         thread_id=int(dialog_manager.dialog_data["category_thread_id"]),
+        required_fields=dialog_manager.dialog_data["category_required_fields"],
     )
     await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
 

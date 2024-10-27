@@ -1,13 +1,11 @@
-from typing import Optional, TypeAlias, List, Any
+import json
+from typing import Optional, List, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert, update, select, exists, delete, Result
+from sqlalchemy import insert, update, select, delete
 
 from src.schema import Category
 from src.data.models import CategoryModel
-
-
-_CategoryResult: TypeAlias = Result[tuple[CategoryModel]]
 
 
 class CategoryDAL:
@@ -36,7 +34,8 @@ class CategoryDAL:
             image=db_result.image,
             is_visible=db_result.is_visible,
             thread_id=db_result.thread_id,
-            web_app_place=db_result.web_app_place
+            web_app_place=db_result.web_app_place,
+            required_fields=db_result.required_fields,
         )
 
     async def get_all(self, **kwargs: Optional[Any]) -> List[Category]:
@@ -55,7 +54,8 @@ class CategoryDAL:
                 image=result.image,
                 is_visible=result.is_visible,
                 thread_id=result.thread_id,
-                web_app_place=result.web_app_place
+                web_app_place=result.web_app_place,
+                required_fields=result.required_fields,
             )
             for result in results
         ]

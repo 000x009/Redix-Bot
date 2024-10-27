@@ -142,18 +142,19 @@ async def purchase_product(
                     chat_id=user_data.user.id,
                     text=f'Текст Авто-выдачи:\n\n{product.auto_purchase_text}',
                 )
-        await bot.send_message(
-            chat_id=game.supergroup_id,
-            text=json_text_getter.get_order_info_text(
-                user_id=user.user_id,
-                order_id=order_id,
-                order_data=order_data,
-                product=product,
-                category=category.name,
-            ),
-            message_thread_id=category.thread_id,
-            reply_markup=inline.take_order_kb_markup(order_id=order_id)
-        )
+        else:
+            await bot.send_message(
+                chat_id=game.supergroup_id,
+                text=json_text_getter.get_order_info_text(
+                    user_id=user.user_id,
+                    order_id=order_id,
+                    order_data=order_data,
+                    product=product,
+                    category=category.name,
+                ),
+                message_thread_id=category.thread_id,
+                reply_markup=inline.take_order_kb_markup(order_id=order_id)
+            )
     except Exception as e:
         print(e)
     finally:
