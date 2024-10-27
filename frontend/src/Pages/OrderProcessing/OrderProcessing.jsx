@@ -65,14 +65,14 @@ const OrderForm = () => {
   }, [id]);
 
   const handleEmailSubmit = () => {
-    if (!formFields.email || !formFields.email.trim()) {
-      setEmailError('Пожалуйста, заполните поле email');
+    if (!formFields.почта || !formFields.почта.trim()) {
+      setEmailError('Пожалуйста, заполните данное поле');
       setCodeSuccess('');
       return;
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(formFields.email)) {
+    if (!emailPattern.test(formFields.почта)) {
       setEmailError('Такой почты не существует');
       setCodeSuccess('');
     } else {
