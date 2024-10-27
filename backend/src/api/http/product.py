@@ -9,13 +9,14 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import DishkaRoute
 
 from aiogram import Bot
+from aiogram.types import BufferedInputFile
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.utils.web_app import WebAppInitData
 
 from src.api.http.exceptions.user import MethodNotAllowedError
 from src.schema import Product
-from src.services import ProductService, UserService, OrderService, TransactionService, GameService, CategoryService
+from src.services import ProductService, UserService, OrderService, TransactionService, GameService, CategoryService, YandexStorageClient
 from src.api.schema.order import CreateOrderDTO
 from src.api.schema.product import CreateProduct
 from src.main.config import settings
@@ -84,6 +85,7 @@ async def purchase_product(
     transaction_service: FromDishka[TransactionService],
     game_service: FromDishka[GameService],
     category_service: FromDishka[CategoryService],
+    yandex_storage_client: FromDishka[YandexStorageClient],
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
     user = await user_service.get_one_user(user_id=user_data.user.id)
@@ -127,10 +129,19 @@ async def purchase_product(
     try:
         bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
         if product.is_auto_purchase:
-            await bot.send_message(
-                chat_id=user_data.user.id,
-                text=f'Текст Авто-выдачи:\n\n{product.auto_purchase_text}',
-            )
+            if product.auto_purchase_image_url:
+                auto_purchase_image_bytes = yandex_storage_client.get_file(product.auto_purchase_image_url)
+                photo = BufferedInputFile(auto_purchase_image_bytes, filename=f"auto_purchase_image_{uuid.uuid4()}.jpg")
+                await bot.send_photo(
+                    chat_id=user_data.user.id,
+                    caption=f'Текст Авто-выдачи:\n\n{product.auto_purchase_text}',
+                    photo=photo,
+                )
+            else:
+                await bot.send_message(
+                    chat_id=user_data.user.id,
+                    text=f'Текст Авто-выдачи:\n\n{product.auto_purchase_text}',
+                )
         await bot.send_message(
             chat_id=game.supergroup_id,
             text=json_text_getter.get_order_info_text(
