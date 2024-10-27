@@ -293,6 +293,7 @@ product_management_dialog = Dialog(
             text=Format("◀️ Назад"),
             state=ProductManagementSG.PRODUCT
         ),
+        state=ProductManagementSG.SET_PURCHASE_LIMIT,
     ),
     Window(
         Const("Введите текст для автовыдачи"),
