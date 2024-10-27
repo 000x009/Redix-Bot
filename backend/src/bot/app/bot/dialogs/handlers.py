@@ -112,9 +112,8 @@ async def disable_auto_delivery(
 @inject_on_click
 async def on_auto_purchase_text(
     message: Message,
-    widget: TextInput,
+    widget: MessageInput,
     dialog_manager: DialogManager,
-    value: str,
     product_service: FromDishka[ProductService],
     yandex_storage_client: FromDishka[YandexStorageClient],
 ) -> None:
@@ -125,7 +124,7 @@ async def on_auto_purchase_text(
         auto_purchase_file = await bot.get_file(message.photo[-1].file_id)
         auto_purchase_image_bytes = await bot.download_file(auto_purchase_file.file_path)
         auto_purchase_image_url = await yandex_storage_client.upload_file(auto_purchase_image_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
-    await product_service.update_product(product_id=product_id, auto_purchase_text=value, is_auto_purchase=True, auto_purchase_image_url=auto_purchase_image_url)
+    await product_service.update_product(product_id=product_id, auto_purchase_text=message.caption if message.caption else message.text, is_auto_purchase=True, auto_purchase_image_url=auto_purchase_image_url)
     await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
 
 

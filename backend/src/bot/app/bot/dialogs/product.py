@@ -297,9 +297,8 @@ product_management_dialog = Dialog(
     ),
     Window(
         Const("Введите текст для автовыдачи"),
-        TextInput(
-            id="set_auto_purchase_text",
-            on_success=on_auto_purchase_text,
+        MessageInput(
+            func=on_auto_purchase_text,
         ),
         SwitchTo(
             id="back_to_product",
