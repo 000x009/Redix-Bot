@@ -32,6 +32,6 @@ def get_order_info_text(
 
     additional_data_text = ""
     for key, value in order_data.additional_data.items():
-        additional_data_text += f"\n\n<b>{key}</b>: <code>{value}</code>"
+        additional_data_text += f"<b>{key}</b>: <code>{value}</code>"
 
     return order_text + additional_data_text

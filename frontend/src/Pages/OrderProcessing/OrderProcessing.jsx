@@ -140,15 +140,15 @@ const OrderForm = () => {
       let label = field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ');
       let placeholder = `Введите ${label.toLowerCase()}`;
 
-      if (field === 'email') {
+      if (field === 'почта') {
         label = 'Почта';
-        placeholder = 'Введите email';
-      } else if (field === 'password') {
+        placeholder = 'Введите почту';
+      } else if (field === 'пароль') {
         label = 'Пароль';
         placeholder = 'Введите пароль';
       }
 
-      if (field === 'email') {
+      if (field === 'почта') {
         return ( 
           <div key={field} style={{marginBottom: '1rem'}}>
             <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
@@ -180,7 +180,7 @@ const OrderForm = () => {
             {codeSuccess && <p style={{color: '#10b981', fontSize: '0.875rem', marginTop: '0.25rem'}}>{codeSuccess}</p>}
           </div>
         );
-      } else if (field === 'password') {
+      } else if (field === 'пароль') {
         return (
           <div key={field} style={{marginBottom: '1rem'}}>
             <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
