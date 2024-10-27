@@ -11,8 +11,8 @@ class ProductModel(Base):
     __tablename__ = "product"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
-    game_id: Mapped[int] = mapped_column(Integer, ForeignKey('game.id'), nullable=True)
-    category_id: Mapped[int] = mapped_column(Integer, ForeignKey('category.id'), nullable=True)
+    game_id: Mapped[int] = mapped_column(Integer, ForeignKey('game.id', ondelete='CASCADE'), nullable=True)
+    category_id: Mapped[int] = mapped_column(Integer, ForeignKey('category.id', ondelete='CASCADE'), nullable=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=False)
     price: Mapped[float] = mapped_column(DECIMAL, nullable=False)

@@ -105,7 +105,7 @@ async def disable_auto_delivery(
     product_service: FromDishka[ProductService],
 ) -> None:
     product_id = dialog_manager.dialog_data["product_id"]
-    await product_service.update_product(product_id=product_id, is_auto_purchase=False)
+    await product_service.update_product(product_id=product_id, is_auto_purchase=False, auto_purchase_text=None)
     await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
 
 
@@ -374,8 +374,8 @@ async def on_product_instruction_new_product(
     message: Message,
     widget: MessageInput,
     dialog_manager: DialogManager,
-):
-    dialog_manager.dialog_data["product_instruction_photo"] = message.photo[-1].file_id
+) -> None:
+    dialog_manager.dialog_data["product_instruction_photo"] = message.photo[-1].file_id if message.photo else None
     dialog_manager.dialog_data["product_instruction"] = message.caption if message.caption else message.text
     await dialog_manager.switch_to(ProductManagementSG.ADD_PRODUCT_PRICE)
 

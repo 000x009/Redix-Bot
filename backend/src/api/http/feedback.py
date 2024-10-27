@@ -50,22 +50,26 @@ async def post_feedback(
     )
     feedback_group_id = -1002348273294
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    
-    media_group = MediaGroupBuilder(caption=f"""
+    text = f"""
 Рейтинг: {"⭐" * data.stars}
 Покупатель: @{user_data.user.username}
 Дата: {datetime.now(tz=UTC).strftime("%d.%m.%Y %H:%M")}
 
 Отзыв:
 {data.text}
-""")
-    
-    for image_url in data.images:
-        image_content = yandex_storage_client.get_file(image_url)
-        file = BufferedInputFile(image_content, filename=f"feedback_image_{uuid.uuid4()}.jpg")
-        media_group.add_photo(media=file)
+"""
     try:
-        await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
+        if data.images:
+            media_group = MediaGroupBuilder(caption=text)
+            for image_url in data.images:
+                image_content = yandex_storage_client.get_file(image_url)
+                file = BufferedInputFile(image_content, filename=f"feedback_image_{uuid.uuid4()}.jpg")
+                media_group.add_photo(media=file)
+            await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
+        else:
+            await bot.send_message(chat_id=feedback_group_id, text=text)
+    except Exception as e:
+        print(e)
     finally:
         await bot.session.close()
 

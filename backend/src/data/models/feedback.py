@@ -11,8 +11,8 @@ class FeedbackModel(Base):
     __tablename__ = "feedback"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
-    product_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('product.id'))
-    order_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('order.id'))
+    product_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('product.id', ondelete='SET NULL'))
+    order_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('order.id', ondelete='SET NULL'))
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('user.user_id', ondelete='CASCADE'))
     text: Mapped[str] = mapped_column(String(500), nullable=False)
     stars: Mapped[int] = mapped_column(Integer, nullable=True)

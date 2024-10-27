@@ -124,20 +124,25 @@ async def purchase_product(
         is_successful=True,
     )
 
-    bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    await bot.send_message(
-        chat_id=game.supergroup_id,
-        text=json_text_getter.get_order_info_text(
-            user_id=user.user_id,
-            order_id=order_id,
-            order_data=order_data,
-            product=product,
-            category=category.name,
-        ),
-        message_thread_id=category.thread_id,
-        reply_markup=inline.take_order_kb_markup(order_id=order_id)
-    )
-    await bot.session.close()
+    try:
+        bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+        await bot.send_message(
+            chat_id=game.supergroup_id,
+            text=json_text_getter.get_order_info_text(
+                user_id=user.user_id,
+                order_id=order_id,
+                order_data=order_data,
+                product=product,
+                category=category.name,
+            ),
+            message_thread_id=category.thread_id,
+            reply_markup=inline.take_order_kb_markup(order_id=order_id)
+        )
+    except Exception as e:
+        print(e)
+    finally:
+        await bot.session.close()
+
     return JSONResponse(status_code=200, content=dict(message="success"))
 
 

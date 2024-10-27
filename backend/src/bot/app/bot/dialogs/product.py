@@ -363,7 +363,7 @@ product_management_dialog = Dialog(
         state=ProductManagementSG.ADD_CATEGORY_PHOTO,
     ),
     Window(
-        Const("Введите ID темы в супергруппе телеграм. (Последняя цифра в ссылке после слэша на тему)"),
+        Const("Введите ID темы в супергруппе телеграм. (Последнее число в ссылке после слэша на тему)"),
         TextInput(
             id="add_category_thread_id_text",
             on_success=on_category_thread_id,
