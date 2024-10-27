@@ -286,7 +286,7 @@ product_management_dialog = Dialog(
         TextInput(
             id="set_purchase_limit_text",
             on_success=on_set_purchase_limit,
-            type=int,
+            type_factory=int,
         ),
         SwitchTo(
             id="back_to_product",
