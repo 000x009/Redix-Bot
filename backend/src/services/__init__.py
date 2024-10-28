@@ -10,6 +10,7 @@ from .game_service import GameService
 from .storage_client import YandexStorageClient
 from .category_service import CategoryService
 from .admin_service import AdminService
+from .supercell_client import SupercellClient
 
 
 __all__ = [
@@ -25,4 +26,5 @@ __all__ = [
     'YandexStorageClient',
     'CategoryService',
     'AdminService',
+    'SupercellClient',
 ]

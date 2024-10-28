@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MainButton } from '@vkruglikov/react-telegram-web-app';
-import { getOneProduct, sendOrder, getOneCategory } from '../../db/db';
+import { getOneProduct, sendOrder, getOneCategory, verifyTag } from '../../db/db';
 import { useTelegram } from '../../hooks/useTelegram';
 
 const OrderForm = () => {
@@ -17,6 +17,8 @@ const OrderForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [codeSuccess, setCodeSuccess] = useState('');
+  const [tagVerificationMessage, setTagVerificationMessage] = useState('');
+  const [tagVerificationSuccess, setTagVerificationSuccess] = useState(false);
  
   useEffect(() => {
     tg.BackButton.show();
@@ -112,6 +114,23 @@ const OrderForm = () => {
       alert('Произошла ошибка при отправке заказа');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleVerifyTag = async (tag) => {
+    try {
+      const result = await verifyTag(tag);
+      if (result.exists) {
+        setTagVerificationMessage('Тег существует!');
+        setTagVerificationSuccess(true);
+      } else {
+        setTagVerificationMessage('Тег не найден');
+        setTagVerificationSuccess(false);
+      }
+    } catch (error) {
+      console.error('Error verifying tag:', error);
+      setTagVerificationMessage('Ошибка при проверке тега');
+      setTagVerificationSuccess(false);
     }
   };
 
@@ -228,6 +247,46 @@ const OrderForm = () => {
                 )}
               </button>
             </div>
+          </div>
+        );
+      } else if (field === 'тег') {
+        return (
+          <div key={field} style={{marginBottom: '1rem'}}>
+            <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
+              {label}
+            </label>
+            <input
+              type="text"
+              value={formFields[field]}
+              onChange={handleInputChange}
+              style={{
+                ...commonInputStyle,
+                borderBottom: formErrors[field] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
+              }}
+              placeholder={placeholder}
+            />
+            <button
+              onClick={() => handleVerifyTag(formFields[field])}
+              style={{
+                color: '#3b82f6',
+                background: 'none',
+                border: 'none',
+                padding: '0.5rem 0',
+                cursor: 'pointer',
+                fontSize: '0.875rem'
+              }}
+            >
+              Проверить тег
+            </button>
+            {tagVerificationMessage && (
+              <p style={{
+                color: tagVerificationSuccess ? '#10b981' : '#ef4444',
+                fontSize: '0.875rem',
+                marginTop: '0.25rem'
+              }}>
+                {tagVerificationMessage}
+              </p>
+            )}
           </div>
         );
       } else {
