@@ -55,7 +55,7 @@ async def on_category_required_fields(
     dialog_manager: DialogManager,
     value: str,
 ) -> None:
-    dialog_manager.dialog_data["category_required_fields"] = value.replace(" ", "").split(",")
+    dialog_manager.dialog_data["category_required_fields"] = value.split(",")
     await dialog_manager.switch_to(ProductManagementSG.ADD_CATEGORY_PHOTO)
 
 
@@ -67,7 +67,7 @@ async def on_edit_category_required_fields(
     value: str,
     category_service: FromDishka[CategoryService],
 ) -> None:
-    required_fields = value.replace(" ", "").split(",")
+    required_fields = value.split(",")
     await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), required_fields=required_fields)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 

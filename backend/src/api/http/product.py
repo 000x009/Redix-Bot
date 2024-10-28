@@ -148,7 +148,7 @@ async def purchase_product(
                 text=json_text_getter.get_order_info_text(
                     user_id=user.user_id,
                     order_id=order_id,
-                    order_data=order_data,
+                    order_data=order_data.additional_data,
                     product=product,
                     category=category.name,
                 ),
