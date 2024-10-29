@@ -308,7 +308,7 @@ async def take_order_handler(
     order = await order_service.get_one_order(id=order_id)
     product = await product_service.get_one_product(id=order.product_id)
     category = await category_service.get_category(id=product.category_id)
-
+    print(product, flush=True)
     if product.is_gift_purchase:
         await bot.send_message(
             chat_id=query.from_user.id,
