@@ -41,7 +41,13 @@ const OrderForm = () => {
   };
 
   const validateGameLink = (link, gameName) => {
-    if (!link) return false;
+    console.log('Validating game link:', link);
+    console.log('Game name:', gameName);
+    
+    if (!link) {
+      console.log('Link is empty, returning false');
+      return false;
+    }
   
     const patterns = {
       'Brawl Stars': /^https:\/\/link\.brawlstars\.com\/\?supercell_id&p=\d{2}-[a-f0-9-]{36}$/,
@@ -51,9 +57,16 @@ const OrderForm = () => {
     };
   
     const pattern = patterns[gameName];
-    if (!pattern) return true;
+    console.log('Pattern for game:', pattern);
+    
+    if (!pattern) {
+      console.log('No pattern found for game, returning true');
+      return true;
+    }
   
-    return pattern.test(link);
+    const isValid = pattern.test(link);
+    console.log('Link validation result:', isValid);
+    return isValid;
   };
 
   useEffect(() => {
