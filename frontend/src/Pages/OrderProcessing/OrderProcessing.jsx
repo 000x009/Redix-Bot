@@ -115,14 +115,19 @@ const OrderForm = () => {
     });
   
     // Add link validation
-    if (formFields.ссылка && product?.game_name) {
+    if (product?.game_name && formFields.ссылка !== undefined) {
       const isValidLink = validateGameLink(formFields.ссылка, product.game_name);
       if (!isValidLink) {
-        errors.ссылка = true;
+        setFormErrors(prev => ({...prev, ссылка: true}));
         setLinkError('Пожалуйста, предоставьте правильную ссылку для добавления в друзья');
         return;
       } else {
         setLinkError('');
+        setFormErrors(prev => {
+          const newErrors = {...prev};
+          delete newErrors.ссылка;
+          return newErrors;
+        });
       }
     }
   
@@ -185,18 +190,21 @@ const OrderForm = () => {
         setFormFields(prev => ({...prev, [field]: e.target.value}));
         if (field === 'ссылка') {
           setLinkError('');
+          setFormErrors(prev => {
+            const newErrors = {...prev};
+            delete newErrors.ссылка;
+            return newErrors;
+          });
         }
       };
 
       let label = field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ');
-      let placeholder = `Введите ${label.toLowerCase()}`;
+      const placeholder = 'Заполните поле';
 
       if (field === 'почта') {
         label = 'Почта';
-        placeholder = 'Введите почту';
       } else if (field === 'пароль') {
         label = 'Пароль';
-        placeholder = 'Введите пароль';
       }
 
       if (field === 'почта') {
