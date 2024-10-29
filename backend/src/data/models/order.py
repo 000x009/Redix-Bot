@@ -25,7 +25,7 @@ class OrderModel(Base):
     time: Mapped[datetime.datetime] = mapped_column(
         TIMESTAMP(timezone=True),
         nullable=False,
-        default=datetime.datetime.now(datetime.UTC),
+        default=datetime.datetime.now(),
     )
     additional_data: Mapped[Mapping[str, Any]] = mapped_column(JSON, nullable=True)
     cancel_reason: Mapped[str] = mapped_column(String, nullable=True)

@@ -1,4 +1,4 @@
-from typing import Optional, TypeAlias, List, Any
+from typing import Optional, List, Any
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +8,7 @@ from src.schema import Product
 from src.data.models import ProductModel
 
 
-_ProductResult: TypeAlias = Result[tuple[ProductModel]]
+_ProductResult = Result[tuple[ProductModel]]
 
 
 class ProductDAL:

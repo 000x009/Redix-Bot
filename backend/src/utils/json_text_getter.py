@@ -17,7 +17,7 @@ def get_json_text(key: str) -> Optional[str]:
 def get_order_info_text(
     user_id: int,
     order_id: uuid.UUID,
-    order_data: CreateOrderDTO | dict,
+    order_data: CreateOrderDTO,
     product: Product,
     category: str,
 ) -> Optional[str]:

@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Optional, TypeAlias, List
+from typing import Optional, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, exists, delete, Result, func
@@ -8,7 +8,7 @@ from src.schema import User
 from src.data.models import UserModel
 
 
-_UserResult: TypeAlias = Result[tuple[UserModel]]
+_UserResult = Result[tuple[UserModel]]
 
 
 class UserDAL:

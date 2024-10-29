@@ -1,9 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
-from dishka import FromDishka
-from dishka.integrations.fastapi import DishkaRoute
+from dependency_injector.wiring import inject, Provide
 
+from src.main.ioc import Container
 from src.services import SupercellAuthService, SupercellClient
 from src.api.schema.supercell import SupercellAuthDTO, VerifyTagSchema
 
@@ -11,14 +11,14 @@ from src.api.schema.supercell import SupercellAuthDTO, VerifyTagSchema
 router = APIRouter(
     prefix="/supercell",
     tags=["Supercell Auth"],
-    route_class=DishkaRoute
 )
 
 
 @router.post("/login")
+@inject
 async def login(
     data: SupercellAuthDTO,
-    supercell_service: FromDishka[SupercellAuthService],
+    supercell_service: SupercellAuthService = Depends(Provide[Container.supercell_service]),
 ) -> JSONResponse:
     supercell_service.login(email=data.email, game=data.game)
     
@@ -26,9 +26,10 @@ async def login(
 
 
 @router.post("/verify-tag")
+@inject
 async def verify_tag(
     data: VerifyTagSchema,
-    supercell_client: FromDishka[SupercellClient],
+    supercell_client: SupercellClient = Depends(Provide[Container.supercell_client]),
 ) -> JSONResponse:
     exists = await supercell_client.verify_tag(data.tag)
     return JSONResponse(status_code=200, content=dict(exists=exists))

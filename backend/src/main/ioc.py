@@ -1,79 +1,89 @@
 from typing import AsyncGenerator
-
-from dishka import Provider, provide, Scope
+from dependency_injector import containers, providers
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessionmaker, AsyncSession
 
 from src.main.config import settings
-
 from src.services import (
-    UserService,
-    ProductService,
-    TransactionService,
-    OrderService,
-    PromoService,
-    SupercellAuthService,
-    FeedbackService,
-    BileeService,
-    GameService,
-    CategoryService,
-    YandexStorageClient,
-    AdminService,
+    UserService, ProductService, TransactionService, OrderService, PromoService,
+    SupercellAuthService, FeedbackService, BileeService, GameService, YandexStorageClient, AdminService, CategoryService, SupercellClient
 )
 from src.data.dal import (
-    UserDAL,
-    ProductDAL,
-    TransactionDAL,
-    OrderDAL,
-    PromoDAL,
-    FeedbackDAL,
-    GameDAL,
-    CategoryDAL,
-    AdminDAL,
+    UserDAL, ProductDAL, TransactionDAL, OrderDAL, PromoDAL, FeedbackDAL, GameDAL, AdminDAL, CategoryDAL
 )
 
-
-class DatabaseProvider(Provider):
-    @provide(scope=Scope.APP, provides=AsyncEngine)
-    async def get_engine(self) -> AsyncGenerator[AsyncEngine, None]:
+class Database:
+    @staticmethod
+    async def get_engine() -> AsyncGenerator[AsyncEngine, None]:
         engine = create_async_engine(url=settings.db_connection_url)
         yield engine
         engine.close()
 
-    @provide(scope=Scope.APP, provides=async_sessionmaker[AsyncSession])
-    def get_async_sessionmaker(self, engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
+    @staticmethod
+    def get_async_sessionmaker(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
         return async_sessionmaker(bind=engine)
 
-    @provide(scope=Scope.REQUEST, provides=AsyncSession)
-    async def get_async_session(self, sessionmaker: async_sessionmaker[AsyncSession]) -> AsyncGenerator[AsyncSession, None]:
+    @staticmethod
+    async def get_async_session(sessionmaker: async_sessionmaker[AsyncSession]) -> AsyncGenerator[AsyncSession, None]:
         async with sessionmaker() as session:
             yield session
             await session.close()
 
+class Container(containers.DeclarativeContainer):
+    wiring_config = containers.WiringConfiguration(modules=[
+        'src.api.http.supercell_auth',
+        'src.api.http.promo',
+        'src.api.http.referral_system',
+        'src.api.http.payment_system',
+        'src.api.http.product',
+        'src.api.http.profile',
+        'src.api.http.feedback',
+        'src.api.http.game',
+        'src.api.http.cloud_storage',
+        'src.api.http.admin',
+        'src.api.http.category',
+    ])
+    config = providers.Configuration()
 
-class DALProvider(Provider):
-    user_dal = provide(UserDAL, scope=Scope.REQUEST, provides=UserDAL)
-    product_dal = provide(ProductDAL, scope=Scope.REQUEST, provides=ProductDAL)
-    transaction_dal = provide(TransactionDAL, scope=Scope.REQUEST, provides=TransactionDAL)
-    order_dal = provide(OrderDAL, scope=Scope.REQUEST, provides=OrderDAL)
-    promo_dal = provide(PromoDAL, scope=Scope.REQUEST, provides=PromoDAL)
-    feedback_dal = provide(FeedbackDAL, scope=Scope.REQUEST, provides=FeedbackDAL)
-    game_dal = provide(GameDAL, scope=Scope.REQUEST, provides=GameDAL)
-    category_dal = provide(CategoryDAL, scope=Scope.REQUEST, provides=CategoryDAL)
-    admin_dal = provide(AdminDAL, scope=Scope.REQUEST, provides=AdminDAL)
+    # Database
+    engine = providers.Resource(Database.get_engine)
+    async_sessionmaker = providers.Factory(
+        Database.get_async_sessionmaker,
+        engine=engine
+    )
+    async_session = providers.Resource(
+        Database.get_async_session,
+        sessionmaker=async_sessionmaker
+    )
 
-class ServiceProvider(Provider):
-    user_service = provide(UserService, scope=Scope.REQUEST, provides=UserService)
-    product_service = provide(ProductService, scope=Scope.REQUEST, provides=ProductService)
-    transaction_service = provide(TransactionService, scope=Scope.REQUEST, provides=TransactionService)
-    order_service = provide(OrderService, scope=Scope.REQUEST, provides=OrderService)
-    promo_service = provide(PromoService, scope=Scope.REQUEST, provides=PromoService)
-    supercell_service = provide(SupercellAuthService, scope=Scope.REQUEST, provides=SupercellAuthService)
-    feedback_service = provide(FeedbackService, scope=Scope.REQUEST, provides=FeedbackService)
-    bilee_service = provide(BileeService, scope=Scope.REQUEST, provides=BileeService)
-    game_service = provide(GameService, scope=Scope.REQUEST, provides=GameService)
-    category_service = provide(CategoryService, scope=Scope.REQUEST, provides=CategoryService)
-    admin_service = provide(AdminService, scope=Scope.REQUEST, provides=AdminService)
+    # DALs
+    user_dal = providers.Factory(UserDAL, session=async_session)
+    product_dal = providers.Factory(ProductDAL, session=async_session)
+    transaction_dal = providers.Factory(TransactionDAL, session=async_session)
+    order_dal = providers.Factory(OrderDAL, session=async_session)
+    promo_dal = providers.Factory(PromoDAL, session=async_session)
+    feedback_dal = providers.Factory(FeedbackDAL, session=async_session)
+    game_dal = providers.Factory(GameDAL, session=async_session)
+    admin_dal = providers.Factory(AdminDAL, session=async_session)
+    category_dal = providers.Factory(CategoryDAL, session=async_session)
 
-    @provide(scope=Scope.REQUEST, provides=YandexStorageClient)
-    def get_yandex_storage_client(self) -> YandexStorageClient:
-        return YandexStorageClient(settings.YANDEX_STORAGE_TOKEN, settings.YANDEX_STORAGE_SECRET, settings.YANDEX_STORAGE_BUCKET_NAME)
+    # Services
+    user_service = providers.Factory(UserService, user_dal=user_dal)
+    product_service = providers.Factory(ProductService, product_dal=product_dal)
+    transaction_service = providers.Factory(TransactionService, transaction_dal=transaction_dal)
+    order_service = providers.Factory(OrderService, order_dal=order_dal)
+    promo_service = providers.Factory(PromoService, promo_dal=promo_dal)
+    supercell_service = providers.Factory(SupercellAuthService)
+    feedback_service = providers.Factory(FeedbackService, feedback_dal=feedback_dal)
+    bilee_service = providers.Factory(BileeService)
+    game_service = providers.Factory(GameService, game_dal=game_dal)
+    admin_service = providers.Factory(AdminService, admin_dal=admin_dal)
+    category_service = providers.Factory(CategoryService, category_dal=category_dal)
+    supercell_client = providers.Factory(SupercellClient)
+    
+
+    yandex_storage_client = providers.Factory(
+        YandexStorageClient,
+        token=config.YANDEX_STORAGE_TOKEN,
+        secret=config.YANDEX_STORAGE_SECRET,
+        bucket_name=config.YANDEX_STORAGE_BUCKET_NAME
+    )

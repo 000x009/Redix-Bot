@@ -6,7 +6,7 @@ class NotAuthorizedError(HTTPException): ...
 
 
 class MethodNotAllowedError(HTTPException):
-    def __init__(self, headers: Dict[str, str] | None = None) -> None:
+    def __init__(self, headers: Dict[str, str]) -> None:
         super().__init__(
             status_code=403,
             detail=dict(error='Method not allowed.'),

@@ -17,7 +17,7 @@ class TransactionModel(Base):
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('user.user_id', ondelete='CASCADE'))
     type: Mapped[enum.Enum] = mapped_column(Enum(TransactionType), nullable=False)
     cause: Mapped[str] = mapped_column(Enum(TransactionCause), nullable=False)
-    time: Mapped[datetime.datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False, default=datetime.datetime.now(datetime.UTC))
+    time: Mapped[datetime.datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False, default=datetime.datetime.now())
     amount: Mapped[float] = mapped_column(DECIMAL)
     payment_data: Mapped[Mapping[str, Any]] = mapped_column(JSON, nullable=True)
     is_successful: Mapped[bool] = mapped_column(Boolean, nullable=True, default=False)

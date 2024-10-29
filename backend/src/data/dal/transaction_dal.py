@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, TypeAlias, List, Any
+from typing import Optional, List, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, exists, delete, Result
@@ -8,7 +8,7 @@ from src.schema import Transaction
 from src.data.models import TransactionModel
 
 
-_TransactionResult: TypeAlias = Result[tuple[TransactionModel]]
+_TransactionResult = Result[tuple[TransactionModel]]
 
 
 class TransactionDAL:

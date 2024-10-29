@@ -1,4 +1,4 @@
-from typing import Optional, TypeAlias, List, Any
+from typing import Optional, List, Any
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +8,7 @@ from src.schema.game import Game
 from src.data.models import GameModel
 
 
-_ProductResult: TypeAlias = Result[tuple[GameModel]]
+_ProductResult = Result[tuple[GameModel]]
 
 
 class GameDAL:

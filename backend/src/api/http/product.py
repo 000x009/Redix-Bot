@@ -3,10 +3,6 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-# from fastapi_cache.decorator import cache
-
-from dishka import FromDishka
-from dishka.integrations.fastapi import DishkaRoute
 
 from aiogram import Bot
 from aiogram.types import BufferedInputFile
@@ -14,14 +10,16 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.utils.web_app import WebAppInitData
 
+from dependency_injector.wiring import inject, Provide
+
+from src.main.ioc import Container
 from src.api.http.exceptions.user import MethodNotAllowedError
 from src.schema import Product
-from src.services import ProductService, UserService, OrderService, TransactionService, GameService, CategoryService, YandexStorageClient
+from src.services import ProductService, UserService, OrderService, TransactionService, GameService, CategoryService, YandexStorageClient, AdminService
 from src.api.schema.order import CreateOrderDTO
 from src.api.schema.product import CreateProduct
 from src.main.config import settings
-from src.bot.app.main.config import dev_config
-from src.bot.app.bot.keyboards import inline
+from src.api.http.keyboard import take_order_kb_markup
 from src.utils import json_text_getter
 from src.api.dependencies import user_provider
 from src.schema.transaction import TransactionCause, TransactionType
@@ -30,46 +28,39 @@ from src.schema.transaction import TransactionCause, TransactionType
 router = APIRouter(
     prefix="/products",
     tags=["Products"],
-    route_class=DishkaRoute,
 )
 
 
 @router.get('/search')
-# @cache(expire=60 * 60 * 24)
+@inject
 async def search_products(
     search: str,
-    product_service: FromDishka[ProductService]
-) -> List[Product] | None:
+    product_service: ProductService = Depends(Provide[Container.product_service]),
+) -> List[Product]:
     response = await product_service.search(search)
 
     return response
 
 
 @router.get('/', response_model=List[Product])
-# @cache(expire=60 * 60 * 24)
+@inject
 async def get_products(
-    product_service: FromDishka[ProductService],
+    product_service: ProductService = Depends(Provide[Container.product_service]),
     category_id: Optional[int] = None,
-) -> List[Product] | JSONResponse:
+) -> List[Product]:
     if category_id:
         products = await product_service.get_products(category_id=category_id, is_visible=True)
     else:
         products = await product_service.get_products(is_visible=True)
 
-    if not products:
-        return JSONResponse(
-            status_code=404,
-            content='Products not found.',
-        )
-
     return products
 
 
 @router.get('/{product_id}', response_model=Product)
-# @cache(expire=60 * 60 * 24)
+@inject
 async def get_one_product(
     product_id: uuid.UUID,
-    product_service: FromDishka[ProductService],
+    product_service: ProductService = Depends(Provide[Container.product_service]),
 ) -> Optional[Product]:
     product = await product_service.get_one_product(id=product_id)
     
@@ -77,15 +68,16 @@ async def get_one_product(
 
 
 @router.post('/{product_id}/purchase')
+@inject
 async def purchase_product(
     order_data: CreateOrderDTO,
-    product_service: FromDishka[ProductService],
-    user_service: FromDishka[UserService],
-    order_service: FromDishka[OrderService],
-    transaction_service: FromDishka[TransactionService],
-    game_service: FromDishka[GameService],
-    category_service: FromDishka[CategoryService],
-    yandex_storage_client: FromDishka[YandexStorageClient],
+    product_service: ProductService = Depends(Provide[Container.product_service]),
+    user_service: UserService = Depends(Provide[Container.user_service]),
+    order_service: OrderService = Depends(Provide[Container.order_service]),
+    transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
+    game_service: GameService = Depends(Provide[Container.game_service]),
+    category_service: CategoryService = Depends(Provide[Container.category_service]),
+    yandex_storage_client: YandexStorageClient = Depends(Provide[Container.yandex_storage_client]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
     user = await user_service.get_one_user(user_id=user_data.user.id)
@@ -153,7 +145,7 @@ async def purchase_product(
                     category=category.name,
                 ),
                 message_thread_id=category.thread_id,
-                reply_markup=inline.take_order_kb_markup(order_id=order_id)
+                reply_markup=take_order_kb_markup(order_id=order_id)
             )
     except Exception as e:
         print(e)
@@ -164,12 +156,16 @@ async def purchase_product(
 
 
 @router.post("/create")
+@inject
 async def create_product(
     data: CreateProduct,
-    product_service: FromDishka[ProductService],
+    product_service: ProductService = Depends(Provide[Container.product_service]),
+    admin_service: AdminService = Depends(Provide[Container.admin_service]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
-    if not user_data.user.id in dev_config.admin.admins:
+    admins = await admin_service.get_all()
+    admin_ids = [admin.user_id for admin in admins]
+    if user_data.user.id not in admin_ids:
         raise MethodNotAllowedError
     
     await product_service.create_product(

@@ -3,12 +3,12 @@ import uuid
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 
-from dishka import FromDishka
-from dishka.integrations.fastapi import DishkaRoute
-
 from aiogram import Bot
 from aiogram.utils.web_app import WebAppInitData
 
+from dependency_injector.wiring import inject, Provide
+
+from src.main.ioc import Container
 from src.services import BileeService, TransactionService, UserService
 from src.api.schema.payment import TopUpSchema
 from src.api.dependencies import user_provider
@@ -18,15 +18,15 @@ from src.main.config import settings
 router = APIRouter(
     prefix="/payment",
     tags=["Payment System"],
-    route_class=DishkaRoute,
 )
 
  
 @router.post('/')
+@inject
 async def top_up(
     data: TopUpSchema,
-    bilee_service: FromDishka[BileeService],
-    transaction_service: FromDishka[TransactionService],
+    bilee_service: BileeService = Depends(Provide[Container.bilee_service]),
+    transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> dict:
     response = bilee_service.create_invoice(amount=data.amount, method=data.method.value)
@@ -46,10 +46,11 @@ async def top_up(
     return response
 
 @router.post("/webhook", response_class=JSONResponse)
+@inject
 async def receive_payment(
     request: Request,
-    transaction_service: FromDishka[TransactionService],
-    user_service: FromDishka[UserService],
+    transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
+    user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> JSONResponse:
     try:
         payload = await request.json()

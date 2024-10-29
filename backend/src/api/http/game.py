@@ -1,25 +1,23 @@
 from typing import List
 
-from fastapi import APIRouter
-# from fastapi_cache.decorator import cache
+from fastapi import APIRouter, Depends
 
-from dishka import FromDishka
-from dishka.integrations.fastapi import DishkaRoute
+from dependency_injector.wiring import inject, Provide
 
+from src.main.ioc import Container
 from src.services import GameService
 from src.schema.game import Game
 
 router = APIRouter(
     prefix="/games",
     tags=["Games"],
-    route_class=DishkaRoute,
 )
 
 
 @router.get("/")
-# @cache(expire=60 * 60 * 24)
+@inject
 async def get_all_games(
-    game_service: FromDishka[GameService],
+    game_service: GameService = Depends(Provide[Container.game_service]),
 ) -> List[Game]:
     response = await game_service.get_all_games()
 
@@ -27,10 +25,10 @@ async def get_all_games(
 
 
 @router.get("/{game_id}")
-# @cache(expire=60 * 60 * 24)
+@inject
 async def get_game(
     game_id: int,
-    game_service: FromDishka[GameService],
+    game_service: GameService = Depends(Provide[Container.game_service]),
 ) -> Game:
     response = await game_service.get_game(id=game_id)
     

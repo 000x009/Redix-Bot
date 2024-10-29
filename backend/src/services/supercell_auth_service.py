@@ -1,8 +1,8 @@
-from typing import Literal, TypeAlias
+from typing import Literal
 
 import requests
 
-_GameLiteral: TypeAlias = Literal['laser', 'magic', 'scroll']
+_GameLiteral = Literal['laser', 'magic', 'scroll']
 
 
 class SupercellAuthService():

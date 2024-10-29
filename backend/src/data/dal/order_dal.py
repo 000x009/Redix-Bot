@@ -1,6 +1,6 @@
 import uuid
 import json
-from typing import Optional, TypeAlias, List, Any
+from typing import Optional, List, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, exists, delete, Result
@@ -9,7 +9,7 @@ from src.schema import Order
 from src.data.models import OrderModel
 
 
-_OrderResult: TypeAlias = Result[tuple[OrderModel]]
+_OrderResult = Result[tuple[OrderModel]]
 
 
 class OrderDAL:

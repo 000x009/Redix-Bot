@@ -1,0 +1,77 @@
+import os
+
+from aiogram import Router, Bot
+from aiogram.filters import CommandStart, Command
+from aiogram.types import Message, Chat, FSInputFile, ReplyKeyboardRemove
+
+from dishka import FromDishka
+
+from app.bot.keyboards import inline
+from app.services import UserService
+from app.main.config import settings
+
+
+router = Router()
+
+
+@router.message(CommandStart())
+async def start_handler(
+    message: Message,
+    bot: Bot,
+    event_chat: Chat,
+    user_service: FromDishka[UserService],
+) -> None:
+    await bot.send_photo(
+        photo=FSInputFile(os.path.normpath("app/bot/files/redix.jpg")),
+        chat_id=event_chat.id,
+        caption="🌟 Добро пожаловать!\n\n🐱 <a href='https://t.me/RedixEmpire'>Redix Shop</a> - это сервис для покупки различных внутриигровых товаров. Мы делаем всё возможное, чтобы обеспечить быструю, надёжную и качественную выдачу товаров по лучшим ценам, что подтверждается нашими <a href='https://t.me/redixempire_otz'>отзывами</a>",
+        reply_markup=inline.main_keyboard_markup,
+    )
+
+    exists = await user_service.exists(user_id=message.from_user.id)
+    if not exists:
+        reffer_id = None
+        start_command = message.text   
+        if len(start_command) >= 7:
+            reffer_id = start_command[7:] if start_command[7:].isdigit() else None
+            reffer_id = reffer_id[4:]
+
+        user_photos = await message.from_user.get_profile_photos()
+        if user_photos.total_count > 0:
+            photo = user_photos.photos[0][-1]
+            file = await bot.get_file(photo.file_id)
+            file_url = f"https://api.telegram.org/file/bot{settings.BOT_TOKEN}/{file.file_path}"
+        else:
+            file_url = None
+            
+        user_fullname = None
+        if message.from_user.first_name and message.from_user.last_name:
+            user_fullname = f"{message.from_user.first_name} {message.from_user.last_name}"
+        elif message.from_user.first_name:
+            user_fullname = message.from_user.first_name
+        elif message.from_user.last_name:
+            user_fullname = message.from_user.last_name
+            
+        await user_service.add_user(
+            user_id=message.from_user.id,
+            referral_code=str(message.from_user.id),
+            referral_id=int(reffer_id) if reffer_id else None,
+            nickname=user_fullname,
+            profile_photo=file_url,
+        )
+
+
+@router.message(Command('remove_kb'))
+async def remove_kb_handler(
+    message: Message,
+    bot: Bot,
+    event_chat: Chat,
+    user_service: FromDishka[UserService],
+) -> None:
+    users = await user_service.get_users()
+    for user in users:
+        try:
+            await bot.send_message(chat_id=user.user_id, text="Сейчас у нас произошло обновления бота,для тех у кого был баланс в боте,просьба отписать менеджеру для переноса баланса,обмануть не получится, у нас имеется база данных старая,поэтому все видим.\n\nЧтобы начала работать новая версия пропишите /start или выберите в меню перезапустить бота", reply_markup=ReplyKeyboardRemove())
+        except Exception as e:
+            print(e)
+            continue

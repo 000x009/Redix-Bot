@@ -1,7 +1,7 @@
 import random
 import hashlib
 from time import time
-from typing import Mapping, Optional, Any
+from typing import Mapping, Optional, Any, Union
 from enum import Enum
 
 import requests
@@ -25,12 +25,12 @@ class BileeService():
     def _generate_order_id(self) -> str:
         return str(int(time()) + random.randint(1, 99999))[0:16]
     
-    def _generate_signature(self, data: Mapping[str, Optional[str | int]]) -> str:
+    def _generate_signature(self, data: Mapping[str, Optional[Union[str, int]]]) -> str:
         data['password'] = self.PASSWORD
         sign = ''.join([str(data.get(key)) for key in sorted(data.keys())])
         return hashlib.sha256(sign.encode('utf-8')).hexdigest()
     
-    def _request(self, endpoint: str, data: Mapping[str, Optional[str | int]]) -> Optional[Mapping[str, Optional[str | int]]]:
+    def _request(self, endpoint: str, data: Mapping[str, Optional[Union[str, int]]]) -> Optional[Mapping[str, Optional[Union[str, int]]]]:
         headers = {
             'Content-Type': 'application/json'
         }
@@ -41,9 +41,9 @@ class BileeService():
     
     def create_invoice(
         self,
-        amount: int | float,
-        method: PaymentMethod = str
-    ) -> Optional[Mapping[str, Optional[str | int]]]:
+        amount: Union[int, float],
+        method: PaymentMethod = PaymentMethod.CARD
+    ) -> Optional[Mapping[str, Optional[Union[str, int]]]]:
         data = {
             'order_id': self.order_id,
             'method_slug': method,
@@ -52,7 +52,7 @@ class BileeService():
         }
         return self._request(endpoint='/payment/init', data=data)
     
-    def get_invoice(self, order_id: str) -> Optional[Mapping[str, Optional[str | int]]]:
+    def get_invoice(self, order_id: str) -> Optional[Mapping[str, Optional[Union[str, int]]]]:
         data = {
             'order_id': order_id,
             'shop_id': self.SHOP_ID,

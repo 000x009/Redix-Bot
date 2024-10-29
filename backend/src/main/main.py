@@ -5,13 +5,10 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import ValidationException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi_cache import FastAPICache
-from fastapi_cache.backends.redis import RedisBackend
-from redis import asyncio as aioredis
- 
-from dishka import make_async_container
-from dishka.integrations.fastapi import setup_dishka
 
+from redis import asyncio as aioredis
+
+from src.main.ioc import Container
 from src.api.http import (
     product,
     profile,
@@ -25,18 +22,27 @@ from src.api.http import (
     cloud_storage,
     admin,
 )
-from src.main.ioc import DALProvider, DatabaseProvider, ServiceProvider
+from src.main.config import settings
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    redis = aioredis.from_url("redis://redis", encoding="utf8", decode_responses=True)
-    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
-    yield
-    await redis.close()
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     redis = aioredis.from_url("redis://redis", encoding="utf8", decode_responses=True)
+#     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+#     yield
+#     await redis.close()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
+container = Container()
+app.container = container
+
+container.config.from_dict({
+    "YANDEX_STORAGE_TOKEN": settings.YANDEX_STORAGE_TOKEN,
+    "YANDEX_STORAGE_SECRET": settings.YANDEX_STORAGE_SECRET,
+    "YANDEX_STORAGE_BUCKET_NAME": settings.YANDEX_STORAGE_BUCKET_NAME,
+})
+container.wire(modules=[__name__])
 
 origins = [
     "http://localhost:3000",
@@ -81,6 +87,3 @@ app.include_router(game.router)
 app.include_router(category.router)
 app.include_router(cloud_storage.router)
 app.include_router(admin.router)
-
-container = make_async_container(DALProvider(), DatabaseProvider(), ServiceProvider())
-setup_dishka(container, app)
