@@ -57,6 +57,8 @@ from .handlers import (
     on_set_purchase_limit,
     on_category_required_fields,
     on_edit_category_required_fields,
+    turn_on_gift_purchase,
+    turn_off_gift_purchase,
 )
 
 
@@ -265,6 +267,18 @@ product_management_dialog = Dialog(
             text=Format("Выключить ограничение на количество покупок"),
             on_click=disable_purchase_limit,
             when=F['product'].purchase_limit,
+        ),
+        Button(
+            id='turn_on_gift_purchase',
+            text=Format("Вкл. подарком"),
+            on_click=turn_on_gift_purchase,
+            when=F['product'].is_gift_purchase,
+        ),
+        Button(
+            id='turn_off_gift_purchase',
+            text=Format("Выкл. подарком"),
+            on_click=turn_off_gift_purchase,
+            when=~F['product'].is_gift_purchase,
         ),
         Button(
             id="disable_auto_delivery",

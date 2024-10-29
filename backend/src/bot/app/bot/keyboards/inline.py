@@ -27,6 +27,24 @@ def cancel_without_reason_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
     )
 
 
+def accepted_friend_request_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="✅ Подтвердить", callback_data=f"confirm_request:{order_id}")
+            ]
+        ]
+    )
+
+def accept_friend_request_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Принял заявку", callback_data=f"accept_request:{order_id}")
+            ]
+        ]
+    )
+
 back_to_main_menu_markup = InlineKeyboardMarkup(
     inline_keyboard=[
         [
@@ -38,17 +56,17 @@ back_to_main_menu_markup = InlineKeyboardMarkup(
 
 def admin_menu_kb_markup(admin_permissions: dict[str, bool]) -> InlineKeyboardMarkup:
     keyboard = []
-    if admin_permissions["mailing"]:
+    if admin_permissions.get("mailing"):
         keyboard.append([InlineKeyboardButton(text="Рассылка", callback_data="admin_mailing")])
-    if admin_permissions["promos"]:
+    if admin_permissions.get("promos"):
         keyboard.append([InlineKeyboardButton(text="Промокоды", callback_data="admin_promo")])
-    if admin_permissions["products"]:
+    if admin_permissions.get("products"):
         keyboard.append([InlineKeyboardButton(text="Управление товарами", callback_data="product_management")])
-    if admin_permissions["users"]:
+    if admin_permissions.get("users"):
         keyboard.append([InlineKeyboardButton(text="Управление пользователями", callback_data="user_management")])
-    if admin_permissions["admins"]:
+    if admin_permissions.get("admins"):
         keyboard.append([InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management")])
-    if admin_permissions["statistics"]:
+    if admin_permissions.get("statistics"):
         keyboard.append([InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics")])
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
@@ -123,6 +141,19 @@ def order_confirmation_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(text='✅ Подтвердить', callback_data=f'confirm_order:{order_id}'),
+            ],
+            [
+                InlineKeyboardButton(text='❌ Отменить', callback_data=f'cancel_order_reason:{order_id}'),
+            ],
+        ]
+    )
+
+
+def gift_order_confirmation_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text='✅ Добавлено в друзья', callback_data=f'add_to_friends:{order_id}'),
             ],
             [
                 InlineKeyboardButton(text='❌ Отменить', callback_data=f'cancel_order_reason:{order_id}'),

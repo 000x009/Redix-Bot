@@ -29,6 +29,7 @@ class OrderModel(Base):
     )
     additional_data: Mapped[Mapping[str, Any]] = mapped_column(JSON, nullable=True)
     cancel_reason: Mapped[str] = mapped_column(String, nullable=True)
+    admin_id: Mapped[int] = mapped_column(BigInteger, nullable=True)
 
     user = relationship('UserModel', back_populates='orders')
     product = relationship('ProductModel', back_populates='orders')

@@ -87,6 +87,7 @@ class OrderDAL:
                 name=db_order.name,
                 additional_data=db_order.additional_data,
                 cancel_reason=db_order.cancel_reason,
+                admin_id=db_order.admin_id,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Order]]:
@@ -105,6 +106,7 @@ class OrderDAL:
                     name=db_order.name,
                     additional_data=db_order.additional_data,
                     cancel_reason=db_order.cancel_reason,
+                    admin_id=db_order.admin_id,
                 )
                 for db_order in db_orders
             ]

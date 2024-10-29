@@ -24,3 +24,4 @@ class Order:
     cancel_reason: Optional[str] = field(default=None)
     time: datetime.datetime = field(default=datetime.datetime.now(datetime.UTC))
     required_fields: Optional[List[str]] = field(default=None)
+    admin_id: Optional[int] = field(default=None)

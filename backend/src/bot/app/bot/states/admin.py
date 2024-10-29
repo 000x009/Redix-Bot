@@ -10,3 +10,7 @@ class AdminManagementSG(StatesGroup):
     SWITCH_PRODUCT_MANAGEMENT_PERMISSION = State()
     SWITCH_USER_MANAGEMENT_PERMISSION = State()
     SWITCH_PROMO_MANAGEMENT_PERMISSION = State()
+
+
+class GiftOrderManagementSG(StatesGroup):
+    MESSAGE_TO_USER = State()

@@ -73,6 +73,28 @@ async def on_edit_category_required_fields(
 
 
 @inject_on_click
+async def turn_on_gift_purchase(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    product_service: FromDishka[ProductService],
+) -> None:
+    await product_service.update_product(product_id=dialog_manager.dialog_data["product_id"], is_gift_purchase=True)
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
+
+
+@inject_on_click
+async def turn_off_gift_purchase(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    product_service: FromDishka[ProductService],
+) -> None:
+    await product_service.update_product(product_id=dialog_manager.dialog_data["product_id"], is_gift_purchase=False)
+    await dialog_manager.switch_to(ProductManagementSG.PRODUCT)
+
+
+@inject_on_click
 async def hide_category(
     callback_query: CallbackQuery,
     widget: Button,

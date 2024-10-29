@@ -10,6 +10,9 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.fsm.storage.base import DefaultKeyBuilder
 
+from apscheduler_di import ContextSchedulerDecorator
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.jobstores.redis import RedisJobStore
 
 from aiogram_album.ttl_cache_middleware import TTLCacheAlbumMiddleware
 
@@ -35,8 +38,20 @@ async def main() -> None:
         'redis://redis:6379/0',
         key_builder=DefaultKeyBuilder(with_destiny=True),
     )
+    jobstores = {
+        'default': RedisJobStore(
+            jobs_key='dispatched_trips_jobs',
+            run_times_key='dispatched_trips_running',
+            db=2,
+            host='localhost',
+            db=2,
+            port=6379
+        )
+    }
+    scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone="Europe/Moscow", jobstores=jobstores))
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dispatcher = Dispatcher(storage=storage)
+    dispatcher = Dispatcher(storage=storage, scheduler=scheduler)
+    scheduler.ctx.add_instance(instance=bot, declared_class=Bot)
 
     dispatcher.include_routers(
         *message_handlers,
