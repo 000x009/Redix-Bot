@@ -77,7 +77,7 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_HOST=paradox_db
+      - DB_HOST=redix_db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - BILEE_SHOP_ID=${BILEE_SHOP_ID}
