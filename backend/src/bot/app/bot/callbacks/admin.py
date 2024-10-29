@@ -440,6 +440,7 @@ async def confirm_request_handler(
         },
     )
     await query.answer(text='Все было успешно подтверждено, ожидайте 24 часа!', show_alert=True)
+    await bot.send_message(chat_id=order.user_id, text='Вас заказ успешно принят, ожидайте 24 часа после чего мы подарим вам товар на ваш аккаунт')
     await bot.delete_message(chat_id=event_chat.id, message_id=query.message.message_id)
 
 
