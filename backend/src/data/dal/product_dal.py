@@ -92,6 +92,7 @@ class ProductDAL:
                 instruction_image_url=db_product.instruction_image_url,
                 is_visible=db_product.is_visible,
                 auto_purchase_image_url=db_product.auto_purchase_image_url,
+                is_gift_purchase=db_product.is_gift_purchase,
             )
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Product]]:
@@ -118,6 +119,7 @@ class ProductDAL:
                     instruction_image_url=db_product.instruction_image_url,
                     is_visible=db_product.is_visible,
                     auto_purchase_image_url=db_product.auto_purchase_image_url,
+                    is_gift_purchase=db_product.is_gift_purchase,
                 )
                 for db_product in db_products
             ]
@@ -160,6 +162,7 @@ class ProductDAL:
                 instruction_image_url=db_product.instruction_image_url,
                 is_visible=db_product.is_visible,
                 auto_purchase_image_url=db_product.auto_purchase_image_url,
+                is_gift_purchase=db_product.is_gift_purchase,
             )
             for db_product in products
         ]
