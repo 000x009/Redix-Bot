@@ -368,7 +368,7 @@ async def message_to_user_handler(
     order = await order_service.get_one_order(id=uuid.UUID(order_id))
     await bot.send_message(
         chat_id=order.user_id,
-        text=f"Примите заявку в на добавление в друзья Supercell ID для дальнейшего получения своего товара. (После приема заявки в друзья, нажмите на кнопку ниже 👇)\n\n{message_to_user}",
+        text=f"Примите заявку на добавление в друзья Supercell ID для дальнейшего получения своего товара. (После приема заявки в друзья, нажмите на кнопку ниже 👇)\n\n{message_to_user}",
         reply_markup=inline.accept_friend_request_kb_markup(order_id=order_id)
     )
     await message.answer(text='Сообщение было успешно отправлено пользователю!', show_alert=True)
@@ -388,6 +388,7 @@ async def accept_request_handler(
     order = await order_service.get_one_order(id=uuid.UUID(order_id))
     product = await product_service.get_one_product(id=order.product_id)
     category = await category_service.get_category(id=product.category_id)
+    await bot.delete_message(chat_id=event_chat.id, message_id=query.message.message_id)
     order_text = json_text_getter.get_order_info_text(
         user_id=order.user_id,
         order_id=order_id,
