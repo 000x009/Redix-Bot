@@ -308,7 +308,11 @@ async def take_order_handler(
     order = await order_service.get_one_order(id=order_id)
     product = await product_service.get_one_product(id=order.product_id)
     category = await category_service.get_category(id=product.category_id)
-    print(product, flush=True)
+    
+    await order_service.update_order(
+        order_id=uuid.UUID(order_id),
+        admin_id=query.from_user.id,
+    )
     if product.is_gift_purchase:
         await bot.send_message(
             chat_id=query.from_user.id,
@@ -322,10 +326,6 @@ async def take_order_handler(
             reply_markup=inline.gift_order_confirmation_kb_markup(order_id=order_id)
         )
     else:
-        await order_service.update_order(
-            order_id=uuid.UUID(order_id),
-            admin_id=query.from_user.id,
-        )
         await bot.send_message(
             chat_id=query.from_user.id,
             text=json_text_getter.get_order_info_text(
@@ -426,7 +426,6 @@ async def confirm_request_handler(
         send_order_to_admin,
         trigger=DateTrigger(run_date=datetime.now() + timedelta(hours=24)),
         kwargs={
-            'bot': bot,
             'order_text': json_text_getter.get_order_info_text(
                 user_id=order.user_id,
                 order_id=order_id,
