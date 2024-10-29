@@ -308,7 +308,7 @@ async def take_order_handler(
     order = await order_service.get_one_order(id=order_id)
     product = await product_service.get_one_product(id=order.product_id)
     category = await category_service.get_category(id=product.category_id)
-    
+
     await order_service.update_order(
         order_id=uuid.UUID(order_id),
         admin_id=query.from_user.id,
@@ -416,6 +416,7 @@ async def confirm_request_handler(
     product_service: FromDishka[ProductService],
     category_service: FromDishka[CategoryService],
     bot: Bot,
+    event_chat: Chat,
     scheduler: AsyncIOScheduler,
 ) -> None:
     order_id = query.data.split(':')[-1]
@@ -424,7 +425,7 @@ async def confirm_request_handler(
     category = await category_service.get_category(id=product.category_id)
     scheduler.add_job(
         send_order_to_admin,
-        trigger=DateTrigger(run_date=datetime.now() + timedelta(hours=24)),
+        trigger=DateTrigger(run_date=datetime.now() + timedelta(seconds=10)),
         kwargs={
             'order_text': json_text_getter.get_order_info_text(
                 user_id=order.user_id,
@@ -438,6 +439,7 @@ async def confirm_request_handler(
         },
     )
     await query.answer(text='Все было успешно подтверждено, ожидайте 24 часа!', show_alert=True)
+    await bot.delete_message(chat_id=event_chat.id, message_id=query.message.message_id)
 
 
 @router.callback_query(F.data == 'bot_statistics')
