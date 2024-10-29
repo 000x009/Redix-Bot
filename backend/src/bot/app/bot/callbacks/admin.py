@@ -416,14 +416,13 @@ async def confirm_request_handler(
     product_service: FromDishka[ProductService],
     category_service: FromDishka[CategoryService],
     bot: Bot,
-    event_chat: Chat,
     scheduler: AsyncIOScheduler,
 ) -> None:
     order_id = query.data.split(':')[-1]
     order = await order_service.get_one_order(id=uuid.UUID(order_id))
     product = await product_service.get_one_product(id=order.product_id)
     category = await category_service.get_category(id=product.category_id)
-    await scheduler.add_job(
+    scheduler.add_job(
         send_order_to_admin,
         trigger=DateTrigger(run_date=datetime.now() + timedelta(hours=24)),
         kwargs={

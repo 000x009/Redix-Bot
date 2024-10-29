@@ -67,9 +67,11 @@ async def main() -> None:
     TTLCacheAlbumMiddleware(router=dispatcher)
 
     try:
+        scheduler.start()
         await bot.delete_webhook(drop_pending_updates=True)
         await dispatcher.start_polling(bot, skip_updates=True)
     finally:
+        scheduler.shutdown()
         await container.close()
         await bot.session.close()
 
