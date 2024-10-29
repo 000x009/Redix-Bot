@@ -42,7 +42,7 @@ async def main() -> None:
         'default': RedisJobStore(
             jobs_key='dispatched_trips_jobs',
             run_times_key='dispatched_trips_running',
-            host='localhost',
+            host='redis',
             db=2,
             port=6379
         )
