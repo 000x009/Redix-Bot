@@ -19,6 +19,7 @@ const OrderForm = () => {
   const [codeSuccess, setCodeSuccess] = useState('');
   const [tagVerificationMessage, setTagVerificationMessage] = useState('');
   const [tagVerificationSuccess, setTagVerificationSuccess] = useState(false);
+  const [linkError, setLinkError] = useState('');
  
   useEffect(() => {
     tg.BackButton.show();
@@ -37,6 +38,22 @@ const OrderForm = () => {
     if (!lastOrderTime) return true;
     const timePassed = Date.now() - parseInt(lastOrderTime);
     return timePassed > 10000;
+  };
+
+  const validateGameLink = (link, gameName) => {
+    if (!link) return false;
+  
+    const patterns = {
+      'Brawl Stars': /^https:\/\/link\.brawlstars\.com\/\?supercell_id&p=\d{2}-[a-f0-9-]{36}$/,
+      'Clash Royale': /^https:\/\/link\.clashroyale\.com\/\?supercell_id&p=\d{2}-[a-f0-9-]{36}$/,
+      'Clash of Clans': /^https:\/\/link\.clashofclans\.com\/\?action=OpenSCID&p=\d{2}-[a-f0-9-]{36}$/,
+      'Hay Day': /^https:\/\/link\.haydaygame\.com\/\?action=OpenSCID&p=\d{2}-[a-f0-9-]{36}$/
+    };
+  
+    const pattern = patterns[gameName];
+    if (!pattern) return true;
+  
+    return pattern.test(link);
   };
 
   useEffect(() => {
@@ -97,6 +114,18 @@ const OrderForm = () => {
       }
     });
   
+    // Add link validation
+    if (formFields.ссылка && product?.game_name) {
+      const isValidLink = validateGameLink(formFields.ссылка, product.game_name);
+      if (!isValidLink) {
+        errors.ссылка = true;
+        setLinkError('Пожалуйста, предоставьте правильную ссылку для добавления в друзья');
+        return;
+      } else {
+        setLinkError('');
+      }
+    }
+  
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       alert('Пожалуйста, заполните все обязательные поля');
@@ -154,6 +183,9 @@ const OrderForm = () => {
       
       const handleInputChange = (e) => {
         setFormFields(prev => ({...prev, [field]: e.target.value}));
+        if (field === 'ссылка') {
+          setLinkError('');
+        }
       };
 
       let label = field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ');
@@ -287,6 +319,25 @@ const OrderForm = () => {
                 {tagVerificationMessage}
               </p>
             )}
+          </div>
+        );
+      } else if (field === 'ссылка') {
+        return (
+          <div key={field} style={{marginBottom: '1rem'}}>
+            <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
+              {label}
+            </label>
+            <input
+              type="text"
+              value={formFields[field]}
+              onChange={handleInputChange}
+              style={{
+                ...commonInputStyle,
+                borderBottom: formErrors[field] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
+              }}
+              placeholder={placeholder}
+            />
+            {linkError && <p style={{color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem'}}>{linkError}</p>}
           </div>
         );
       } else {
