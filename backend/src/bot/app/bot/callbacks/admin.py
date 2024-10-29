@@ -398,7 +398,7 @@ async def accept_request_handler(
     await bot.send_message(
         chat_id=order.admin_id,
         text=f'Пользователь {order.user_id} принял вашу заявку на добавление в друзья. Вот данные для заказа:\n\n{order_text}',
-        reply_markup=inline.confirm_order_kb_markup(order_id=order_id)
+        reply_markup=inline.accepted_friend_request_kb_markup(order_id=order_id)
     )
 
 
