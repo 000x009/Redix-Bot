@@ -128,7 +128,7 @@ const OrderForm = () => {
     });
   
     // Add link validation
-    if (product?.game_name && formFields.ссылка !== undefined) {
+    if (formFields.ссылка) {
       const isValidLink = validateGameLink(formFields.ссылка, product.game_name);
       if (!isValidLink) {
         setFormErrors(prev => ({...prev, ссылка: true}));
