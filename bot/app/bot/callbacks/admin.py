@@ -452,8 +452,7 @@ async def bot_statistics_handler(
     product_service: FromDishka[ProductService],
     user_service: FromDishka[UserService],
 ) -> None:
-    purchase_count = await product_service.get_purchase_count()
-    total_purchase_amount = await product_service.get_total_purchase_amount()
+    stats = await product_service.get_purchase_statistics()
     users_count = await user_service.get_new_users_amount()
 
     await bot.edit_message_text(
@@ -462,10 +461,16 @@ async def bot_statistics_handler(
 <b>Статистика бота</b>
 
 <b>Количество покупок:</b>
-За все время: {purchase_count['all_time']}
+За день: {stats['count']['today']}
+За неделю: {stats['count']['week']}
+За месяц: {stats['count']['month']}
+За все время: {stats['count']['all_time']}
 
 <b>Сумма покупок:</b>
-За все время: {total_purchase_amount['all_time']}
+За день: {stats['amount']['today']} ₽
+За неделю: {stats['amount']['week']} ₽
+За месяц: {stats['amount']['month']} ₽
+За все время: {stats['amount']['all_time']} ₽
 
 <b>Количество пришедших пользователей:</b>
 За день: {users_count['today']}

@@ -446,7 +446,19 @@ export async function verifyTag(tag) {
 }
 
 
-export async function login(email, game) {
-  const response = await axios.post(`${API_URL}/supercell/login`, { email: email, game: game });
-  return response.data;
+export async function SupercellAuth(email, game) {
+  try {
+    const response = await axios.post(`${API_URL}/supercell/login`, {
+      email: email,
+      game: game
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Supercell auth error:', error);
+    throw error;
+  }
 }

@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from typing import Optional, TypeAlias, List
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -106,14 +106,21 @@ class UserDAL:
         await self.session.execute(query)
         await self.session.commit()
 
-    async def get_new_users_amount(self, days: Optional[int] = None) -> int:
-        if days is not None:
-            query = (
-                select(func.count()).select_from(UserModel)
-                .filter(UserModel.joined_at > func.now() - timedelta(days=days))
-            )
-        else:
-            query = select(func.count()).select_from(UserModel)
-        result = await self.session.execute(query)
+    async def get_new_users_amount(self) -> dict:
+        async def get_count_for_period(days: Optional[int] = None) -> int:
+            if days is not None:
+                date_threshold = datetime.now() - timedelta(days=days)
+                query = select(func.count()).select_from(UserModel).where(
+                    UserModel.joined_at > date_threshold
+                )
+            else:
+                query = select(func.count()).select_from(UserModel)
+            result = await self.session.execute(query)
+            return result.scalar_one() or 0
 
-        return result.scalar_one_or_none() or 0
+        return {
+            'today': await get_count_for_period(1),
+            'week': await get_count_for_period(7),
+            'month': await get_count_for_period(30),
+            'all_time': await get_count_for_period(None)
+        }

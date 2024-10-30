@@ -1,14 +1,15 @@
-from typing import Optional, TypeAlias, List, Any
+from typing import Optional, List, Any
+from datetime import datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, exists, delete, Result, func, or_
 
 from app.schema import Product
-from app.data.models import ProductModel
+from app.data.models import ProductModel, OrderModel
 
 
-_ProductResult: TypeAlias = Result[tuple[ProductModel]]
+_ProductResult = Result[tuple[ProductModel]]
 
 
 class ProductDAL:
@@ -167,15 +168,42 @@ class ProductDAL:
             for db_product in products
         ]
 
-    async def get_purchase_count(self) -> int:
-        query = select(func.sum(ProductModel.purchase_count))
+    async def get_purchase_count(self, days: Optional[int] = None) -> dict:
+        if days is not None:
+            date_threshold = datetime.now() - timedelta(days=days)
+            query = select(func.sum(ProductModel.purchase_count)).join(OrderModel).where(
+                OrderModel.time > date_threshold
+            )
+        else:
+            query = select(func.sum(ProductModel.purchase_count))
+        
         result = await self.session.execute(query)
         return result.scalar_one() or 0
-    
-    async def get_total_purchase_amount(self) -> float:
-        query = select(func.sum(ProductModel.price * ProductModel.purchase_count)).where(
-            ProductModel.purchase_count > 0
-        )
-        result = await self.session.execute(query)
 
-        return result.scalar_one_or_none() or 0.0
+    async def get_total_purchase_amount(self, days: Optional[int] = None) -> dict:
+        if days is not None:
+            date_threshold = datetime.now() - timedelta(days=days)
+            query = select(func.sum(OrderModel.price)).where(
+                OrderModel.time > date_threshold
+            )
+        else:
+            query = select(func.sum(OrderModel.price))
+        
+        result = await self.session.execute(query)
+        return result.scalar_one() or 0
+
+    async def get_purchase_statistics(self) -> dict:
+        return {
+            'count': {
+                'today': await self.get_purchase_count(1),
+                'week': await self.get_purchase_count(7),
+                'month': await self.get_purchase_count(30),
+                'all_time': await self.get_purchase_count(None)
+            },
+            'amount': {
+                'today': await self.get_total_purchase_amount(1),
+                'week': await self.get_total_purchase_amount(7),
+                'month': await self.get_total_purchase_amount(30),
+                'all_time': await self.get_total_purchase_amount(None)
+            }
+        }

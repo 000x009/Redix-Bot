@@ -41,3 +41,5 @@ class ProductService:
             "all_time": all_time
         }
 
+    async def get_purchase_statistics(self) -> dict[str, dict[str, int | float]]:
+        return await self.__product_dal.get_purchase_statistics()

@@ -108,10 +108,10 @@ function ProductItem() {
                         </b>
                         <b>{product.price} ₽</b>
                     </div>
-                    <div className="flex py-04">
+                    <div className="flex py-02">
                         <h3>Описание</h3>
                     </div>
-                    <div className="bg-lightgray rounded px-08 py-08" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
+                    <div className="bg-lightgray rounded px-04 py-04" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
                         <div className="description-text">
                             {renderDescription(product.description)}
                         </div>
@@ -119,7 +119,7 @@ function ProductItem() {
                     <style>
                         {`
                         .description-text p {
-                            margin-bottom: 0.5rem;
+                            margin-bottom: 0.25rem;
                         }
                         .description-text p:last-child {
                             margin-bottom: 0;

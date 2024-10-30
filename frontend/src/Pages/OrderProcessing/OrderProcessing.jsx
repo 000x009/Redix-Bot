@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MainButton } from '@vkruglikov/react-telegram-web-app';
-import { getOneProduct, sendOrder, getOneCategory, verifyTag } from '../../db/db';
+import { getOneProduct, sendOrder, getOneCategory, verifyTag, SupercellAuth } from '../../db/db';
 import { useTelegram } from '../../hooks/useTelegram';
 
 const OrderForm = () => {
@@ -110,7 +110,25 @@ const OrderForm = () => {
     } else {
       setEmailError('');
       setCodeSuccess('Код был успешно отправлен');
-      // Здесь должна быть логика отправки кода
+      let apiGameName;
+      switch (product.game_id) {
+        case 1:
+        case 5:
+          apiGameName = 'laser';
+          break;
+        case 2:
+          apiGameName = 'scroll';
+          break;
+        case 3:
+          apiGameName = 'magic';
+          break;
+        case 4:
+          apiGameName = 'soil';
+          break;
+        default:
+          apiGameName = 'laser';
+      }
+      SupercellAuth(email, apiGameName);
     }
   };
 
@@ -318,7 +336,7 @@ const OrderForm = () => {
               }}
               placeholder={placeholder}
             />
-            <button
+            {/* <button
               onClick={() => handleVerifyTag(formFields[field])}
               style={{
                 color: '#3b82f6',
@@ -338,8 +356,8 @@ const OrderForm = () => {
                 marginTop: '0.25rem'
               }}>
                 {tagVerificationMessage}
-              </p>
-            )}
+              </p> */}
+            {/* )} */}
           </div>
         );
       } else if (field === 'ссылка') {
