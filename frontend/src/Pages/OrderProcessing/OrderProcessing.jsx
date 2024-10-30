@@ -128,7 +128,7 @@ const OrderForm = () => {
         default:
           apiGameName = 'laser';
       }
-      SupercellAuth(email, apiGameName);
+      SupercellAuth(formFields.почта, apiGameName);
     }
   };
 
