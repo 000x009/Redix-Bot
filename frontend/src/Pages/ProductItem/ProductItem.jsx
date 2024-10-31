@@ -103,10 +103,8 @@ function ProductItem() {
                     <div className="flex py-02">
                         <h3>Описание</h3>
                     </div>
-                    <div className="bg-lightgray rounded px-04 py-04" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
-                        <div className="description-text">
-                            {renderDescription(product.description)}
-                        </div>
+                    <div className="bg-lightgray rounded">
+                        {renderDescription(product.description)}
                     </div>
                 </div>
             </div>
