@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getOneProduct, getUser } from '../../db/db';
 import { useTelegram } from '../../hooks/useTelegram';
 import CircularProgress from '@mui/material/CircularProgress';
+import './ProductItem.css';
 
 function ProductItem() {
     const { id } = useParams();
@@ -74,11 +75,15 @@ function ProductItem() {
 
     const renderDescription = (text) => {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.split(urlRegex).map((part, index) => 
-            urlRegex.test(part) ? 
-                <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a> 
-                : part
-        );
+        return text.split('\n').map((paragraph, paragraphIndex) => (
+            <p key={paragraphIndex}>
+                {paragraph.split(urlRegex).map((part, index) => 
+                    urlRegex.test(part) ? 
+                        <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a> 
+                        : part
+                )}
+            </p>
+        ));
     };
 
     if (loading) {

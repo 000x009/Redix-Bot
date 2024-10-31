@@ -1,0 +1,6 @@
+.description-text p {
+    margin-bottom: 1em;
+}
+.description-text p:last-child {
+    margin-bottom: 0;
+}
