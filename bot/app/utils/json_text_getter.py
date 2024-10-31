@@ -17,7 +17,7 @@ class CreateOrderDTO(BaseModel):
 
 
 def get_json_text(key: str) -> Optional[str]:
-    with open(os.path.normpath('src/files/texts.json'), encoding="utf-8") as f:
+    with open(os.path.normpath('app/files/texts.json'), encoding="utf-8") as f:
         data = json.load(f)
 
         return data.get(key)
