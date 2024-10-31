@@ -112,7 +112,7 @@ function ProductItem() {
                     </div>
                     <div className="bg-lightgray rounded px-04 py-04" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
                         <div className="description-text">
-                            {renderDescription(product.description)}
+                            {product.description}
                         </div>
                     </div>
                 </div>
