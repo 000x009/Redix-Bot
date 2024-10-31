@@ -175,7 +175,7 @@ class ProductDAL:
                 OrderModel.time > date_threshold
             )
         else:
-            query = select(func.count(OrderModel))
+            query = select(func.count(OrderModel.id))
         
         result = await self.session.execute(query)
         return result.scalar_one() or 0
