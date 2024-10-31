@@ -171,11 +171,11 @@ class ProductDAL:
     async def get_purchase_count(self, days: Optional[int] = None) -> dict:
         if days is not None:
             date_threshold = datetime.now() - timedelta(days=days)
-            query = select(func.sum(ProductModel.purchase_count)).join(OrderModel).where(
+            query = select(func.count(OrderModel.id)).where(
                 OrderModel.time > date_threshold
             )
         else:
-            query = select(func.sum(ProductModel.purchase_count))
+            query = select(func.count(OrderModel))
         
         result = await self.session.execute(query)
         return result.scalar_one() or 0
@@ -198,12 +198,12 @@ class ProductDAL:
                 'today': await self.get_purchase_count(1),
                 'week': await self.get_purchase_count(7),
                 'month': await self.get_purchase_count(30),
-                'all_time': await self.get_purchase_count(None)
+                'all_time': await self.get_purchase_count()
             },
             'amount': {
                 'today': await self.get_total_purchase_amount(1),
                 'week': await self.get_total_purchase_amount(7),
                 'month': await self.get_total_purchase_amount(30),
-                'all_time': await self.get_total_purchase_amount(None)
+                'all_time': await self.get_total_purchase_amount()
             }
         }
