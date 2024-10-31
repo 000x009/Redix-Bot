@@ -74,9 +74,11 @@ function ProductItem() {
 
     const renderDescription = (text) => {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.split('\n').map((paragraph, paragraphIndex) => (
-            <p key={paragraphIndex}>{paragraph.split(urlRegex).map((part, partIndex) => urlRegex.test(part) ? (<a key={partIndex} href={part} target="_blank" rel="noopener noreferrer">{part}</a>) : (part))}</p>
-        ));
+        return text.split(urlRegex).map((part, index) => 
+            urlRegex.test(part) ? 
+                <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a> 
+                : part
+        );
     };
 
     if (loading) {
@@ -103,8 +105,10 @@ function ProductItem() {
                     <div className="flex py-02">
                         <h3>Описание</h3>
                     </div>
-                    <div className="bg-lightgray rounded">
-                        {renderDescription(product.description)}
+                    <div className="bg-lightgray rounded px-04 py-04" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
+                        <div className="description-text">
+                            {renderDescription(product.description)}
+                        </div>
                     </div>
                 </div>
             </div>
