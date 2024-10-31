@@ -74,16 +74,27 @@ function ProductItem() {
     }, [user, product, id]);
 
     const renderDescription = (text) => {
+        if (!text) return null;
+        
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.split('\n').map((paragraph, paragraphIndex) => (
-            <p key={paragraphIndex}>
-                {paragraph.split(urlRegex).map((part, index) => 
-                    urlRegex.test(part) ? 
-                        <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a> 
-                        : part
-                )}
-            </p>
-        ));
+        const lines = text.split('\n').filter(line => line.trim());
+        
+        return (
+            <div className="description-text">
+                {lines.map((line, index) => {
+                    const parts = line.split(urlRegex);
+                    return (
+                        <div key={index} className="description-line">
+                            {parts.map((part, partIndex) => 
+                                urlRegex.test(part) ? 
+                                    <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer">{part}</a> 
+                                    : part
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
     };
 
     if (loading) {

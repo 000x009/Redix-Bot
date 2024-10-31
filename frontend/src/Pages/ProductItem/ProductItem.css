@@ -1,11 +1,20 @@
-.description-text p {
-    margin: 0.6em 0;
+.description-line {
+    margin: 4px 0;
 }
 
-.description-text p:first-child {
+.description-line:first-child {
     margin-top: 0;
 }
 
-.description-text p:last-child {
+.description-line:last-child {
     margin-bottom: 0;
+}
+
+.description-line a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.description-line a:hover {
+    text-decoration: underline;
 }
