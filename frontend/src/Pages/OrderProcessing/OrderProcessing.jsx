@@ -84,7 +84,7 @@ const OrderForm = () => {
         
         const initialFormFields = {};
         fetchedCategory.required_fields.forEach(field => {
-          initialFormFields[field] = '';
+          initialFormFields[field.toLowerCase()] = '';
         });
         setFormFields(initialFormFields);
       } catch (error) {
@@ -104,7 +104,7 @@ const OrderForm = () => {
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(formFields.почта)) {
+    if (!emailPattern.test(formFields.почта.trim())) {
       setEmailError('Такой почты не существует');
       setCodeSuccess('');
     } else {
@@ -128,7 +128,7 @@ const OrderForm = () => {
         default:
           apiGameName = 'laser';
       }
-      SupercellAuth(formFields.почта, apiGameName);
+      SupercellAuth(formFields.почта.trim(), apiGameName);
     }
   };
 
@@ -140,14 +140,14 @@ const OrderForm = () => {
   
     const errors = {};
     Object.keys(formFields).forEach(field => {
-      if (field !== 'two_factor_code' && !formFields[field]) {
+      if (field !== 'two_factor_code' && !formFields[field].trim()) {
         errors[field] = true;
       }
     });
   
     // Add link validation
     if (formFields.ссылка) {
-      const isValidLink = validateGameLink(formFields.ссылка, product.game_name);
+      const isValidLink = validateGameLink(formFields.ссылка.trim(), product.game_name);
       if (!isValidLink) {
         setFormErrors(prev => ({...prev, ссылка: true}));
         setLinkError('Пожалуйста, предоставьте правильную ссылку для добавления в друзья');
@@ -171,7 +171,11 @@ const OrderForm = () => {
     setIsSubmitting(true);
   
     try {
-      await sendOrder(id, formFields, tg.initData);
+      const trimmedFormFields = {};
+      Object.keys(formFields).forEach(field => {
+        trimmedFormFields[field] = formFields[field].trim();
+      });
+      await sendOrder(id, trimmedFormFields, tg.initData);
       localStorage.setItem(`lastOrder_${id}`, Date.now().toString());
       navigate('/order/success');
     } catch (error) {
@@ -184,7 +188,7 @@ const OrderForm = () => {
 
   const handleVerifyTag = async (tag) => {
     try {
-      const result = await verifyTag(tag);
+      const result = await verifyTag(tag.trim());
       if (result.exists) {
         setTagVerificationMessage('Тег существует!');
         setTagVerificationSuccess(true);
@@ -218,7 +222,8 @@ const OrderForm = () => {
       };
       
       const handleInputChange = (e) => {
-        setFormFields(prev => ({...prev, [field]: e.target.value}));
+        const fieldName = field.toLowerCase();
+        setFormFields(prev => ({...prev, [fieldName]: e.target.value}));
         if (field === 'ссылка') {
           setLinkError('');
           setFormErrors(prev => {
@@ -229,16 +234,16 @@ const OrderForm = () => {
         }
       };
 
-      let label = field.charAt(0).toUpperCase() + field.slice(1).replace('_', ' ');
+      let label = field.charAt(0).toUpperCase() + field.slice(1).toLowerCase().replace('_', ' ');
       const placeholder = 'Заполните поле';
 
-      if (field === 'почта') {
+      if (field.toLowerCase() === 'почта') {
         label = 'Почта';
-      } else if (field === 'пароль') {
+      } else if (field.toLowerCase() === 'пароль') {
         label = 'Пароль';
       }
 
-      if (field === 'почта') {
+      if (field.toLowerCase() === 'почта') {
         return ( 
           <div key={field} style={{marginBottom: '1rem'}}>
             <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
@@ -247,14 +252,14 @@ const OrderForm = () => {
             <div style={{display: 'flex'}}>
               <input
                 type="email"
-                value={formFields[field]}
+                value={formFields.почта || ''}
                 onChange={handleInputChange}
                 style={{
                   ...commonInputStyle,
                   flexGrow: 1,
                   borderTopRightRadius: 0,
                   borderBottomRightRadius: 0,
-                  borderBottom: formErrors[field] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
+                  borderBottom: formErrors.почта ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
                 }}
                 placeholder={placeholder}
               />
@@ -270,7 +275,7 @@ const OrderForm = () => {
             {codeSuccess && <p style={{color: '#10b981', fontSize: '0.875rem', marginTop: '0.25rem'}}>{codeSuccess}</p>}
           </div>
         );
-      } else if (field === 'пароль') {
+      } else if (field.toLowerCase() === 'пароль') {
         return (
           <div key={field} style={{marginBottom: '1rem'}}>
             <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
@@ -279,11 +284,11 @@ const OrderForm = () => {
             <div style={{position: 'relative'}}>
               <input
                 type={showPassword ? "text" : "password"}
-                value={formFields[field]}
+                value={formFields[field.toLowerCase()]}
                 onChange={handleInputChange}
                 style={{
                   ...commonInputStyle,
-                  borderBottom: formErrors[field] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)',
+                  borderBottom: formErrors[field.toLowerCase()] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)',
                   paddingRight: '2.5rem'
                 }}
                 placeholder={placeholder}
@@ -320,7 +325,7 @@ const OrderForm = () => {
             </div>
           </div>
         );
-      } else if (field === 'тег') {
+      } else if (field.toLowerCase() === 'тег') {
         return (
           <div key={field} style={{marginBottom: '1rem'}}>
             <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
@@ -328,16 +333,16 @@ const OrderForm = () => {
             </label>
             <input
               type="text"
-              value={formFields[field]}
+              value={formFields[field.toLowerCase()]}
               onChange={handleInputChange}
               style={{
                 ...commonInputStyle,
-                borderBottom: formErrors[field] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
+                borderBottom: formErrors[field.toLowerCase()] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
               }}
               placeholder={placeholder}
             />
             {/* <button
-              onClick={() => handleVerifyTag(formFields[field])}
+              onClick={() => handleVerifyTag(formFields[field.toLowerCase()])}
               style={{
                 color: '#3b82f6',
                 background: 'none',
@@ -360,7 +365,7 @@ const OrderForm = () => {
             {/* )} */}
           </div>
         );
-      } else if (field === 'ссылка') {
+      } else if (field.toLowerCase() === 'ссылка') {
         return (
           <div key={field} style={{marginBottom: '1rem'}}>
             <label style={{display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.25rem'}}>
@@ -368,11 +373,11 @@ const OrderForm = () => {
             </label>
             <input
               type="text"
-              value={formFields[field]}
+              value={formFields[field.toLowerCase()]}
               onChange={handleInputChange}
               style={{
                 ...commonInputStyle,
-                borderBottom: formErrors[field] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
+                borderBottom: formErrors[field.toLowerCase()] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
               }}
               placeholder={placeholder}
             />
@@ -387,11 +392,11 @@ const OrderForm = () => {
             </label>
             <input
               type="text"
-              value={formFields[field]}
+              value={formFields[field.toLowerCase()]}
               onChange={handleInputChange}
               style={{
                 ...commonInputStyle,
-                borderBottom: formErrors[field] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
+                borderBottom: formErrors[field.toLowerCase()] ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
               }}
               placeholder={placeholder}
             />

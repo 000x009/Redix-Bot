@@ -198,12 +198,14 @@ class ProductDAL:
                 'today': await self.get_purchase_count(1),
                 'week': await self.get_purchase_count(7),
                 'month': await self.get_purchase_count(30),
+                'year': await self.get_purchase_count(365),
                 'all_time': await self.get_purchase_count()
             },
             'amount': {
                 'today': await self.get_total_purchase_amount(1),
                 'week': await self.get_total_purchase_amount(7),
                 'month': await self.get_total_purchase_amount(30),
+                'year': await self.get_total_purchase_amount(365),
                 'all_time': await self.get_total_purchase_amount()
             }
         }

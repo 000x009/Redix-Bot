@@ -464,18 +464,21 @@ async def bot_statistics_handler(
 За день: {stats['count']['today']}
 За неделю: {stats['count']['week']}
 За месяц: {stats['count']['month']}
+За год: {stats['count']['year']}
 За все время: {stats['count']['all_time']}
 
 <b>Сумма покупок:</b>
 За день: {stats['amount']['today']} ₽
 За неделю: {stats['amount']['week']} ₽
 За месяц: {stats['amount']['month']} ₽
+За год: {stats['amount']['year']} ₽
 За все время: {stats['amount']['all_time']} ₽
 
 <b>Количество пришедших пользователей:</b>
 За день: {users_count['today']}
 За неделю: {users_count['week']}
 За месяц: {users_count['month']}
+За год: {users_count['year']}
 За все время: {users_count['all_time']}
 """,
         message_id=query.message.message_id,

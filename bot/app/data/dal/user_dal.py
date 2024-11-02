@@ -122,5 +122,6 @@ class UserDAL:
             'today': await get_count_for_period(1),
             'week': await get_count_for_period(7),
             'month': await get_count_for_period(30),
+            'year': await get_count_for_period(365),
             'all_time': await get_count_for_period(None)
         }
