@@ -20,6 +20,8 @@ const OrderForm = () => {
   const [tagVerificationMessage, setTagVerificationMessage] = useState('');
   const [tagVerificationSuccess, setTagVerificationSuccess] = useState(false);
   const [linkError, setLinkError] = useState('');
+  const [generalError, setGeneralError] = useState('');
+  const [cooldownError, setCooldownError] = useState('');
  
   useEffect(() => {
     tg.BackButton.show();
@@ -133,8 +135,11 @@ const OrderForm = () => {
   };
 
   const handleSubmit = async () => {
+    setGeneralError('');
+    setCooldownError('');
+    
     if (isSubmitting || !isCooldownPassed(id)) {
-      alert('Пожалуйста, подождите. Заказ уже обрабатывается или не прошло 10 секунд с предыдущего заказа.');
+      setCooldownError('Пожалуйста, подождите. Заказ уже обрабатывается или не прошло 10 секунд с предыдущего заказа.');
       return;
     }
   
@@ -148,7 +153,6 @@ const OrderForm = () => {
       }
     });
   
-    // Add link validation
     if (formFields.ссылка) {
       const isValidLink = validateGameLink(formFields.ссылка.trim(), product.game_name);
       if (!isValidLink) {
@@ -166,12 +170,11 @@ const OrderForm = () => {
     }
   
     if (hasErrors) {
-      // setFormErrors(errors);
-      // alert('Пожалуйста, заполните все обязательные поля');
+      setFormErrors(errors);
+      setGeneralError('Пожалуйста, заполните все обязательные поля');
       return;
     }
   
-    // Устанавливаем isSubmitting в true только после успешной валидации
     setIsSubmitting(true);
   
     try {
@@ -184,8 +187,8 @@ const OrderForm = () => {
       navigate('/order/success');
     } catch (error) {
       console.error('Error sending order:', error);
-      alert('Произошла ошибка при отправке заказа');
-      setIsSubmitting(false); // Сбрасываем состояние в случае ошибки
+      setGeneralError('Произошла ошибка при отправке заказа');
+      setIsSubmitting(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -332,6 +335,9 @@ const OrderForm = () => {
                 )}
               </button>
             </div>
+            {formErrors[field.toLowerCase()] && (
+              <p style={{color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem'}}>Пожалуйста, введите пароль</p>
+            )}
           </div>
         );
       } else if (field.toLowerCase() === 'тег') {
@@ -350,28 +356,9 @@ const OrderForm = () => {
               }}
               placeholder={placeholder}
             />
-            {/* <button
-              onClick={() => handleVerifyTag(formFields[field.toLowerCase()])}
-              style={{
-                color: '#3b82f6',
-                background: 'none',
-                border: 'none',
-                padding: '0.5rem 0',
-                cursor: 'pointer',
-                fontSize: '0.875rem'
-              }}
-            >
-              Проверить тег
-            </button>
-            {tagVerificationMessage && (
-              <p style={{
-                color: tagVerificationSuccess ? '#10b981' : '#ef4444',
-                fontSize: '0.875rem',
-                marginTop: '0.25rem'
-              }}>
-                {tagVerificationMessage}
-              </p> */}
-            {/* )} */}
+            {formErrors[field.toLowerCase()] && (
+              <p style={{color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem'}}>Пожалуйста, введите тег</p>
+            )}
           </div>
         );
       } else if (field.toLowerCase() === 'ссылка') {
@@ -409,6 +396,9 @@ const OrderForm = () => {
               }}
               placeholder={placeholder}
             />
+            {formErrors[field.toLowerCase()] && (
+              <p style={{color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem'}}>Пожалуйста, заполните это поле</p>
+            )}
           </div>
         );
       }
@@ -441,6 +431,17 @@ const OrderForm = () => {
   return (
     <div style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '1rem', backgroundColor: 'var(--tg-theme-bg-color)', color: 'var(--tg-theme-text-color)', overflow: 'hidden', maxWidth: '100vw'}}>
       <h1 style={{fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem'}}>Оформление заказа</h1>
+      {(generalError || cooldownError) && (
+        <div style={{
+          backgroundColor: '#fee2e2',
+          color: '#ef4444',
+          padding: '0.75rem',
+          borderRadius: '0.375rem',
+          marginBottom: '1rem'
+        }}>
+          {generalError || cooldownError}
+        </div>
+      )}
       <div style={{flexGrow: 1, display: 'flex', flexDirection: 'column'}}>
         <div className="bg-lightgray rounded px-08 py-08" style={{ marginBottom: '1.5rem' }}>
           {product.instruction_image_url && (
