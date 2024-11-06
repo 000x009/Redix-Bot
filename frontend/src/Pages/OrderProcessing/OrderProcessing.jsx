@@ -166,7 +166,7 @@ const OrderForm = () => {
     }
   
     if (hasErrors) {
-      setFormErrors(errors);
+      // setFormErrors(errors);
       alert('Пожалуйста, заполните все обязательные поля');
       return;
     }
