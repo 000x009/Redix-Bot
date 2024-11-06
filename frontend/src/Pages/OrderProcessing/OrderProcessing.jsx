@@ -171,6 +171,7 @@ const OrderForm = () => {
       return;
     }
   
+    // Устанавливаем isSubmitting в true только после успешной валидации
     setIsSubmitting(true);
   
     try {
@@ -184,6 +185,7 @@ const OrderForm = () => {
     } catch (error) {
       console.error('Error sending order:', error);
       alert('Произошла ошибка при отправке заказа');
+      setIsSubmitting(false); // Сбрасываем состояние в случае ошибки
     } finally {
       setIsSubmitting(false);
     }
