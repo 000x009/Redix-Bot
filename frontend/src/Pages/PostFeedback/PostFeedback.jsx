@@ -18,6 +18,7 @@ const PostFeedback = () => {
   const { tg } = useTelegram();
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [photos, setPhotos] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setIsWebApp(!!window.Telegram?.WebApp);
@@ -36,15 +37,20 @@ const PostFeedback = () => {
   }, [tg.BackButton, navigate, isWebApp]);
 
   const handleSubmit = useCallback(async () => {
+    if (isSubmitting) return;
+    
     setError('');
     if (review.trim() === '') {
       setShowConfirmation(true);
     } else {
       submitReview();
     }
-  }, [review, product, rating, tg.initData, navigate, photos]);
+  }, [review, product, rating, tg.initData, navigate, photos, isSubmitting]);
   
   const submitReview = async () => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
     try {
       const is_posted = await isUserPostedFeedback(id, tg.initData);
       if (is_posted) {
@@ -61,6 +67,8 @@ const PostFeedback = () => {
     } catch (err) {
       console.error('Error submitting review:', err);
       setError('Произошла ошибка при отправке отзыва. Пожалуйста, попробуйте еще раз.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -91,8 +99,9 @@ const PostFeedback = () => {
   useEffect(() => {
     const setupMainButton = () => {
       tg.MainButton.setParams({
-        text: 'Отправить',
+        text: isSubmitting ? 'Отправка...' : 'Отправить',
         color: '#4CAF50',
+        disable: isSubmitting
       });
       tg.MainButton.onClick(handleSubmit);
       tg.MainButton.show();
@@ -104,7 +113,7 @@ const PostFeedback = () => {
       tg.MainButton.offClick(handleSubmit);
       tg.MainButton.hide();
     };
-  }, [tg.MainButton, handleSubmit]);
+  }, [tg.MainButton, handleSubmit, isSubmitting]);
 
   useEffect(() => {
     const fetchData = async () => {

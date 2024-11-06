@@ -139,9 +139,12 @@ const OrderForm = () => {
     }
   
     const errors = {};
+    let hasErrors = false;
+    
     Object.keys(formFields).forEach(field => {
       if (field !== 'two_factor_code' && !formFields[field].trim()) {
         errors[field] = true;
+        hasErrors = true;
       }
     });
   
@@ -151,7 +154,7 @@ const OrderForm = () => {
       if (!isValidLink) {
         setFormErrors(prev => ({...prev, ссылка: true}));
         setLinkError('Пожалуйста, предоставьте правильную ссылку для добавления в друзья');
-        return;
+        hasErrors = true;
       } else {
         setLinkError('');
         setFormErrors(prev => {
@@ -162,7 +165,7 @@ const OrderForm = () => {
       }
     }
   
-    if (Object.keys(errors).length > 0) {
+    if (hasErrors) {
       setFormErrors(errors);
       alert('Пожалуйста, заполните все обязательные поля');
       return;
@@ -257,20 +260,24 @@ const OrderForm = () => {
                 style={{
                   ...commonInputStyle,
                   flexGrow: 1,
-                  borderTopRightRadius: 0,
-                  borderBottomRightRadius: 0,
+                  borderTopRightRadius: category?.name === 'Supercell Store' ? '0.25rem' : 0,
+                  borderBottomRightRadius: category?.name === 'Supercell Store' ? '0.25rem' : 0,
                   borderBottom: formErrors.почта ? '1px solid red' : '1px solid var(--tg-theme-hint-color)'
                 }}
                 placeholder={placeholder}
               />
-              <button
-                onClick={handleEmailSubmit}
-                style={{backgroundColor: '#3b82f6', color: 'white', padding: '0.5rem', borderTopRightRadius: '0.25rem', borderBottomRightRadius: '0.25rem', border: 'none'}}
-              >
-                ➤
-              </button>
+              {category?.name !== 'Supercell Store' && (
+                <button
+                  onClick={handleEmailSubmit}
+                  style={{backgroundColor: '#3b82f6', color: 'white', padding: '0.5rem', borderTopRightRadius: '0.25rem', borderBottomRightRadius: '0.25rem', border: 'none'}}
+                >
+                  ➤
+                </button>
+              )}
             </div>
-            <p style={{color: 'gray', fontSize: '0.75rem', marginTop: '0.25rem'}}>Стрелка отправляет код на почту</p>
+            {category?.name !== 'Supercell Store' && (
+              <p style={{color: 'gray', fontSize: '0.75rem', marginTop: '0.25rem'}}>Стрелка отправляет код на почту</p>
+            )}
             {emailError && <p style={{color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem'}}>{emailError}</p>}
             {codeSuccess && <p style={{color: '#10b981', fontSize: '0.875rem', marginTop: '0.25rem'}}>{codeSuccess}</p>}
           </div>
