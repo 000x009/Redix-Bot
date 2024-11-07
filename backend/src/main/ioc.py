@@ -76,7 +76,7 @@ class Container(containers.DeclarativeContainer):
     feedback_service = providers.Factory(FeedbackService, feedback_dal=feedback_dal)
     freekassa_service = providers.Factory(FreeKassaService)
     game_service = providers.Factory(GameService, game_dal=game_dal)
-    admin_service = providers.Factory(AdminService, admin_dal=admin_dal)
+    admin_service = providers.Factory(AdminService, dal=admin_dal)
     category_service = providers.Factory(CategoryService, category_dal=category_dal)
     supercell_client = providers.Factory(SupercellClient)
     
