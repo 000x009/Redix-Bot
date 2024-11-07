@@ -52,7 +52,7 @@ const OrderForm = () => {
     }
   
     const patterns = {
-      'Brawl Stars': /^https:\/\/link\.brawlstars\.com\/\?supercell_id&p=\d{2}-[a-f0-9-]{36}$/,
+      'Brawl Stars': /^https:\/\/link\.brawlstars\.com\/(?:\?supercell_id&p=\d{2}-[a-f0-9-]{36}|invite\/friend\/[a-z]{2}\?tag=[A-Z0-9]+&token=[a-z0-9]+)$/,
       'Clash Royale': /^https:\/\/link\.clashroyale\.com\/\?supercell_id&p=\d{2}-[a-f0-9-]{36}$/,
       'Clash of Clans': /^https:\/\/link\.clashofclans\.com\/\?action=OpenSCID&p=\d{2}-[a-f0-9-]{36}$/,
       'Hay Day': /^https:\/\/link\.haydaygame\.com\/\?action=OpenSCID&p=\d{2}-[a-f0-9-]{36}$/

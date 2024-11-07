@@ -1,5 +1,5 @@
 import json
-from typing import Optional, TypeAlias, List, Any
+from typing import Optional, List, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, exists, delete, Result
@@ -8,7 +8,7 @@ from app.schema import Feedback
 from app.data.models import FeedbackModel
 
 
-_FeedbackResult: TypeAlias = Result[tuple[FeedbackModel]]
+_FeedbackResult = Result[tuple[FeedbackModel]]
 
 
 class FeedbackDAL:
@@ -85,6 +85,7 @@ class FeedbackDAL:
                 time=db_feedback.time,
                 is_active=db_feedback.is_active,
                 images=db_feedback.images,
+                message_url=db_feedback.message_url,
             )
         return None
 
@@ -104,6 +105,7 @@ class FeedbackDAL:
                     time=db_feedback.time,
                     is_active=db_feedback.is_active,
                     images=db_feedback.images,
+                    message_url=db_feedback.message_url,
                 )
                 for db_feedback in db_feedbacks
             ]

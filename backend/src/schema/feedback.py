@@ -14,3 +14,4 @@ class Feedback:
     time: datetime.datetime = field(default=datetime.datetime.now())
     is_active: bool = field(default=True)
     images: list[str] = field(default=None)
+    message_url: str = field(default=None)

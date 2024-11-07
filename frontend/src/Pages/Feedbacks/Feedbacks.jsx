@@ -197,6 +197,22 @@ const FeedbackItem = ({ feedback, isAdmin, onDelete }) => {
       }}>
         <p style={{ margin: 0 }}>{feedback.text}</p>
       </div>
+      {feedback.message_url && (
+        <a 
+          href={feedback.message_url} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          style={{ 
+            display: 'inline-block', 
+            marginTop: '8px', 
+            color: 'var(--tg-theme-link-color)', 
+            textDecoration: 'none', 
+            fontWeight: 'bold' 
+          }}
+        >
+          Перейти к отзыву
+        </a>
+      )}
     </div>
   );
 };

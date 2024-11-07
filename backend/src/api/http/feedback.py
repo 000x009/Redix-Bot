@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
 from aiogram import Bot
-from aiogram.types import BufferedInputFile
+from aiogram.types import BufferedInputFile, Message
 from aiogram.utils.media_group import MediaGroupBuilder
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -37,16 +37,7 @@ async def post_feedback(
     yandex_storage_client: YandexStorageClient = Depends(Provide[Container.yandex_storage_client]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
-    await feedback_service.add_feedback(
-        id=uuid.uuid4(),
-        product_id=data.product.id,
-        order_id=data.order_id,
-        user_id=user_data.user.id,
-        text=data.text,
-        stars=data.stars,
-        time=datetime.now(),
-        images=data.images,
-    )
+    feedback_id = uuid.uuid4()
     feedback_group_id = -1002348273294
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     text = f"""
@@ -64,9 +55,21 @@ async def post_feedback(
                 image_content = yandex_storage_client.get_file(image_url)
                 file = BufferedInputFile(image_content, filename=f"feedback_image_{uuid.uuid4()}.jpg")
                 media_group.add_photo(media=file)
-            await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
+            message: Message = await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
         else:
-            await bot.send_message(chat_id=feedback_group_id, text=text)
+            message: Message = await bot.send_message(chat_id=feedback_group_id, text=text)
+        
+        await feedback_service.add_feedback(
+            id=feedback_id,
+            product_id=data.product.id,
+            order_id=data.order_id,
+            user_id=user_data.user.id,
+            text=data.text,
+            stars=data.stars,
+            time=datetime.now(),
+            images=data.images,
+            message_url=message.get_url(),
+        )
     except Exception as e:
         print(e)
     finally:

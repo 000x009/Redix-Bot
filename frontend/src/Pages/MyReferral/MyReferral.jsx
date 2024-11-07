@@ -11,7 +11,7 @@ function MyReferral() {
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [btnMessage, setBtnMessage] = useState('Копировать ссылку');
-    const [link, setLink] = useState(`https://t.me/paradoxxx_test_bot?start=${code}`);
+    const [link, setLink] = useState(`https://t.me/RedixShopBot?start=${code}`);
     const [user, setUser] = useState(null);
     const { tg } = useTelegram();
  
@@ -32,7 +32,7 @@ function MyReferral() {
             const response = await getUser(tg.initData);
             setUser(response);
             setCode(response.referral_code);
-            setLink(`https://t.me/paradoxxx_test_bot?start=${response.referral_code}`);
+            setLink(`https://t.me/RedixShopBot?start=${response.referral_code}`);
         };
         fetchUser();
         setIsLoading(false);
@@ -99,7 +99,7 @@ function MyReferral() {
             setMessage('Реферальный код не может быть пустым');
             return;
         }
-        setLink(`https://t.me/paradoxxx_test_bot?start=${code}`);
+        setLink(`https://t.me/RedixShopBot?start=${code}`);
         try {
             if (code !== user.referral_code) {  
                 await setReferralCode(code, tg.initData);
@@ -144,7 +144,7 @@ function MyReferral() {
             </div>
         </div>
         <div className="horizontal-padding flex column">
-            <div className="label" style={{marginBottom: '0.5rem'}}>Распространяйте ваше реферальную ссылку, и за
+            <div className="label" style={{marginBottom: '0.5rem'}}>Распространяйте вашу реферальную ссылку, и за
                 каждого нового пользователя по вашей ссылке
                 вы будете получать процент с каждой его покупки на баланс.
             </div>

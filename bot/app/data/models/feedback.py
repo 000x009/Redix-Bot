@@ -19,6 +19,7 @@ class FeedbackModel(Base):
     time: Mapped[datetime.datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False, default=datetime.datetime.now())
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     images: Mapped[list[str]] = mapped_column(JSON, nullable=True)
+    message_url: Mapped[str] = mapped_column(String, nullable=True)
 
     user = relationship('UserModel', back_populates='feedbacks')
     product = relationship('ProductModel', back_populates='feedbacks')

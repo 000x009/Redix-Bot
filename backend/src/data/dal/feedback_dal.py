@@ -85,6 +85,7 @@ class FeedbackDAL:
                 time=db_feedback.time,
                 is_active=db_feedback.is_active,
                 images=db_feedback.images,
+                message_url=db_feedback.message_url,
             )
         return None
 
@@ -104,6 +105,7 @@ class FeedbackDAL:
                     time=db_feedback.time,
                     is_active=db_feedback.is_active,
                     images=db_feedback.images,
+                    message_url=db_feedback.message_url,
                 )
                 for db_feedback in db_feedbacks
             ]
