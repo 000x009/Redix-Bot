@@ -13,7 +13,7 @@ from app.services import (
     PromoService,
     SupercellAuthService,
     FeedbackService,
-    FreekassaService,
+    FreeKassaService,
     GameService,
     YandexStorageClient,
     CategoryService,
@@ -69,7 +69,7 @@ class ServiceProvider(Provider):
     promo_service = provide(PromoService, scope=Scope.REQUEST, provides=PromoService)
     supercell_service = provide(SupercellAuthService, scope=Scope.REQUEST, provides=SupercellAuthService)
     feedback_service = provide(FeedbackService, scope=Scope.REQUEST, provides=FeedbackService)
-    freekassa_service = provide(FreekassaService, scope=Scope.REQUEST, provides=FreekassaService)
+    freekassa_service = provide(FreeKassaService, scope=Scope.REQUEST, provides=FreeKassaService)
     game_service = provide(GameService, scope=Scope.REQUEST, provides=GameService)
     category_service = provide(CategoryService, scope=Scope.REQUEST, provides=CategoryService)
     admin_service = provide(AdminService, scope=Scope.REQUEST, provides=AdminService)
