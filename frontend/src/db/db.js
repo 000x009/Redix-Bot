@@ -462,3 +462,9 @@ export async function SupercellAuth(email, game) {
     throw error;
   }
 }
+
+
+export async function getAdmins() {
+  const response = await axios.get(`${API_URL}/admin/admins`);
+  return response.data;
+}

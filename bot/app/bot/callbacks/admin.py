@@ -426,7 +426,7 @@ async def confirm_request_handler(
     category = await category_service.get_category(id=product.category_id)
     scheduler.add_job(
         send_order_to_admin,
-        trigger=DateTrigger(run_date=datetime.now() + timedelta(seconds=10)),
+        trigger=DateTrigger(run_date=datetime.now() + timedelta(hours=24)),
         kwargs={
             'order_text': json_text_getter.get_order_info_text(
                 user_id=order.user_id,

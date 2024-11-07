@@ -38,9 +38,12 @@ async def post_feedback(
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
     feedback_id = uuid.uuid4()
-    feedback_group_id = -1002348273294
+    feedback_group_id = -1001968045101
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    feedbacks = await feedback_service.get_feedbacks()
+    feedbacks_count = len(feedbacks)
     text = f"""
+Номер отзыва: {feedbacks_count + 1}
 Рейтинг: {"⭐" * data.stars}
 Покупатель: @{user_data.user.username}
 Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}
@@ -49,6 +52,7 @@ async def post_feedback(
 {data.text}
 """
     try:
+
         if data.images:
             media_group = MediaGroupBuilder(caption=text)
             for image_url in data.images:
@@ -58,6 +62,7 @@ async def post_feedback(
             message: Message = await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
         else:
             message: Message = await bot.send_message(chat_id=feedback_group_id, text=text)
+
         
         await feedback_service.add_feedback(
             id=feedback_id,

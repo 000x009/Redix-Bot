@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getFeedbacks, removeFeedback, getUser, getUserFeedbacks } from '../../db/db';
+import { getFeedbacks, removeFeedback, getUser, getUserFeedbacks, getAdmins } from '../../db/db';
 import { useTelegram } from '../../hooks/useTelegram';
 import CircularProgress from '@mui/material/CircularProgress';
 import FeedbackPhoto from '../../images/feedback_photo.PNG';
@@ -10,7 +10,7 @@ export default function Feedbacks() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [db_user, setDbUser] = useState(null);
   const { tg } = useTelegram();
-  const [admins, setAdmins] = useState([6384960822, 1719800292])
+  const [admins, setAdmins] = useState([])
 
   useEffect(() => {
     tg.BackButton.show();
@@ -35,6 +35,14 @@ export default function Feedbacks() {
     };
 
     fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      const admins = await getAdmins();
+      setAdmins(admins);
+    };
+    fetchAdmins();
   }, []);
 
   useEffect(() => {

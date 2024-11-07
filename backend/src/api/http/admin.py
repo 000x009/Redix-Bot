@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends
 
@@ -25,3 +25,12 @@ async def get_admin(
 ) -> Optional[Admin]:
     admin = await admin_service.get(user_id=user_data.user.id)
     return admin
+
+
+@router.get("/admins")
+@inject
+async def get_admins(
+    admin_service: AdminService = Depends(Provide[Container.admin_service]),
+) -> List[int]:
+    admins = await admin_service.get_all()
+    return [admin.user_id for admin in admins]

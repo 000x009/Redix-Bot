@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { getOneProduct, getUser } from '../../db/db';
 import { useTelegram } from '../../hooks/useTelegram';
 import CircularProgress from '@mui/material/CircularProgress';
-import './ProductItem.css';
 
 function ProductItem() {
     const { id } = useParams();
@@ -74,27 +73,18 @@ function ProductItem() {
     }, [user, product, id]);
 
     const renderDescription = (text) => {
-        if (!text) return null;
-        
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const lines = text.split('\n').filter(line => line.trim());
-        
-        return (
-            <div className="description-text">
-                {lines.map((line, index) => {
-                    const parts = line.split(urlRegex);
-                    return (
-                        <div key={index} className="description-line">
-                            {parts.map((part, partIndex) => 
-                                urlRegex.test(part) ? 
-                                    <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer">{part}</a> 
-                                    : part
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-        );
+        return text.split('\n').map((paragraph, paragraphIndex) => (
+            <p key={paragraphIndex}>
+                {paragraph.split(urlRegex).map((part, partIndex) => 
+                    urlRegex.test(part) ? (
+                        <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer">{part}</a>
+                    ) : (
+                        part
+                    )
+                )}
+            </p>
+        ));
     };
 
     if (loading) {
@@ -118,14 +108,24 @@ function ProductItem() {
                         </b>
                         <b>{product.price} ₽</b>
                     </div>
-                    <div className="flex py-02">
+                    <div className="flex py-04">
                         <h3>Описание</h3>
                     </div>
-                    <div className="bg-lightgray rounded px-04 py-04" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
+                    <div className="bg-lightgray rounded px-08 py-08" style={{overflowWrap: 'break-word', wordBreak: 'break-word'}}>
                         <div className="description-text">
                             {renderDescription(product.description)}
                         </div>
                     </div>
+                    <style>
+                        {`
+                        .description-text p {
+                            margin-bottom: 0.5rem;
+                        }
+                        .description-text p:last-child {
+                            margin-bottom: 0;
+                        }
+                        `}
+                    </style>
                 </div>
             </div>
         </div>
