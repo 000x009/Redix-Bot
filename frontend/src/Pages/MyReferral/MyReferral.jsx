@@ -146,7 +146,7 @@ function MyReferral() {
         <div className="horizontal-padding flex column">
             <div className="label" style={{marginBottom: '0.5rem'}}>Распространяйте вашу реферальную ссылку, и за
                 каждого нового пользователя по вашей ссылке
-                вы будете получать процент с каждой его покупки на баланс.
+                вы будете получать 2 процента с каждой его покупки на баланс.
             </div>
 
             <span className="fw-500">Ваша реферальная ссылка:</span>
