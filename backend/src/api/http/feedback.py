@@ -73,7 +73,7 @@ async def post_feedback(
             stars=data.stars,
             time=datetime.now(),
             images=data.images,
-            message_url=message.get_url(),
+            message_url=message.get_url()[0] if isinstance(message, list[Message]) else message.get_url(),
         )
     except Exception as e:
         print(e)
