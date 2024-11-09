@@ -59,9 +59,9 @@ async def post_feedback(
                 image_content = yandex_storage_client.get_file(image_url)
                 file = BufferedInputFile(image_content, filename=f"feedback_image_{uuid.uuid4()}.jpg")
                 media_group.add_photo(media=file)
-            message: Message = await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
+            message: list[Message] | Message = await bot.send_media_group(chat_id=feedback_group_id, media=media_group.build())
         else:
-            message: Message = await bot.send_message(chat_id=feedback_group_id, text=text)
+            message: Message | list[Message] = await bot.send_message(chat_id=feedback_group_id, text=text)
 
         
         await feedback_service.add_feedback(
@@ -73,7 +73,7 @@ async def post_feedback(
             stars=data.stars,
             time=datetime.now(),
             images=data.images,
-            message_url=message.get_url()[0] if isinstance(message, list) else message.get_url(),
+            message_url=message[0].get_url() if isinstance(message, list) else message.get_url(),
         )
     except Exception as e:
         print(e)
