@@ -16,7 +16,7 @@ class Database:
     async def get_engine() -> AsyncGenerator[AsyncEngine, None]:
         engine = create_async_engine(url=settings.db_connection_url)
         yield engine
-        engine.close()
+        await engine.dispose()
 
     @staticmethod
     def get_async_sessionmaker(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
@@ -25,8 +25,12 @@ class Database:
     @staticmethod
     async def get_async_session(sessionmaker: async_sessionmaker[AsyncSession]) -> AsyncGenerator[AsyncSession, None]:
         async with sessionmaker() as session:
-            yield session
-            await session.close()
+            try:
+                yield session
+            except Exception:
+                await session.rollback()
+            finally:
+                await session.close()
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=[
