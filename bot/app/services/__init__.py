@@ -11,6 +11,7 @@ from .storage_client import YandexStorageClient
 from .category_service import CategoryService
 from .admin_service import AdminService
 from .supercell_client import SupercellClient
+from .bilee_service import BileeService
 
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     'CategoryService',
     'AdminService',
     'SupercellClient',
+    'BileeService',
 ]

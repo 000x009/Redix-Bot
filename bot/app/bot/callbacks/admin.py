@@ -6,6 +6,7 @@ from aiogram.types import CallbackQuery, Chat, ReplyKeyboardRemove, Message
 from aiogram.fsm.context import FSMContext
 
 from dishka import FromDishka
+from aiogram_album import AlbumMessage
 
 from aiogram_dialog import DialogManager, StartMode, ShowMode
 
@@ -41,69 +42,40 @@ async def admin_panel_handler(
     )
 
 
-#MAILING HANDLERS
-@router.callback_query(F.data == 'admin_mailing')
-async def mailing_handler(
-    query: CallbackQuery,
-    bot: Bot,
-    event_chat: Chat,
-    state: FSMContext,
-) -> None:
-    await bot.edit_message_text(
-        message_id=query.message.message_id,
-        chat_id=event_chat.id,
-        text="Отправьте сообщение, которое желаете разослать всем пользователям:",
-        reply_markup=inline.back_to_apanel_kb_markup,
-    )
-    await state.set_state(MailingSG.MESSAGE)
-
-
-@router.callback_query(F.data == 'confirm_mailing')
-async def mailing_sender_handler(
-    query: CallbackQuery,
+# MAILING HANDLERS
+@router.message(MailingSG.MESSAGE, F.media_group_id)
+async def mailing_message_handler(
+    album_message: AlbumMessage,
     state: FSMContext,
     bot: Bot,
     event_chat: Chat,
-    user_service: FromDishka[UserService],
+    dialog_manager: DialogManager,
 ) -> None:
+    album_photo = [message.photo[-1].file_id for message in album_message]
+    await state.update_data(album_photo=album_photo, album_caption=album_message.caption)
     state_data = await state.get_data()
-    media_group = state_data.get("media_group")
-    message_id = state_data.get("message_id")
-
-    users = await user_service.get_users()
-    rkm = ReplyKeyboardRemove()
-    for user in users:
-        try:
-            if media_group:
-                await bot.send_media_group(chat_id=user.user_id, media=media_group.build())
-            elif message_id:
-                await bot.copy_message(
-                    chat_id=user.user_id,
-                    message_id=message_id,
-                    from_chat_id=event_chat.id,
-                    reply_markup=rkm,
-                )
-        except Exception as ex:
-            print(ex)
-
-    await bot.send_message(chat_id=event_chat.id, text="Сообщение успешно разослано пользователям!")
-    await bot.delete_message(
-        chat_id=event_chat.id,
-        message_id=query.message.message_id,
+    await dialog_manager.start(
+        state=MailingSG.BUTTON,
+        data=state_data,
+        mode=StartMode.RESET_STACK,
+        show_mode=ShowMode.DELETE_AND_SEND,
     )
-    await state.clear()
+    
 
-
-@router.callback_query(F.data == 'cancel_mailing')
-async def mailing_sender_handler(
-    query: CallbackQuery,
+@router.message(MailingSG.MESSAGE)
+async def mailing_message_handler(
+    message: Message,
     state: FSMContext,
-    bot: Bot,
-    event_chat: Chat,
+    dialog_manager: DialogManager,
 ) -> None:
-    await state.clear()
-    await bot.delete_message(chat_id=event_chat.id, message_id=query.message.message_id)
-    await bot.send_message(chat_id=event_chat.id, text="Рассылка успешно отменена")
+    await state.update_data(message_id=message.message_id)
+    state_data = await state.get_data()
+    await dialog_manager.start(
+        MailingSG.BUTTON,
+        data=state_data,
+        mode=StartMode.RESET_STACK,
+        show_mode=ShowMode.DELETE_AND_SEND,
+    )
 
 
 #User Management

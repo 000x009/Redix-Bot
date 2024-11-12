@@ -11,6 +11,7 @@ from .category_service import CategoryService
 from .admin_service import AdminService
 from .supercell_client import SupercellClient
 from .freekassa_service import FreeKassaService
+from .bilee_service import BileeService
 
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     'AdminService',
     'SupercellClient',
     'FreeKassaService',
+    'BileeService',
 ]

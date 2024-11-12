@@ -27,6 +27,22 @@ def cancel_without_reason_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
     )
 
 
+def web_app_button(game_id: int) -> InlineKeyboardMarkup:
+    if int(game_id) > 0:
+        url = f"https://paradox-shop.ru/game?id={game_id}"
+    elif int(game_id) == -1:
+        url = "https://paradox-shop.ru/"
+
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="КУПИТЬ", web_app=WebAppInfo(url=url))
+            ]
+        ]
+    )
+
+
+
 def accepted_friend_request_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[

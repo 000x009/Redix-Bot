@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessi
 from src.main.config import settings
 from src.services import (
     UserService, ProductService, TransactionService, OrderService, PromoService,
-    SupercellAuthService, FeedbackService, FreeKassaService, GameService, YandexStorageClient, AdminService, CategoryService, SupercellClient
+    SupercellAuthService, FeedbackService, FreeKassaService, GameService, YandexStorageClient, AdminService, CategoryService, SupercellClient, BileeService
 )
 from src.data.dal import (
     UserDAL, ProductDAL, TransactionDAL, OrderDAL, PromoDAL, FeedbackDAL, GameDAL, AdminDAL, CategoryDAL
@@ -83,6 +83,7 @@ class Container(containers.DeclarativeContainer):
     admin_service = providers.Factory(AdminService, dal=admin_dal)
     category_service = providers.Factory(CategoryService, category_dal=category_dal)
     supercell_client = providers.Factory(SupercellClient)
+    bilee_service = providers.Factory(BileeService)
     
 
     yandex_storage_client = providers.Factory(

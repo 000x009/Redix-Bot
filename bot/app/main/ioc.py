@@ -18,6 +18,7 @@ from app.services import (
     YandexStorageClient,
     CategoryService,
     AdminService,
+    BileeService,
 )
 from app.data.dal import (
     UserDAL,
@@ -73,6 +74,7 @@ class ServiceProvider(Provider):
     game_service = provide(GameService, scope=Scope.REQUEST, provides=GameService)
     category_service = provide(CategoryService, scope=Scope.REQUEST, provides=CategoryService)
     admin_service = provide(AdminService, scope=Scope.REQUEST, provides=AdminService)
+    bilee_service = provide(BileeService, scope=Scope.REQUEST, provides=BileeService)
     
     @provide(scope=Scope.REQUEST, provides=YandexStorageClient)
     def get_yandex_storage_client(self) -> YandexStorageClient:

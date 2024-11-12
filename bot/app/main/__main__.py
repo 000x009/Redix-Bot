@@ -51,6 +51,7 @@ async def main() -> None:
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dispatcher = Dispatcher(storage=storage, scheduler=scheduler)
     scheduler.ctx.add_instance(instance=bot, declared_class=Bot)
+    TTLCacheAlbumMiddleware(router=dispatcher, latency=0.5)
 
     dispatcher.include_routers(
         *message_handlers,
@@ -63,7 +64,6 @@ async def main() -> None:
     container = make_async_container(DatabaseProvider(), DALProvider(), ServiceProvider())
     setup_dishka(container=container, router=dispatcher, auto_inject=True)
 
-    TTLCacheAlbumMiddleware(router=dispatcher)
 
     try:
         scheduler.start()

@@ -20,8 +20,8 @@ class Settings(BaseSettings):
     DB_PORT: str
     POSTGRES_PASSWORD: str
     BOT_URL: str
-    FREEKASSA_SHOP_ID: str
-    FREEKASSA_SECRET_KEY: str
+    BILEE_SHOP_ID: str
+    BILEE_PASSWORD: str
     BOT_TOKEN: str
     CONFIG_PATH: str
     YANDEX_STORAGE_TOKEN: str

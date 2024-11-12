@@ -5,7 +5,7 @@ import hmac
 import time
 from typing import Optional, Dict
 
-from src.main.config import settings
+# from src.main.config import settings
 
 class PaymentMethod(enum.Enum):
     CARD = 36
@@ -16,8 +16,8 @@ class FreeKassaService:
     API_URL = 'https://api.freekassa.com/v1/'
 
     def __init__(self) -> None:
-        self.shop_id = settings.FREEKASSA_SHOP_ID
-        self.secret_key = settings.FREEKASSA_SECRET_KEY
+        self.shop_id = "ssd"
+        self.secret_key = "ssd"
 
     def create_order(
         self,

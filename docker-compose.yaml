@@ -16,7 +16,7 @@ services:
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   redix_db:
-    image: postgres:15.8-alpine
+    image: postgres:15-alpine
     container_name: redix_db
     ports:
       - "5432:5432"
@@ -26,6 +26,7 @@ services:
       - POSTGRES_DB=${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./paradox.sql:/docker-entrypoint-initdb.d/paradox.sql
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     restart: on-failure
     networks:
@@ -48,8 +49,8 @@ services:
       - DB_HOST=redix_db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
-      - FREEKASSA_SHOP_ID=${FREEKASSA_SHOP_ID}
-      - FREEKASSA_SECRET_KEY=${FREEKASSA_SECRET_KEY}
+      - BILEE_SHOP_ID=${BILEE_SHOP_ID}
+      - BILEE_PASSWORD=${BILEE_PASSWORD}
       - BOT_TOKEN=${BOT_TOKEN}
       - BOT_URL=${BOT_URL}
       - CONFIG_PATH=${CONFIG_PATH}
