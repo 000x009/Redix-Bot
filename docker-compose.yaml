@@ -62,8 +62,8 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      redix_db:
-        condition: service_healthy
+      - redix_db
+        # condition: service_healthy
     command: sh -c "alembic upgrade head && uvicorn src.main.main:app --host 0.0.0.0 --port 8000 --reload"
     networks:
       - default
@@ -91,8 +91,8 @@ services:
       - YANDEX_STORAGE_BUCKET_NAME=${YANDEX_STORAGE_BUCKET_NAME}
     command: "python -m app.main"
     depends_on:
-      redix_db:
-        condition: service_healthy
+      - redix_db
+        # condition: service_healthy
     restart: on-failure
     networks:
       - default
