@@ -486,6 +486,7 @@ async def on_input_photo_new_product(
     product_service: FromDishka[ProductService],
     yandex_storage_client: FromDishka[YandexStorageClient],
 ):  
+    print("ON INPUT PHOTO", flush=True)
     bot = dialog_manager.middleware_data.get("bot")
     file = await bot.get_file(message.photo[-1].file_id)
     photo_bytes = await bot.download_file(file.file_path)
@@ -499,11 +500,14 @@ async def on_input_photo_new_product(
     }
     product_instruction_photo_file_id = dialog_manager.dialog_data.get("product_instruction_photo")
     instruction_image_url = None
+    print("S3")
     if product_instruction_photo_file_id:
         instruction_file = await bot.get_file(product_instruction_photo_file_id)
         instruction_photo_bytes = await bot.download_file(instruction_file.file_path)
         instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
     image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+    
+    print("CREATING PRODUCT", flush=True)
     await product_service.create_product(
         id=uuid.uuid4(),
         category_id=int(dialog_manager.dialog_data["category_id"]),
@@ -518,60 +522,6 @@ async def on_input_photo_new_product(
     )
     await message.delete()
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
-
-
-
-@inject_on_click
-async def on_input_photo_new_product(
-    message: Message,
-    widget: MessageInput,
-    dialog_manager: DialogManager,
-    product_service: FromDishka[ProductService],
-    yandex_storage_client: FromDishka[YandexStorageClient],
-):  
-    try:
-        bot = dialog_manager.middleware_data.get("bot")
-        file = await bot.get_file(message.photo[-1].file_id)
-        photo_bytes = await bot.download_file(file.file_path)
-
-        games_dict = {
-            "1": "Brawl Stars",
-            "2": "Squad Busters",
-            "3": "Clash of Clans",
-            "4": "Clash Royale",
-            "5": "Roblox",
-            "6": "Fortnite",
-            "7": "PUBG",
-            "8": "FIFA Mobile",
-            "9": "Minecraft",
-            "10": "Stumble Guys",
-            "11": "My Singing Monsters",
-            "12": "World of Tanks [Евро]",
-            "13": "Blockman Go",
-            "14": "Supercell Store",
-            "15": "Brawl Stars",
-            "16": "Squad Busters",
-            "17": "Clash of Clans",
-            "18": "Clash Royale",
-        }
-
-        image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
-        await product_service.create_product(
-            id=uuid.uuid4(),
-            name=dialog_manager.dialog_data["product_name"],
-            description=dialog_manager.dialog_data["product_description"],
-            instruction=dialog_manager.dialog_data["product_instruction"],
-            price=int(dialog_manager.dialog_data["product_price"]),
-            image_url=image_url,
-            category="something",
-            game_id=int(dialog_manager.dialog_data["game_id"]),
-            game_name=games_dict[dialog_manager.dialog_data["game_id"]],
-        )
-        await message.delete()
-    except Exception as e:
-        print(e)
-    finally:
-        await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
 
 
 @inject_on_click
