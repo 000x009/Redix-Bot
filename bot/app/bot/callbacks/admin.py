@@ -67,6 +67,7 @@ async def mailing_message_handler(
     event_chat: Chat,
     dialog_manager: DialogManager,
 ) -> None:
+    print("MEDIA GROUP", flush=True)
     album_photo = [message.photo[-1].file_id for message in album_message]
     await state.update_data(album_photo=album_photo, album_caption=album_message.caption)
     state_data = await state.get_data()
@@ -84,8 +85,10 @@ async def mailing_message_handler(
     state: FSMContext,
     dialog_manager: DialogManager,
 ) -> None:
+    print("ONE PHOTO")
     await state.update_data(message_id=message.message_id)
     state_data = await state.get_data()
+    print(state_data, flush=True)
     await dialog_manager.start(
         MailingSG.BUTTON,
         data=state_data,

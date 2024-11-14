@@ -71,4 +71,5 @@ mailing_dialog = Dialog(
         ),
         state=MailingSG.CHECKOUT,
     ),
+    on_process_result=close_dialog,
 )
