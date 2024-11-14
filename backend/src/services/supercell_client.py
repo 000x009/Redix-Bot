@@ -19,8 +19,9 @@ class SupercellClient:
                     f"{self.base_url}/players/{cleaned_tag}",
                     headers=self.headers
                 ) as response:
+                    print(response, flush=True)
                     data = await response.json()
-                    print(data)
+                    print(data, flush=True)
                     return response.status == 200
         except Exception as e:
             print(f"Error verifying tag: {e}")
