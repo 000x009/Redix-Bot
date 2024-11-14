@@ -57,6 +57,7 @@ services:
       - YANDEX_STORAGE_TOKEN=${YANDEX_STORAGE_TOKEN}
       - YANDEX_STORAGE_SECRET=${YANDEX_STORAGE_SECRET}
       - YANDEX_STORAGE_BUCKET_NAME=${YANDEX_STORAGE_BUCKET_NAME}
+      - BRAWL_STARS_API_KEY=${BRAWL_STARS_API_KEY}
     restart: on-failure
     container_name: redix_backend
     ports:
@@ -89,6 +90,7 @@ services:
       - YANDEX_STORAGE_TOKEN=${YANDEX_STORAGE_TOKEN}
       - YANDEX_STORAGE_SECRET=${YANDEX_STORAGE_SECRET}
       - YANDEX_STORAGE_BUCKET_NAME=${YANDEX_STORAGE_BUCKET_NAME}
+      - BRAWL_STARS_API_KEY=${BRAWL_STARS_API_KEY}
     command: "python -m app.main"
     depends_on:
       - redix_db

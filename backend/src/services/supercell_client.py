@@ -1,11 +1,14 @@
 import aiohttp
+from src.main.config import settings
+
 
 class SupercellClient:
     def __init__(self):
-        self.base_url = "https://api.supercell.com"
+        self.base_url = "https://api.brawlstars.com/v1/"
         self.headers = {
             "Accept": "application/json",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {settings.BRAWL_STARS_API_KEY}"
         }
 
     async def verify_tag(self, tag: str) -> bool:
@@ -13,7 +16,7 @@ class SupercellClient:
             cleaned_tag = tag.replace('#', '').upper()
             async with aiohttp.ClientSession() as session:
                 async with session.get(
-                    f"{self.base_url}/player/{cleaned_tag}",
+                    f"{self.base_url}/players/{cleaned_tag}",
                     headers=self.headers
                 ) as response:
                     data = await response.json()

@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     BILEE_PASSWORD: str
     BOT_TOKEN: str
     CONFIG_PATH: str
+    BRAWL_STARS_API_KEY: str
     YANDEX_STORAGE_TOKEN: str
     YANDEX_STORAGE_SECRET: str
     YANDEX_STORAGE_BUCKET_NAME: str
