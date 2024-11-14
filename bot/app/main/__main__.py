@@ -24,6 +24,7 @@ from app.bot.handlers import message_handlers
 from app.bot.callbacks import callback_handlers
 from app.bot.dialogs.product import product_management_dialog
 from app.bot.dialogs.admin import admin_management_dialog
+from app.bot.dialogs.mailing import mailing_dialog
 from app.bot.dialogs.getter import YandexStorageMedia
 
 logger = logging.getLogger(__name__)
@@ -57,6 +58,7 @@ async def main() -> None:
         *message_handlers,
         *callback_handlers,
         product_management_dialog,
+        mailing_dialog,
         admin_management_dialog,
     )
     setup_dialogs(dispatcher, message_manager=YandexStorageMedia())
