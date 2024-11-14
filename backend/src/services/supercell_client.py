@@ -15,7 +15,7 @@ class SupercellClient:
             # cleaned_tag = tag.replace('#', '').upper()
             # print(cleaned_tag)
             async with aiohttp.ClientSession() as session:
-                async with session.post(
+                async with session.get(
                     f"{self.base_url}/players/{tag}",
                     headers=self.headers
                 ) as response:
