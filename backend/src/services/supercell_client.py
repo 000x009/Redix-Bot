@@ -12,11 +12,11 @@ class SupercellClient:
 
     async def verify_tag(self, tag: str) -> bool:
         try:
-            cleaned_tag = tag.replace('#', '').upper()
-            print(cleaned_tag)
+            # cleaned_tag = tag.replace('#', '').upper()
+            # print(cleaned_tag)
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    f"{self.base_url}/players/{cleaned_tag}",
+                    f"{self.base_url}/players/{tag}",
                     headers=self.headers
                 ) as response:
                     print(response, flush=True)
