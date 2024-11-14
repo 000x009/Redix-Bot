@@ -43,6 +43,22 @@ async def admin_panel_handler(
 
 
 # MAILING HANDLERS
+@router.callback_query(F.data == 'admin_mailing')
+async def mailing_handler(
+    query: CallbackQuery,
+    bot: Bot,
+    event_chat: Chat,
+    state: FSMContext,
+) -> None:
+    await bot.edit_message_text(
+        message_id=query.message.message_id,
+        chat_id=event_chat.id,
+        text="Отправьте сообщение, которое желаете разослать всем пользователям:",
+        reply_markup=inline.back_to_apanel_kb_markup,
+    )
+    await state.set_state(MailingSG.MESSAGE)
+
+
 @router.message(MailingSG.MESSAGE, F.media_group_id)
 async def mailing_message_handler(
     album_message: AlbumMessage,

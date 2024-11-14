@@ -486,7 +486,6 @@ async def on_input_photo_new_product(
     product_service: FromDishka[ProductService],
     yandex_storage_client: FromDishka[YandexStorageClient],
 ):  
-    print("ON INPUT PHOTO", flush=True)
     bot = dialog_manager.middleware_data.get("bot")
     file = await bot.get_file(message.photo[-1].file_id)
     photo_bytes = await bot.download_file(file.file_path)
@@ -500,14 +499,12 @@ async def on_input_photo_new_product(
     }
     product_instruction_photo_file_id = dialog_manager.dialog_data.get("product_instruction_photo")
     instruction_image_url = None
-    print("S3")
     if product_instruction_photo_file_id:
         instruction_file = await bot.get_file(product_instruction_photo_file_id)
         instruction_photo_bytes = await bot.download_file(instruction_file.file_path)
         instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
     image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
     
-    print("CREATING PRODUCT", flush=True)
     await product_service.create_product(
         id=uuid.uuid4(),
         category_id=int(dialog_manager.dialog_data["category_id"]),
