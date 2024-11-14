@@ -356,6 +356,27 @@ const OrderForm = () => {
               }}
               placeholder={placeholder}
             />
+            <button
+              onClick={() => handleVerifyTag(formFields[field.toLowerCase()])}
+              style={{
+                color: '#3b82f6',
+                background: 'none',
+                border: 'none',
+                padding: '0.5rem 0',
+                cursor: 'pointer',
+                fontSize: '0.875rem'
+              }}
+            >
+              Проверить тег
+            </button>
+            {tagVerificationMessage && (
+              <p style={{
+                color: tagVerificationSuccess ? '#10b981' : '#ef4444',
+                fontSize: '0.875rem',
+                marginTop: '0.25rem'
+              }}>
+                {tagVerificationMessage}
+              </p>)}
             {formErrors[field.toLowerCase()] && (
               <p style={{color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem'}}>Пожалуйста, введите тег</p>
             )}
