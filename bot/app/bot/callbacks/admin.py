@@ -85,10 +85,11 @@ async def mailing_message_handler(
     state: FSMContext,
     dialog_manager: DialogManager,
 ) -> None:
-    print("ONE PHOTO")
     await state.update_data(message_id=message.message_id)
     state_data = await state.get_data()
-    print(state_data, flush=True)
+    if state_data.get("album_photo"):
+        state_data.pop("album_photo")
+
     await dialog_manager.start(
         MailingSG.BUTTON,
         data=state_data,
