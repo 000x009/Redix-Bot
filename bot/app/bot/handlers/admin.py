@@ -38,43 +38,43 @@ async def admin_panel_handler(
         )
 
 
-# MAILING HANDLERS
-@router.message(MailingSG.MESSAGE, F.media_group_id)
-async def mailing_message_handler(
-    album_message: AlbumMessage,
-    state: FSMContext,
-    bot: Bot,
-    event_chat: Chat,
-) -> None:
-    album_photo = [message.photo[-1].file_id for message in album_message]
-    media_group = MediaGroupBuilder(caption=album_message.caption)
+# # MAILING HANDLERS
+# @router.message(MailingSG.MESSAGE, F.media_group_id)
+# async def mailing_message_handler(
+#     album_message: AlbumMessage,
+#     state: FSMContext,
+#     bot: Bot,
+#     event_chat: Chat,
+# ) -> None:
+#     album_photo = [message.photo[-1].file_id for message in album_message]
+#     media_group = MediaGroupBuilder(caption=album_message.caption)
 
-    for photo in album_photo:
-        media_group.add_photo(media=photo)
+#     for photo in album_photo:
+#         media_group.add_photo(media=photo)
 
-    await state.update_data(media_group=media_group)
-    await bot.send_message(
-        chat_id=event_chat.id,
-        text="Вы уверены, что хотите разослать это сообщение всем?",
-        reply_markup=inline.mailing_choice_kb_markup,
-    )
-    await state.set_state(MailingSG.CHECKOUT)
+#     await state.update_data(media_group=media_group)
+#     await bot.send_message(
+#         chat_id=event_chat.id,
+#         text="Вы уверены, что хотите разослать это сообщение всем?",
+#         reply_markup=inline.mailing_choice_kb_markup,
+#     )
+#     await state.set_state(MailingSG.CHECKOUT)
 
 
-@router.message(MailingSG.MESSAGE)
-async def mailing_message_handler(
-    message: Message,
-    state: FSMContext,
-    bot: Bot,
-    event_chat: Chat,
-) -> None:
-    await state.update_data(message_id=message.message_id)
-    await bot.send_message(
-        chat_id=event_chat.id,
-        text="Вы уверены, что хотите разослать это сообщение всем?",
-        reply_markup=inline.mailing_choice_kb_markup,
-    )
-    await state.set_state(MailingSG.CHECKOUT)
+# @router.message(MailingSG.MESSAGE)
+# async def mailing_message_handler(
+#     message: Message,
+#     state: FSMContext,
+#     bot: Bot,
+#     event_chat: Chat,
+# ) -> None:
+#     await state.update_data(message_id=message.message_id)
+#     await bot.send_message(
+#         chat_id=event_chat.id,
+#         text="Вы уверены, что хотите разослать это сообщение всем?",
+#         reply_markup=inline.mailing_choice_kb_markup,
+#     )
+#     await state.set_state(MailingSG.CHECKOUT)
 
 
 #User Management
