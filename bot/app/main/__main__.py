@@ -58,8 +58,8 @@ async def main() -> None:
         *message_handlers,
         *callback_handlers,
         product_management_dialog,
-        mailing_dialog,
         admin_management_dialog,
+        mailing_dialog,
     )
     setup_dialogs(dispatcher, message_manager=YandexStorageMedia())
 

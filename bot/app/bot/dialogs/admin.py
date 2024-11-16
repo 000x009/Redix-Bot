@@ -160,4 +160,5 @@ admin_management_dialog = Dialog(
         ),
         state=AdminManagementSG.ADD_ADMIN,
     ),
+    on_process_result=close_dialog,
 )

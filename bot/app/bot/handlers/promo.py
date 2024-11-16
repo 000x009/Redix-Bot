@@ -9,6 +9,7 @@ from dishka import FromDishka
 from app.bot.keyboards import inline
 from app.bot.states import CreatePromoSG, EditPromoSG, DeletePromoSG, InfoPromoSG
 from app.services import PromoService
+from app.schema.promo import PromoStatus
 
 router = Router()
 
@@ -125,11 +126,11 @@ async def delete_promo_handler(
     name = message.text
     try:
         if name.isdigit():
-            await promo_service.update_promo_by_id(id=int(name), status='неактивный')
+            await promo_service.update_promo(id=int(name), status=PromoStatus.INACTIVE)
             await message.answer('Вы успешно удалили промокод')
         else:
-            await promo_service.update_promo_by_name(name=name, status='неактивный')
+            await promo_service.update_promo(name=name, status=PromoStatus.INACTIVE)
             await message.answer('Вы успешно удалили промокод')
     except Exception as _ex:
-        print(_ex)
+        print(_ex, flush=True)
         await message.answer('Упс... Что-то пошло не так при удалении кода')

@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, delete
 
 from app.schema import Category
-from app.data.models import CategoryModel
+from app.data.models import CategoryModel, ProductModel
 
 
 class CategoryDAL:
@@ -18,6 +18,9 @@ class CategoryDAL:
 
     async def update(self, category_id: int, **kwargs) -> None:
         query = update(CategoryModel).where(CategoryModel.id == category_id).values(**kwargs)
+        if kwargs.get('is_visible'):
+            products_query = update(ProductModel).where(ProductModel.category_id == category_id).values(is_visible=kwargs['is_visible'])
+            await self.session.execute(products_query)
         await self.session.execute(query)
         await self.session.commit()
 
