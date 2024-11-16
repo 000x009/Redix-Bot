@@ -60,6 +60,7 @@ from .handlers import (
     turn_on_gift_purchase,
     turn_off_gift_purchase,
     delete_category,
+    on_edit_category_name,
 )
 
 
@@ -186,6 +187,11 @@ product_management_dialog = Dialog(
             text=Format("Изменить обязательные поля"),
             state=ProductManagementSG.EDIT_CATEGORY_REQUIRED_FIELDS,
         ),
+        SwitchTo(
+            id='edit_category_name',
+            text=Format("Изменить название категории"),
+            state=ProductManagementSG.EDIT_CATEGORY_NAME,
+        ),
         Row(
             PrevPage(
                 scroll="product_group", text=Format("◀️"),
@@ -307,6 +313,14 @@ product_management_dialog = Dialog(
         ),
         Back(Format("◀️ Назад")),
         state=ProductManagementSG.EDIT_PRODUCT_NAME,
+    ),
+    Window(
+        Const("Введите новое название категории"),
+        TextInput(
+            id="edit_category_name_text",
+            on_success=on_edit_category_name,
+        ),
+        state=ProductManagementSG.EDIT_CATEGORY_NAME,
     ),
     Window(
         Const("Введите ограничение на количество покупок (число)"),

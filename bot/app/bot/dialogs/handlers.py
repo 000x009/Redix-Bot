@@ -109,6 +109,18 @@ async def delete_category(
 
 
 @inject_on_click
+async def on_edit_category_name(
+    callback_query: CallbackQuery,
+    widget: TextInput[str],
+    dialog_manager: DialogManager,
+    value: str,
+    category_service: FromDishka[CategoryService],
+):
+    await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), name=value)
+    await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
 async def hide_category(
     callback_query: CallbackQuery,
     widget: Button,

@@ -472,8 +472,16 @@ const OrderForm = () => {
               style={{width: '100%', maxHeight: '200px', objectFit: 'cover', marginBottom: '1rem'}}
             />
           )}
-          {product.instruction && product.instruction.trim() !== '' && (
+          {/* {product.instruction && product.instruction.trim() !== '' && (
             <div className="word-pre" style={{ marginTop: product.instruction_image_url ? '1rem' : '0' }}>
+              {makeLinksClickable(product.instruction)}
+            </div>
+          // )} */}
+          {product.instruction && product.instruction.trim() !== '' && (
+            <div className="word-pre" style={{ 
+              marginTop: product.instruction_image_url ? '1rem' : '0',
+              whiteSpace: 'pre-wrap'
+            }}>
               {makeLinksClickable(product.instruction)}
             </div>
           )}

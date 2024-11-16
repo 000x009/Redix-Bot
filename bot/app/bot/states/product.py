@@ -11,6 +11,7 @@ class ProductManagementSG(StatesGroup):
     ADD_CATEGORY_PHOTO = State()
     EDIT_CATEGORY_REQUIRED_FIELDS = State()
     ADD_CATEGORY_THREAD_ID = State()
+    EDIT_CATEGORY_NAME = State()
     PRODUCT = State()
     SET_PURCHASE_LIMIT = State()
     EDIT_PRODUCT_NAME = State()
