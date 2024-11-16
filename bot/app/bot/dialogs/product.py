@@ -59,6 +59,7 @@ from .handlers import (
     on_edit_category_required_fields,
     turn_on_gift_purchase,
     turn_off_gift_purchase,
+    delete_category,
 )
 
 
@@ -174,6 +175,11 @@ product_management_dialog = Dialog(
             text=Format("Показать категорию"),
             on_click=show_category,
             when=~F['category'].is_visible
+        ),
+        Button(
+            id='delete_category',
+            text=Format("🗑️ Удалить категорию"),
+            on_click=delete_category,
         ),
         SwitchTo(
             id='edit_category',

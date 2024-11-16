@@ -20,3 +20,6 @@ class CategoryService:
     
     async def update_category(self, category_id: int, **params) -> None:
         await self.__category_dal.update(category_id=category_id, **params)
+
+    async def delete_category(self, category_id: int) -> None:
+        await self.__category_dal.delete(category_id=category_id)

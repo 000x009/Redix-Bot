@@ -98,6 +98,17 @@ async def turn_off_gift_purchase(
 
 
 @inject_on_click
+async def delete_category(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    category_service: FromDishka[CategoryService],
+):
+    await category_service.delete_category(category_id=dialog_manager.dialog_data["category_id"])
+    await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
+
+
+@inject_on_click
 async def hide_category(
     callback_query: CallbackQuery,
     widget: Button,
