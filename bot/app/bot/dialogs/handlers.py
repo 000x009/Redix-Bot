@@ -104,7 +104,7 @@ async def delete_category(
     dialog_manager: DialogManager,
     category_service: FromDishka[CategoryService],
 ):
-    await category_service.delete_category(category_id=dialog_manager.dialog_data["category_id"])
+    await category_service.delete_category(category_id=int(dialog_manager.dialog_data["category_id"]))
     await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
 
 
