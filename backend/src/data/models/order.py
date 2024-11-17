@@ -14,7 +14,7 @@ class OrderModel(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('user.user_id', ondelete='CASCADE'))
-    product_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('product.id', ondelete='SET NULL'))
+    product_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('product.id', ondelete='SET NULL'), nullable=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     status: Mapped[OrderStatus] = mapped_column(
         Enum(OrderStatus),

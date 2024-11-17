@@ -41,7 +41,7 @@ async def post_feedback(
     feedback_group_id = -1001968045101
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     feedbacks = await feedback_service.get_feedbacks()
-    feedbacks_count = len(feedbacks)
+    feedbacks_count = len(feedbacks) if feedbacks else 0
     text = f"""
 Номер отзыва: {feedbacks_count + 1}
 Рейтинг: {"⭐" * data.stars}

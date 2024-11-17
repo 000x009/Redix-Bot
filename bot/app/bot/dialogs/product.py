@@ -284,13 +284,13 @@ product_management_dialog = Dialog(
             id='turn_on_gift_purchase',
             text=Format("Вкл. подарком"),
             on_click=turn_on_gift_purchase,
-            when=F['product'].is_gift_purchase,
+            when=~F['product'].is_gift_purchase,
         ),
         Button(
             id='turn_off_gift_purchase',
             text=Format("Выкл. подарком"),
             on_click=turn_off_gift_purchase,
-            when=~F['product'].is_gift_purchase,
+            when=F['product'].is_gift_purchase,
         ),
         Button(
             id="disable_auto_delivery",

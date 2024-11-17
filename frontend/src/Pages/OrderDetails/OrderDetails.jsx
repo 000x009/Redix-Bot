@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import { getOneOrder, getOneProduct } from '../../db/db';
+import { getOneOrder, getOneProduct, getOneCategory } from '../../db/db';
 import { useNavigate } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,6 +9,7 @@ function OrderDetails() {
     const navigate = useNavigate();
     const [order, setOrder] = useState(null);
     const [product, setProduct] = useState(null);
+    const [category, setCategory] = useState(null);
     const [loading, setLoading] = useState(true);
     const {id} = useParams();
     const { tg } = useTelegram();
@@ -29,8 +30,10 @@ function OrderDetails() {
         const fetchData = async () => {
             const orderData = await getOneOrder(id, tg.initData);
             const productData = await getOneProduct(orderData.product_id);
+            const categoryData = await getOneCategory(productData.category_id);
             setOrder(orderData);
             setProduct(productData);
+            setCategory(categoryData);
             setLoading(false);
         }
         fetchData();
@@ -60,28 +63,28 @@ function OrderDetails() {
     
         const additionalData = order.additional_data;
 
-        const gameSpecificFields = {
-            'Brawl Stars': [['email', 'Почта'], ['code', 'Код']],
-            'PUBG': [['pubg_id', 'PUBG ID']],
-            'Blockman Go': [['blockman_id', 'ID'], ['password', 'Пароль']],
-            'Roblox': [['login', 'Имя пользователя'], ['password', 'Пароль']],
-            'Clash of Clans': [['email', 'Почта'], ['code', 'Код']],
-            'Clash Royale': [['email', 'Почта'], ['code', 'Код']],
-            'Squad Busters': [['email', 'Почта'], ['code', 'Код']],
-            'Fortnite': [['login', 'Почта'], ['password', 'Пароль']],
-            'FIFA Mobile': [['login', 'Почта'], ['password', 'Пароль']],
-            'Minecraft': [['login', 'Почта'], ['password', 'Пароль']],
-            'Stumble Guys': [['nickname', 'Никнейм']],
-            'My Singing Monsters': [['login', 'Почта'], ['password', 'Пароль']],
-            'World of Tanks [Евро]': [['email', 'Почта'], ['password', 'Пароль']],
-        };
+        // const gameSpecificFields = {
+        //     'Brawl Stars': [['email', 'Почта'], ['code', 'Код']],
+        //     'PUBG': [['pubg_id', 'PUBG ID']],
+        //     'Blockman Go': [['blockman_id', 'ID'], ['password', 'Пароль']],
+        //     'Roblox': [['login', 'Имя пользователя'], ['password', 'Пароль']],
+        //     'Clash of Clans': [['email', 'Почта'], ['code', 'Код']],
+        //     'Clash Royale': [['email', 'Почта'], ['code', 'Код']],
+        //     'Squad Busters': [['email', 'Почта'], ['code', 'Код']],
+        //     'Fortnite': [['login', 'Почта'], ['password', 'Пароль']],
+        //     'FIFA Mobile': [['login', 'Почта'], ['password', 'Пароль']],
+        //     'Minecraft': [['login', 'Почта'], ['password', 'Пароль']],
+        //     'Stumble Guys': [['nickname', 'Никнейм']],
+        //     'My Singing Monsters': [['login', 'Почта'], ['password', 'Пароль']],
+        //     'World of Tanks [Евро]': [['email', 'Почта'], ['password', 'Пароль']],
+        // };
     
-        let fieldsToRender = gameSpecificFields[product.game_name] || Object.entries(additionalData).map(([key, value]) => [key, key]);
+        let fieldsToRender = category.required_fields[product.game_name] || Object.entries(additionalData).map(([key, value]) => [key, value]);
 
-        // Add two_factor_code field for Roblox if it exists in additionalData
-        if (product.game_name === 'Roblox' && additionalData.two_factor_code) {
-            fieldsToRender.push(['two_factor_code', 'Код двухфакторной аутентификации']);
-        }
+        // // Add two_factor_code field for Roblox if it exists in additionalData
+        // if (product.game_name === 'Roblox' && additionalData.two_factor_code) {
+        //     fieldsToRender.push(['two_factor_code', 'Код двухфакторной аутентификации']);
+        // }
 
         return fieldsToRender.map(([field, label]) => (
             <div className="detail-item" key={field}>
