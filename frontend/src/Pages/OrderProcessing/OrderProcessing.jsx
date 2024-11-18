@@ -464,7 +464,7 @@ const OrderForm = () => {
         </div>
       )}
       <div style={{flexGrow: 1, display: 'flex', flexDirection: 'column'}}>
-        <div className="bg-lightgray rounded px-08 py-08" style={{ marginBottom: '1.5rem' }}>
+        <div className="bg-lightgray rounded px-08 py-08" style={{ marginBottom: '1.5rem', padding: '1rem' }}>
           {product.instruction_image_url && (
             <img 
               src={product.instruction_image_url} 
@@ -472,15 +472,11 @@ const OrderForm = () => {
               style={{width: '100%', maxHeight: '200px', objectFit: 'cover', marginBottom: '1rem'}}
             />
           )}
-          {/* {product.instruction && product.instruction.trim() !== '' && (
-            <div className="word-pre" style={{ marginTop: product.instruction_image_url ? '1rem' : '0' }}>
-              {makeLinksClickable(product.instruction)}
-            </div>
-          // )} */}
           {product.instruction && product.instruction.trim() !== '' && (
             <div className="word-pre" style={{ 
               marginTop: product.instruction_image_url ? '1rem' : '0',
-              whiteSpace: 'pre-wrap'
+              whiteSpace: 'pre-wrap',
+              padding: '0.5rem'
             }}>
               {makeLinksClickable(product.instruction)}
             </div>

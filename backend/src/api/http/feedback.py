@@ -42,9 +42,11 @@ async def post_feedback(
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     feedbacks = await feedback_service.get_feedbacks()
     feedbacks_count = len(feedbacks) if feedbacks else 0
+    
+    rating = "★ " * data.stars + "☆ " * (5 - data.stars)
     text = f"""
 Номер отзыва: {feedbacks_count + 1}
-Рейтинг: {"⭐" * data.stars}
+Рейтинг: {rating}
 Покупатель: @{user_data.user.username}
 Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}
 
