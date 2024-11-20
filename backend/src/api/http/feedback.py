@@ -15,7 +15,7 @@ from aiogram.utils.web_app import WebAppInitData
 from dependency_injector.wiring import inject, Provide
 
 from src.main.ioc import Container
-from src.services import FeedbackService, UserService, YandexStorageClient, AdminService
+from src.services import FeedbackService, UserService, YandexStorageClient, AdminService, OrderService
 from src.api.schema.feedback import CreateFeedback
 from src.schema import Feedback
 from src.api.dependencies import user_provider
@@ -35,23 +35,27 @@ async def post_feedback(
     data: CreateFeedback,
     feedback_service: FeedbackService = Depends(Provide[Container.feedback_service]),
     yandex_storage_client: YandexStorageClient = Depends(Provide[Container.yandex_storage_client]),
+    order_service: OrderService = Depends(Provide[Container.order_service]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> JSONResponse:
     feedback_id = uuid.uuid4()
     feedback_group_id = -1001968045101
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     feedbacks = await feedback_service.get_feedbacks()
+    order = await order_service.get_orders()
+    order_one = await order_service.get_one_order(order_id=data.order_id)
     feedbacks_count = len(feedbacks) if feedbacks else 0
     
     rating = "★ " * data.stars + "☆ " * (5 - data.stars)
     text = f"""
-Номер отзыва: {feedbacks_count + 1}
+Отзыв №{feedbacks_count + 1}
+Покупка №{len(order) + 1}: {order_one.name} на {order_one.price}₽
 Рейтинг: {rating}
 Покупатель: @{user_data.user.username}
 Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}
 
 Отзыв:
-{data.text}
+<blockquote>{data.text}</blockquote>
 """
     try:
 
