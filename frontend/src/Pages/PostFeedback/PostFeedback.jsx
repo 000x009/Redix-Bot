@@ -72,18 +72,43 @@ const PostFeedback = () => {
     }
   };
 
-  const handlePhotoUpload = (event) => {
+  const handlePhotoUpload = async (event) => {
     const files = Array.from(event.target.files);
+    
     if (photos.length + files.length > 10) {
       setError('Максимальное количество фотографий - 10');
       return;
     }
-    const newPhotos = files.map(file => URL.createObjectURL(file));
-    setPhotos(prevPhotos => [...prevPhotos, ...newPhotos]);
+
+    // Process files one by one to ensure they're all handled
+    for (const file of files) {
+      try {
+        // Create object URL for preview
+        const objectUrl = URL.createObjectURL(file);
+        
+        // Verify the file loaded correctly
+        await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => reject();
+          img.src = objectUrl;
+        });
+
+        setPhotos(prevPhotos => [...prevPhotos, objectUrl]);
+      } catch (err) {
+        console.error('Error loading photo:', err);
+        setError('Ошибка при загрузке фотографии. Пожалуйста, попробуйте другое изображение.');
+      }
+    }
   };
 
   const removePhoto = (index) => {
-    setPhotos(prevPhotos => prevPhotos.filter((_, i) => i !== index));
+    setPhotos(prevPhotos => {
+      const newPhotos = [...prevPhotos];
+      URL.revokeObjectURL(newPhotos[index]); // Clean up object URL
+      newPhotos.splice(index, 1);
+      return newPhotos;
+    });
   };
 
   const ConfirmationPopup = ({ onConfirm, onCancel }) => (
@@ -191,6 +216,7 @@ const PostFeedback = () => {
               type="file"
               accept="image/*"
               multiple
+              capture="environment"
               onChange={handlePhotoUpload}
               style={{ display: 'none' }}
             />

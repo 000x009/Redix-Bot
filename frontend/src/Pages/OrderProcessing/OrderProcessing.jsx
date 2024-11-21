@@ -444,9 +444,27 @@ const OrderForm = () => {
 
   const makeLinksClickable = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.split(urlRegex).map((part, index) => 
-      urlRegex.test(part) ? <a key={index} href={part} target="_blank" rel="noopener noreferrer">{part}</a> : part
-    );
+    const parts = text.split(urlRegex);
+    const matches = text.match(urlRegex) || [];
+    
+    return parts.reduce((acc, part, index) => {
+      if (index === 0) return [part];
+      
+      const link = matches[index - 1];
+      const linkElement = <a key={`link-${index}`} href={link} target="_blank" rel="noopener noreferrer">{link}</a>;
+      
+      return [...acc, linkElement, part];
+    }, []).map((element, index) => {
+      if (typeof element === 'string') {
+        return element.split('\n').map((line, i) => (
+          <React.Fragment key={`line-${index}-${i}`}>
+            {line}
+            {i < element.split('\n').length - 1 && <br />}
+          </React.Fragment>
+        ));
+      }
+      return element;
+    });
   };
 
   return (

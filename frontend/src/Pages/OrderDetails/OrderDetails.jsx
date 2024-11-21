@@ -63,33 +63,10 @@ function OrderDetails() {
     
         const additionalData = order.additional_data;
 
-        // const gameSpecificFields = {
-        //     'Brawl Stars': [['email', 'Почта'], ['code', 'Код']],
-        //     'PUBG': [['pubg_id', 'PUBG ID']],
-        //     'Blockman Go': [['blockman_id', 'ID'], ['password', 'Пароль']],
-        //     'Roblox': [['login', 'Имя пользователя'], ['password', 'Пароль']],
-        //     'Clash of Clans': [['email', 'Почта'], ['code', 'Код']],
-        //     'Clash Royale': [['email', 'Почта'], ['code', 'Код']],
-        //     'Squad Busters': [['email', 'Почта'], ['code', 'Код']],
-        //     'Fortnite': [['login', 'Почта'], ['password', 'Пароль']],
-        //     'FIFA Mobile': [['login', 'Почта'], ['password', 'Пароль']],
-        //     'Minecraft': [['login', 'Почта'], ['password', 'Пароль']],
-        //     'Stumble Guys': [['nickname', 'Никнейм']],
-        //     'My Singing Monsters': [['login', 'Почта'], ['password', 'Пароль']],
-        //     'World of Tanks [Евро]': [['email', 'Почта'], ['password', 'Пароль']],
-        // };
-    
-        let fieldsToRender = category.required_fields[product.game_name] || Object.entries(additionalData).map(([key, value]) => [key, value]);
-
-        // // Add two_factor_code field for Roblox if it exists in additionalData
-        // if (product.game_name === 'Roblox' && additionalData.two_factor_code) {
-        //     fieldsToRender.push(['two_factor_code', 'Код двухфакторной аутентификации']);
-        // }
-
-        return fieldsToRender.map(([field, label]) => (
-            <div className="detail-item" key={field}>
-                <div className="label">{label}</div>
-                <div className="value">{additionalData[field]}</div>
+        return Object.entries(additionalData).map(([key, value]) => (
+            <div className="detail-item" key={key}>
+                <div className="label">{key}</div>
+                <div className="value">{value}</div>
             </div>
         ));
     };

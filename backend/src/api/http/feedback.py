@@ -42,14 +42,14 @@ async def post_feedback(
     feedback_group_id = -1001968045101
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     feedbacks = await feedback_service.get_feedbacks()
-    order = await order_service.get_orders()
-    order_one = await order_service.get_one_order(order_id=data.order_id)
+    orders = await order_service.get_orders()
+    order_one = await order_service.get_one_order(id=data.order_id)
     feedbacks_count = len(feedbacks) if feedbacks else 0
     
     rating = "★ " * data.stars + "☆ " * (5 - data.stars)
     text = f"""
 Отзыв №{feedbacks_count + 1}
-Покупка №{len(order) + 1}: {order_one.name} на {order_one.price}₽
+Покупка №{len(orders) + 1 if orders else 1}: {order_one.name} на {order_one.price}₽
 Рейтинг: {rating}
 Покупатель: @{user_data.user.username}
 Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}
