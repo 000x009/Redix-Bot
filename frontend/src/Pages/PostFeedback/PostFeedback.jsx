@@ -216,7 +216,6 @@ const PostFeedback = () => {
               type="file"
               accept="image/*"
               multiple
-              capture="environment"
               onChange={handlePhotoUpload}
               style={{ display: 'none' }}
             />
