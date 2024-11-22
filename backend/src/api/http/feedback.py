@@ -51,11 +51,11 @@ async def post_feedback(
 Отзыв №{feedbacks_count + 1}
 Покупка №{len(orders) + 1 if orders else 1}: {order_one.name} на {order_one.price}₽
 Рейтинг: {rating}
-Покупатель: @{user_data.user.username}
+Покупатель: {'@' + user_data.user.username if user_data.user.username else user_data.user.first_name + ' ' + user_data.user.last_name}
 Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}
 
-Отзыв:
-<blockquote>{data.text}</blockquote>
+{'Отзыв:' if data.text else ''}
+{f'<blockquote>{data.text}</blockquote>' if data.text else ''}
 """
     try:
 
