@@ -208,17 +208,19 @@ const PostFeedback = () => {
           ></textarea>
           <p className="character-count">{review.length}/500 символов</p>
           <div className="photo-upload">
-            <label htmlFor="photo-input" className="photo-upload-button">
-              Прикрепить фото (макс. 10)
-            </label>
-            <input
-              id="photo-input"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handlePhotoUpload}
-              style={{ display: 'none' }}
-            />
+              <button 
+                className="photo-upload-button"
+                onClick={() => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.multiple = true;
+                  input.onchange = handlePhotoUpload;
+                  input.click();
+                }}
+              >
+                Прикрепить фото (макс. 10)
+              </button>
           </div>
           <div className="photo-preview">
             {photos.map((photo, index) => (
