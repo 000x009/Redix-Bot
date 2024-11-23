@@ -493,8 +493,6 @@ const OrderForm = () => {
           {product.instruction && product.instruction.trim() !== '' && (
             <div className="word-pre" style={{ 
               marginTop: product.instruction_image_url ? '1rem' : '0',
-              whiteSpace: 'pre-wrap',
-              padding: '0.5rem'
             }}>
               {product.instruction}
             </div>
