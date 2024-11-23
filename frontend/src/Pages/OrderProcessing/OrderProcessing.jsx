@@ -496,7 +496,7 @@ const OrderForm = () => {
               whiteSpace: 'pre-wrap',
               padding: '0.5rem'
             }}>
-              {makeLinksClickable(product.instruction)}
+              {product.instruction}
             </div>
           )}
         </div>

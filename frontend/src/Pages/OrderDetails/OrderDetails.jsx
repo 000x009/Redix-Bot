@@ -65,7 +65,7 @@ function OrderDetails() {
 
         return Object.entries(additionalData).map(([key, value]) => (
             <div className="detail-item" key={key}>
-                <div className="label">{key}</div>
+                <div className="label">{key.charAt(0).toUpperCase() + key.slice(1)}</div>
                 <div className="value">{value}</div>
             </div>
         ));
