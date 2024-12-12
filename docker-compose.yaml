@@ -121,6 +121,9 @@ services:
     image: redis:alpine
     ports:
       - "6379:6379"
+    restart: on-failure
+    networks:
+      - default
 
   pgadmin:
     image: dpage/pgadmin4
