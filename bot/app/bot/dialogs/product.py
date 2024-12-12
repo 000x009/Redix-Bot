@@ -61,7 +61,7 @@ from .handlers import (
     turn_off_gift_purchase,
     delete_category,
     on_edit_category_name,
-    on_input_photo_new_game,
+    on_edit_photo_game,
     on_edit_photo_category,
 )
 
@@ -350,7 +350,7 @@ product_management_dialog = Dialog(
     ),
     Window(
         Const("Отправьте новое фото игры"),
-        MessageInput(on_input_photo_new_game, content_types=[ContentType.PHOTO]),
+        MessageInput(on_edit_photo_game, content_types=[ContentType.PHOTO]),
         SwitchTo(
             id="back_to_game_management",
             text=Format("◀️ Назад"),
