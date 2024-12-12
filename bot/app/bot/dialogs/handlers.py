@@ -13,7 +13,7 @@ from dishka import FromDishka
 
 from app.bot.states.product import ProductManagementSG
 from .inject_wrappers import inject_on_click
-from app.services import ProductService, YandexStorageClient, CategoryService, UserService
+from app.services import ProductService, YandexStorageClient, CategoryService, UserService, GameService
 from app.bot.states.mailing import MailingSG
 from app.bot.keyboards import inline
 
@@ -118,6 +118,42 @@ async def on_edit_category_name(
 ):
     await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), name=value)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
+async def on_edit_photo_category(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+    yandex_storage_client: FromDishka[YandexStorageClient],
+    category_service: FromDishka[CategoryService],
+) -> None:
+    try:
+        bot = dialog_manager.middleware_data.get("bot")
+        file = await bot.get_file(message.photo[-1].file_id)
+        photo_bytes = await bot.download_file(file.file_path)
+        image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+        await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), image=image_url)
+    finally:
+        await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
+async def on_edit_photo_game(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+    yandex_storage_client: FromDishka[YandexStorageClient],
+    game_service: FromDishka[GameService],
+) -> None:
+    try:
+        bot = dialog_manager.middleware_data.get("bot")
+        file = await bot.get_file(message.photo[-1].file_id)
+        photo_bytes = await bot.download_file(file.file_path)
+        image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+        await game_service.update_game(game_id=int(dialog_manager.dialog_data["game_id"]), image_url=image_url)
+    finally:
+        await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
 
 
 @inject_on_click

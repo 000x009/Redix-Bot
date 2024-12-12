@@ -16,3 +16,6 @@ class GameService:
 
     async def create_game(self, **kwargs) -> None:
         return await self.game_dal.add(**kwargs)
+
+    async def update_game(self, game_id: int, **kwargs) -> None:
+        return await self.game_dal.update(game_id=game_id, **kwargs)

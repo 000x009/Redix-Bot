@@ -61,6 +61,8 @@ from .handlers import (
     turn_off_gift_purchase,
     delete_category,
     on_edit_category_name,
+    on_input_photo_new_game,
+    on_edit_photo_category,
 )
 
 
@@ -139,6 +141,11 @@ product_management_dialog = Dialog(
         MessageInput(
             func=message_input_fixing
         ),
+        SwitchTo(
+            text=Const("Поменять картинку"),
+            id="change_game_image",
+            state=ProductManagementSG.CHANGE_GAME_IMAGE,
+        ),
         Back(Format("◀️ Назад")),
         state=ProductManagementSG.GAME_MANAGEMENT,
         getter=one_game_getter,
@@ -159,6 +166,11 @@ product_management_dialog = Dialog(
             hide_on_single_page=True,
             hide_pager=True,
             when="products"
+        ),
+        SwitchTo(
+            id='change_category_image',
+            text=Format("Поменять картинку"),
+            state=ProductManagementSG.CHANGE_CATEGORY_IMAGE,
         ),
         Button(
             id='add_product',
@@ -335,6 +347,26 @@ product_management_dialog = Dialog(
             state=ProductManagementSG.PRODUCT
         ),
         state=ProductManagementSG.SET_PURCHASE_LIMIT,
+    ),
+    Window(
+        Const("Отправьте новое фото игры"),
+        MessageInput(on_input_photo_new_game, content_types=[ContentType.PHOTO]),
+        SwitchTo(
+            id="back_to_game_management",
+            text=Format("◀️ Назад"),
+            state=ProductManagementSG.GAME_MANAGEMENT
+        ),
+        state=ProductManagementSG.CHANGE_GAME_IMAGE,
+    ),
+    Window(
+        Const("Отправьте новое фото категории"),
+        MessageInput(on_edit_photo_category, content_types=[ContentType.PHOTO]),
+        SwitchTo(
+            id="back_to_category_management",
+            text=Format("◀️ Назад"),
+            state=ProductManagementSG.CATEGORY_MANAGEMENT
+        ),
+        state=ProductManagementSG.CHANGE_CATEGORY_IMAGE,
     ),
     Window(
         Const("Введите текст для автовыдачи"),

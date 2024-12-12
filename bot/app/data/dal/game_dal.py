@@ -20,8 +20,8 @@ class GameDAL:
         await self.session.execute(query)
         await self.session.commit()
 
-    async def update(self, product_id: UUID, **kwargs) -> None:
-        query = update(GameModel).where(GameModel.id == product_id).values(**kwargs)
+    async def update(self, game_id: int, **kwargs) -> None:
+        query = update(GameModel).where(GameModel.id == game_id).values(**kwargs)
         await self.session.execute(query)
         await self.session.commit()
 
