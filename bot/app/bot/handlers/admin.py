@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from aiogram import Router, Bot, F
@@ -18,6 +19,8 @@ from app.schema.transaction import TransactionCause, TransactionType
 
 router = Router()
 
+logger = logging.getLogger(__name__)
+
 
 @router.message(Command("admin"))
 async def admin_panel_handler(
@@ -26,16 +29,23 @@ async def admin_panel_handler(
     event_chat: Chat,
     admin_service: FromDishka[AdminService],
 ) -> None:
-    admins = await admin_service.get_all()
-    admin_ids = [admin.user_id for admin in admins]
+    
+    try:
+        admins = await admin_service.get_all()
+        admin_ids = [admin.user_id for admin in admins]
 
-    if message.from_user.id in admin_ids:
-        admin = await admin_service.get(user_id=message.from_user.id)
-        await bot.send_message(
-            chat_id=event_chat.id,
-            text="Админ-меню",
-            reply_markup=inline.admin_menu_kb_markup(admin.permissions),
-        )
+        if message.from_user.id in admin_ids:
+            admin = await admin_service.get(user_id=message.from_user.id)
+            await bot.send_message(
+                chat_id=event_chat.id,
+                text="Админ-меню",
+                reply_markup=inline.admin_menu_kb_markup(admin.permissions),
+            )
+        else:
+            logger.error("User is not admin!")
+    except Exception as e:
+        logger.error(f"Error in admin handler: {str(e)}")
+        logger.exception(e)
 
 
 # # MAILING HANDLERS

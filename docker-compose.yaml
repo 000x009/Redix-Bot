@@ -16,7 +16,7 @@ services:
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
   redix_db:
-    image: postgres:15-alpine
+    image: postgres:16.3-alpine
     container_name: redix_db
     ports:
       - "5432:5432"
@@ -121,6 +121,19 @@ services:
     image: redis:alpine
     ports:
       - "6379:6379"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=redixadmin_751756d@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=redixadmin_751756d
+      - PGADMIN_SCRIPT_NAME=/pgadmin
+    networks:
+      - default
+    depends_on:
+      - redix_db
+    restart: on-failure
 
 volumes:
   postgres_data:
