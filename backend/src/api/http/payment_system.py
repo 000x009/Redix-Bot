@@ -3,17 +3,17 @@ import uuid
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 
-from dependency_injector.wiring import inject, Provide
-
 from aiogram import Bot
 from aiogram.utils.web_app import WebAppInitData
 
-from src.services import BileeService, TransactionService, UserService
+from dependency_injector.wiring import inject, Provide
+
+from src.main.ioc import Container
+from src.services import FreeKassaService, TransactionService, UserService
 from src.api.schema.payment import TopUpSchema
 from src.api.dependencies import user_provider
 from src.schema.transaction import TransactionCause, TransactionType
 from src.main.config import settings
-from src.main.ioc import Container
 
 router = APIRouter(
     prefix="/payment",
@@ -25,21 +25,27 @@ router = APIRouter(
 @inject
 async def top_up(
     data: TopUpSchema,
-    bilee_service: BileeService = Depends(Provide[Container.bilee_service]),
+    request: Request,
+    freekassa_service: FreeKassaService = Depends(Provide[Container.freekassa_service]),
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> dict:
-    response = bilee_service.create_invoice(amount=data.amount, method=data.method.value)
+    response = freekassa_service.create_order(
+        amount=data.amount,
+        payment_method=data.method,
+        ip=request.client.host,
+        email="leonshevchenko616@gmail.com",
+    )
 
-    if response.get('success') is True:
-        payment_data = response['payment']
-        payment_data['url'] = response['url']
+    if response.get("success") is True:
+        payment_data = response
+        payment_data['url'] = response['location']
         await transaction_service.add_transaction(
-            id=payment_data['uuid'],
+            id=payment_data['orderId'],
             user_id=user_data.user.id,
             type=TransactionType.DEPOSIT,
             cause=TransactionCause.DONATE,
-            amount=payment_data['amount'],
+            amount=data.amount,
             payment_data=payment_data
         )
 
@@ -54,7 +60,7 @@ async def receive_payment(
 ) -> JSONResponse:
     try:
         payload = await request.json()
-        payment_id = payload.get('uuid')
+        payment_id = payload.get('MERCHANT_ORDER_ID')
         if not payment_id:
             return JSONResponse(status_code=400, content={"error": "Missing payment ID"})
 
@@ -63,7 +69,7 @@ async def receive_payment(
             return JSONResponse(status_code=400, content={"error": "Payment not found"})
 
         user = await user_service.get_one_user(user_id=payment.user_id)
-        top_up_amount = payload.get('amount')
+        top_up_amount = float(payload.get('AMOUNT'))
         await user_service.update_user(user_id=user.user_id, balance=user.balance + top_up_amount)
         await transaction_service.update_transaction(id=payment_id, is_successful=True)
 
@@ -83,8 +89,7 @@ async def receive_payment(
                     amount=reff_top_up_amount,
                     is_successful=True,
                 )
-                bot = Bot(token=settings.BOT_TOKEN)
-                await bot.send_message(chat_id=user.user_id, text=f"✅ Баланс пополнен на {reff_top_up_amount} рублей")
+                await bot.send_message(chat_id=referral.user_id, text=f"✅ Баланс пополнен на {reff_top_up_amount} рублей")
         except Exception as e:
             pass
         finally:
@@ -94,3 +99,14 @@ async def receive_payment(
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+    
+
+
+@router.post("/success")
+async def success_payment(request: Request):
+    return JSONResponse(status_code=200, content={"success": True})
+
+
+@router.post("/fail")
+async def fail_payment(request: Request):
+    return JSONResponse(status_code=200, content={"success": False})

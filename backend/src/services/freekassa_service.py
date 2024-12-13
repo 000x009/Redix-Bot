@@ -5,10 +5,10 @@ import hmac
 import time
 from typing import Optional, Dict
 
-# from src.main.config import settings
+from src.main.config import settings
 
 class PaymentMethod(enum.Enum):
-    CARD = 36
+    CARD = 1
     SBP = 44
 
 
@@ -16,8 +16,8 @@ class FreeKassaService:
     API_URL = 'https://api.freekassa.com/v1/'
 
     def __init__(self) -> None:
-        self.shop_id = "ssd"
-        self.secret_key = "ssd"
+        self.shop_id = settings.FREEKASSA_SHOP_ID
+        self.secret_key = settings.FREEKASSA_API_KEY
 
     def create_order(
         self,
@@ -39,11 +39,8 @@ class FreeKassaService:
         params['signature'] = self._generate_signature(params)
 
         response = requests.post(f'{self.API_URL}{endpoint}', json=params)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            print(f"Error: {response.status_code} - {response.text}")
-            return None
+        print(response.json(), flush=True)
+        return response.json()
 
     def _generate_signature(self, params: Dict[str, str]) -> str:
         sorted_params = {key: params[key] for key in sorted(params.keys())}
