@@ -30,6 +30,8 @@ class YandexStorageMedia(MessageManager):
         if media.url:
             object_name = media.url.split('/')[-1]
             file = yandex_storage_client.get_file(object_url=media.url)
+            print("FILE", file, flush=True)
+            print("OBJECT_NAME", object_name, flush=True)
             return BufferedInputFile(file, filename=object_name)
         return await super().get_media_source(media, bot)
 
@@ -89,6 +91,7 @@ async def one_product_getter(
 ) -> dict:
     product_id = dialog_manager.dialog_data["product_id"]
     product = await product_service.get_one_product(id=uuid.UUID(product_id))
+    print(product, flush=True)
 
     return {
         "photo": MediaAttachment(
