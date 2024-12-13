@@ -168,10 +168,24 @@ const OrderForm = () => {
         });
       }
     }
+
+    const validateEmail = (email) => {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(email.trim());
+    }
+
+    if (formFields.почта) {
+      const isValidEmail = validateEmail(formFields.почта.trim());
+      if (!isValidEmail) {
+        setFormErrors(prev => ({...prev, почта: true}));
+        setEmailError('Пожалуйста, предоставьте правильную почту');
+        hasErrors = true;
+      }
+    }
   
     if (hasErrors) {
       setFormErrors(errors);
-      setGeneralError('Пожалуйста, заполните все обязательные поля');
+      setGeneralError('Пожалуйста, заполните все обязательные поля правильно');
       return;
     }
   
