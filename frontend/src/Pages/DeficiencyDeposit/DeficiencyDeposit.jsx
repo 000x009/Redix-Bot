@@ -12,7 +12,7 @@ const DeficiencyDeposit = () => {
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [method, setMethod] = useState('card');
+    const [method, setMethod] = useState(1);
     const [amount, setAmount] = useState('');
     const [validStatus, setValidStatus] = useState(0);
     const [message, setMessage] = useState('');
@@ -146,11 +146,11 @@ const DeficiencyDeposit = () => {
             <div className="flex column gap-2">
                 <h3>Выберите способ оплаты</h3>
                 <div className="flex gap-1 align-items-center">
-                    <input checked={method === 'card'} id="card" name="type" type="radio" onChange={() => setMethod('card')}/>
+                    <input checked={method === 1} id="card" name="type" type="radio" onChange={() => setMethod(1)}/>
                     <label htmlFor="card">Картой (Kassa)</label>
                 </div>
                 <div className="flex gap-1 align-items-center">
-                    <input id="sbp" name="type" type="radio" onChange={() => setMethod('sbp')}/>
+                    <input id="sbp" name="type" type="radio" onChange={() => setMethod(44)}/>
                     <label htmlFor="sbp">СБП (Kassa)</label>
                 </div>
             </div>
