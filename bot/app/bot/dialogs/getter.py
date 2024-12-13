@@ -30,9 +30,8 @@ class YandexStorageMedia(MessageManager):
         if media.url:
             object_name = media.url.split('/')[-1]
             file = yandex_storage_client.get_file(object_url=media.url)
-            print("FILE", file, flush=True)
-            print("OBJECT_NAME", object_name, flush=True)
-            return BufferedInputFile(file, filename=object_name)
+            if file:
+                return BufferedInputFile(file, filename=object_name)
         return await super().get_media_source(media, bot)
 
 
