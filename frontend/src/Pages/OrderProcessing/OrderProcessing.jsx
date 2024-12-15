@@ -192,7 +192,6 @@ const OrderForm = () => {
       const isValidCode = validateCode(formFields.код.trim());
       if (!isValidCode) {
         setFormErrors(prev => ({...prev, код: true}));
-        setCodeError('Пожалуйста, предоставьте правильный код');
         hasErrors = true;
       }
     }
