@@ -30,6 +30,8 @@ async def top_up(
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> dict:
+    print("PAYMENT METHOD", data.method)
+    print("IP", request.client.host)
     response = freekassa_service.create_order(
         amount=data.amount,
         payment_method=data.method,

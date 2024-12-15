@@ -182,6 +182,20 @@ const OrderForm = () => {
         hasErrors = true;
       }
     }
+
+    const validateCode = (code) => {
+      const codePattern = /^[0-9]{6}$/;
+      return codePattern.test(code.trim());
+    }
+
+    if (formFields.код) {
+      const isValidCode = validateCode(formFields.код.trim());
+      if (!isValidCode) {
+        setFormErrors(prev => ({...prev, код: true}));
+        setCodeError('Пожалуйста, предоставьте правильный код');
+        hasErrors = true;
+      }
+    }
   
     if (hasErrors) {
       setFormErrors(errors);
