@@ -1,6 +1,5 @@
-import uuid
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import JSONResponse
 
 from aiogram import Bot
@@ -58,13 +57,33 @@ async def top_up(
 @router.post("/webhook", response_class=JSONResponse)
 @inject
 async def receive_payment(
-    request: Request,
+    merchant_id: str = Form(...),
+    amount: float = Form(...),
+    intid: str = Form(...),
+    merchant_order_id: str = Form(...),
+    p_email: str = Form(...),
+    p_phone: str = Form(...),
+    cur_id: str = Form(...),
+    sign: str = Form(...),
+    us_key: str = Form(...),
+    payer_account: str = Form(...),
+    commission: float = Form(...),
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> JSONResponse:
-    payload = await request.json()
-    print("payload", payload)
-    payment_id = payload.get('MERCHANT_ORDER_ID')
+    print("merchant_id", merchant_id)
+    print("amount", amount)
+    print("intid", intid)
+    print("merchant_order_id", merchant_order_id)
+    print("p_email", p_email)
+    print("p_phone", p_phone)
+    print("cur_id", cur_id)
+    print("sign", sign)
+    print("us_key", us_key)
+    print("payer_account", payer_account)
+    print("commission", commission)
+
+    payment_id = merchant_order_id
     if not payment_id:
         return JSONResponse(status_code=400, content={"error": "Missing payment ID"})
 
@@ -73,7 +92,7 @@ async def receive_payment(
         return JSONResponse(status_code=400, content={"error": "Payment not found"})
 
     user = await user_service.get_one_user(user_id=payment.user_id)
-    top_up_amount = float(payload.get('AMOUNT'))
+    top_up_amount = float(amount)
     await user_service.update_user(user_id=user.user_id, balance=user.balance + top_up_amount)
     await transaction_service.update_transaction(id=payment_id, is_successful=True)
 
