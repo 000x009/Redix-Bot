@@ -57,12 +57,7 @@ const DeficiencyDeposit = () => {
 
     const handleMainButtonClick = useCallback(async () => {
         const response = await makeDeposit(amount, method, tg.initData);
-        console.log("response", response)
-        // if (response.success) {
         navigate(`/payment/${response.id}`);
-        // } else {
-        //     tg.showAlert('Произошла ошибка при создании платежа');
-        // }
     }, [amount, method, tg, navigate]);
 
     useEffect(() => {

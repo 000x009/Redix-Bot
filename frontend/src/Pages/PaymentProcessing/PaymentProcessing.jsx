@@ -79,8 +79,8 @@ export default function PaymentProcessing() {
 
     const handlePayment = () => {
         console.log("transaction", transaction)
-        if (transaction.location) {
-            tg.openLink(transaction.location);
+        if (transaction.payment_data.location) {
+            tg.openLink(transaction.payment_data.location);
         } else {
             console.error('Payment URL not available');
         }
