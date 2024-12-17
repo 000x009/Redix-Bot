@@ -13,6 +13,7 @@ from src.services import FreeKassaService, TransactionService, UserService
 from src.api.schema.payment import TopUpSchema
 from src.api.dependencies import user_provider
 from src.schema.transaction import TransactionCause, TransactionType
+from src.schema.transaction import Transaction
 from src.main.config import settings
 
 router = APIRouter(
@@ -21,7 +22,7 @@ router = APIRouter(
 )
 
  
-@router.post('/')
+@router.post('/', response_model=Transaction)
 @inject
 async def top_up(
     data: TopUpSchema,
@@ -29,7 +30,7 @@ async def top_up(
     freekassa_service: FreeKassaService = Depends(Provide[Container.freekassa_service]),
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     # user_data: WebAppInitData = Depends(user_provider),
-) -> dict:
+) -> Transaction:
     print("PAYMENT METHOD", data.method)
     print("IP", request.client.host)
     transaction = await transaction_service.add_transaction(
