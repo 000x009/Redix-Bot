@@ -52,8 +52,9 @@ async def top_up(
         # payment_data['url'] = response['location']
         await transaction_service.update_transaction(id=transaction.id, payment_data=payment_data)
 
-    transaction.payment_data = response
-    return response
+    updated_transaction = await transaction_service.get_one_transaction(id=transaction.id)
+
+    return updated_transaction
 
 
 @router.post("/webhook", response_class=JSONResponse)
