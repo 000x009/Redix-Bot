@@ -62,9 +62,9 @@ async def receive_payment(
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> JSONResponse:
-    print("request", request)
     try:
         payload = await request.json()
+        print("payload", payload)
         payment_id = payload.get('MERCHANT_ORDER_ID')
         if not payment_id:
             return JSONResponse(status_code=400, content={"error": "Missing payment ID"})
