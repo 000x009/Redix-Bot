@@ -47,11 +47,12 @@ async def top_up(
         unique_transaction_id=transaction.unique_id,
     )
 
-    if response.get("success") is True:
+    if response.get("type") == "success":
         payment_data = response
-        payment_data['url'] = response['location']
+        # payment_data['url'] = response['location']
         await transaction_service.update_transaction(id=transaction.id, payment_data=payment_data)
 
+    transaction.payment_data = response
     return response
 
 
