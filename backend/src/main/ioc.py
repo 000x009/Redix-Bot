@@ -14,7 +14,13 @@ from src.data.dal import (
 class Database:
     @staticmethod
     async def get_engine() -> AsyncGenerator[AsyncEngine, None]:
-        engine = create_async_engine(url=settings.db_connection_url)
+        engine = create_async_engine(
+            url=settings.db_connection_url,
+            pool_size=20,
+            max_overflow=10,
+            pool_recycle=3600,
+            pool_pre_ping=True,
+        )
         yield engine
         await engine.dispose()
 
@@ -27,10 +33,12 @@ class Database:
         async with sessionmaker() as session:
             try:
                 yield session
-            except Exception:
+            except Exception as e:
                 await session.rollback()
+                raise e
             finally:
                 await session.close()
+
 
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=[
