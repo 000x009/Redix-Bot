@@ -29,12 +29,12 @@ async def top_up(
     request: Request,
     freekassa_service: FreeKassaService = Depends(Provide[Container.freekassa_service]),
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
-    # user_data: WebAppInitData = Depends(user_provider),
+    user_data: WebAppInitData = Depends(user_provider),
 ) -> Transaction:
     print("PAYMENT METHOD", data.method)
     print("IP", request.client.host)
     transaction = await transaction_service.add_transaction(
-        user_id=6384960822,
+        user_id=user_data.user.id,
         type=TransactionType.DEPOSIT,
         cause=TransactionCause.DONATE,
         amount=data.amount,
