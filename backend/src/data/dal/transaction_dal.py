@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from typing import Optional, List, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,10 +16,36 @@ class TransactionDAL:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def add(self, **kwargs) -> None:
-        query = insert(TransactionModel).values(**kwargs)
+    async def add(self, **kwargs) -> Transaction:
+        generated_id = uuid.uuid4()
+        query = insert(TransactionModel).values(
+            id=generated_id,
+            user_id=kwargs.get('user_id'),
+            type=kwargs.get('type'),
+            cause=kwargs.get('cause'),
+            amount=kwargs.get('amount'),
+            is_successful=kwargs.get('is_successful'),
+            time=datetime.datetime.now(),
+            payment_data=kwargs.get('payment_data'),
+        )
         await self.session.execute(query)
         await self.session.commit()
+
+        transaction = await self.get_one(id=generated_id)
+
+        print("unique_id", transaction.unique_id)
+
+        return Transaction(
+            id=transaction.id,
+            unique_id=transaction.unique_id,
+            user_id=transaction.user_id,
+            type=transaction.type,
+            cause=transaction.cause,
+            amount=transaction.amount,
+            is_successful=transaction.is_successful,
+            time=transaction.time,
+            payment_data=transaction.payment_data,
+        )
 
     async def update(self, id: uuid.UUID, **kwargs) -> None:
         query = update(TransactionModel).where(TransactionModel.id == id).values(**kwargs)
@@ -76,6 +103,7 @@ class TransactionDAL:
             db_transaction = res.scalar_one_or_none()
             return Transaction(
                 id=db_transaction.id,
+                unique_id=db_transaction.unique_id,
                 user_id=db_transaction.user_id,
                 type=db_transaction.type,
                 cause=db_transaction.cause,
@@ -93,6 +121,7 @@ class TransactionDAL:
             return [
                 Transaction(
                     id=db_transaction.id,
+                    unique_id=db_transaction.unique_id,
                     user_id=db_transaction.user_id,
                     type=db_transaction.type,
                     cause=db_transaction.cause,

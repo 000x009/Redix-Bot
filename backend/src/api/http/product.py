@@ -110,7 +110,6 @@ async def purchase_product(
     )
     await user_service.update_user(user_id=user.user_id, balance=user.balance - product.price)
     await transaction_service.add_transaction(
-        id=uuid.uuid4(),
         user_id=user.user_id,
         type=TransactionType.DEBIT,
         cause=TransactionCause.PAYMENT,

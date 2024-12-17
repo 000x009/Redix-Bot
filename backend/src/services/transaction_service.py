@@ -15,7 +15,7 @@ class TransactionService:
     async def get_one_transaction(self, **params: Optional[Any]) -> Optional[Transaction]:
         return await self.__transaction_dal.get_one(**params)
     
-    async def add_transaction(self, **params: Optional[Any]) -> None:
+    async def add_transaction(self, **params: Optional[Any]) -> Transaction:
         return await self.__transaction_dal.add(**params)
 
     async def update_transaction(self, id: uuid.UUID, **params: Optional[Any]) -> None:

@@ -8,7 +8,7 @@ from src.data.models import Base
 
 if TYPE_CHECKING:
     from src.data.models.admin import AdminModel
-
+    from src.data.models.transaction import TransactionModel
 
 class UserModel(Base):
     __tablename__ = "user"
@@ -22,7 +22,27 @@ class UserModel(Base):
     profile_photo: Mapped[str] = mapped_column(String, nullable=True)
     joined_at: Mapped[datetime] = mapped_column(TIMESTAMP, nullable=False, default=datetime.now(), server_default=func.now())
 
-    transactions = relationship('TransactionModel', back_populates='user')
-    orders = relationship('OrderModel', back_populates='user')
-    feedbacks = relationship('FeedbackModel', back_populates='user')
-    admin: Mapped["AdminModel"] = relationship(back_populates="user")
+    transactions: Mapped[list["TransactionModel"]] = relationship(
+        'TransactionModel',
+        back_populates='user',
+        lazy='joined',
+        uselist=True,
+    )
+    orders = relationship(
+        'OrderModel',
+        back_populates='user',
+        lazy='joined',
+        uselist=True,
+    )
+    feedbacks = relationship(
+        'FeedbackModel',
+        back_populates='user',
+        lazy='joined',
+        uselist=True,
+    )
+    admin: Mapped["AdminModel"] = relationship(
+        'AdminModel',
+        back_populates='user',
+        lazy='joined',
+        uselist=False,
+    )

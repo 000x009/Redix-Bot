@@ -28,30 +28,32 @@ async def top_up(
     request: Request,
     freekassa_service: FreeKassaService = Depends(Provide[Container.freekassa_service]),
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
-    user_data: WebAppInitData = Depends(user_provider),
+    # user_data: WebAppInitData = Depends(user_provider),
 ) -> dict:
     print("PAYMENT METHOD", data.method)
     print("IP", request.client.host)
+    transaction = await transaction_service.add_transaction(
+        user_id=6384960822,
+        type=TransactionType.DEPOSIT,
+        cause=TransactionCause.DONATE,
+        amount=data.amount,
+        is_successful=False,
+    )
     response = freekassa_service.create_order(
         amount=data.amount,
         payment_method=data.method,
         ip=request.client.host,
         email="leonshevchenko616@gmail.com",
+        unique_transaction_id=transaction.unique_id,
     )
 
     if response.get("success") is True:
         payment_data = response
         payment_data['url'] = response['location']
-        await transaction_service.add_transaction(
-            id=payment_data['orderId'],
-            user_id=user_data.user.id,
-            type=TransactionType.DEPOSIT,
-            cause=TransactionCause.DONATE,
-            amount=data.amount,
-            payment_data=payment_data
-        )
+        await transaction_service.update_transaction(id=transaction.id, payment_data=payment_data)
 
     return response
+
 
 @router.post("/webhook", response_class=JSONResponse)
 @inject
@@ -60,6 +62,7 @@ async def receive_payment(
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> JSONResponse:
+    print("request", request)
     try:
         payload = await request.json()
         payment_id = payload.get('MERCHANT_ORDER_ID')
@@ -84,7 +87,6 @@ async def receive_payment(
                 reff_top_up_amount = round(top_up_amount * 0.02, 2)
                 await user_service.update_user(user_id=user.referral_id, balance=referral.balance + reff_top_up_amount)
                 await transaction_service.add_transaction(
-                    id=uuid.uuid4(),
                     user_id=referral.user_id,
                     type=TransactionType.DEPOSIT,
                     cause=TransactionCause.REFERRAL,

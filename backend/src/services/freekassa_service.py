@@ -2,7 +2,6 @@ import requests
 import enum
 import hashlib
 import hmac
-import time
 from typing import Optional, Dict
 
 from src.main.config import settings
@@ -25,14 +24,16 @@ class FreeKassaService:
         ip: str,
         email: str,
         payment_method: PaymentMethod,
+        unique_transaction_id: int,
     ) -> Optional[Dict]:
         endpoint = '/orders/create'
+        print(unique_transaction_id, flush=True)
         params = {
             'shopId': self.shop_id,
             'amount': amount,
             'currency': 'RUB',
             'ip': ip,
-            'nonce': self._generate_nonce(),
+            'nonce': unique_transaction_id,
             'email': email,
             'i': payment_method.value,
         }
@@ -48,8 +49,3 @@ class FreeKassaService:
         signature = hmac.new(self.secret_key.encode('utf-8'), sign_string.encode('utf-8'), hashlib.sha256).hexdigest()
 
         return signature
-
-    def _generate_nonce(self) -> int:
-        current_time = time.time()
-        random_number = int((current_time - int(current_time)) * 1000000)
-        return random_number

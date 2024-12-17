@@ -80,7 +80,6 @@ async def use_promo(
         await promo_service.update_promo(name=raw_promo.name, uses=promo.uses - 1)
     await user_service.update_user(user_id=user_data.user.id, used_coupons=used_coupons, balance=updated_balance)
     await transaction_service.add_transaction(
-        id=uuid.uuid4(),
         user_id=user_data.user.id,
         type=TransactionType.DEPOSIT,
         cause=TransactionCause.COUPON,
