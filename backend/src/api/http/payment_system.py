@@ -62,48 +62,43 @@ async def receive_payment(
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_service: UserService = Depends(Provide[Container.user_service]),
 ) -> JSONResponse:
+    payload = await request.json()
+    print("payload", payload)
+    payment_id = payload.get('MERCHANT_ORDER_ID')
+    if not payment_id:
+        return JSONResponse(status_code=400, content={"error": "Missing payment ID"})
+
+    payment = await transaction_service.get_one_transaction(id=payment_id)
+    if not payment:
+        return JSONResponse(status_code=400, content={"error": "Payment not found"})
+
+    user = await user_service.get_one_user(user_id=payment.user_id)
+    top_up_amount = float(payload.get('AMOUNT'))
+    await user_service.update_user(user_id=user.user_id, balance=user.balance + top_up_amount)
+    await transaction_service.update_transaction(id=payment_id, is_successful=True)
+
     try:
-        payload = await request.json()
-        print("payload", payload)
-        payment_id = payload.get('MERCHANT_ORDER_ID')
-        if not payment_id:
-            return JSONResponse(status_code=400, content={"error": "Missing payment ID"})
+        bot = Bot(token=settings.BOT_TOKEN)
+        await bot.send_message(chat_id=user.user_id, text=f"✅ Баланс пополнен на {top_up_amount} рублей")
 
-        payment = await transaction_service.get_one_transaction(id=payment_id)
-        if not payment:
-            return JSONResponse(status_code=400, content={"error": "Payment not found"})
-
-        user = await user_service.get_one_user(user_id=payment.user_id)
-        top_up_amount = float(payload.get('AMOUNT'))
-        await user_service.update_user(user_id=user.user_id, balance=user.balance + top_up_amount)
-        await transaction_service.update_transaction(id=payment_id, is_successful=True)
-
-        try:
-            bot = Bot(token=settings.BOT_TOKEN)
-            await bot.send_message(chat_id=user.user_id, text=f"✅ Баланс пополнен на {top_up_amount} рублей")
-
-            if user.referral_id:
-                referral = await user_service.get_one_user(user_id=user.referral_id)
-                reff_top_up_amount = round(top_up_amount * 0.02, 2)
-                await user_service.update_user(user_id=user.referral_id, balance=referral.balance + reff_top_up_amount)
-                await transaction_service.add_transaction(
-                    user_id=referral.user_id,
-                    type=TransactionType.DEPOSIT,
-                    cause=TransactionCause.REFERRAL,
-                    amount=reff_top_up_amount,
-                    is_successful=True,
-                )
-                await bot.send_message(chat_id=referral.user_id, text=f"✅ Баланс пополнен на {reff_top_up_amount} рублей")
-        except Exception as e:
-            pass
-        finally:
-            await bot.session.close()
-
-        return JSONResponse(status_code=200, content={"success": True})
-
+        if user.referral_id:
+            referral = await user_service.get_one_user(user_id=user.referral_id)
+            reff_top_up_amount = round(top_up_amount * 0.02, 2)
+            await user_service.update_user(user_id=user.referral_id, balance=referral.balance + reff_top_up_amount)
+            await transaction_service.add_transaction(
+                user_id=referral.user_id,
+                type=TransactionType.DEPOSIT,
+                cause=TransactionCause.REFERRAL,
+                amount=reff_top_up_amount,
+                is_successful=True,
+            )
+            await bot.send_message(chat_id=referral.user_id, text=f"✅ Баланс пополнен на {reff_top_up_amount} рублей")
     except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
-    
+        pass
+    finally:
+        await bot.session.close()
+
+    return JSONResponse(status_code=200, content={"success": True})
 
 
 @router.post("/success")
