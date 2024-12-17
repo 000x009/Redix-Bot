@@ -7,7 +7,7 @@ import { useTelegram } from '../../hooks/useTelegram';
 function Deposit() {
     const navigate = useNavigate();
     const [amount, setAmount] = useState('');
-    const [method, setMethod] = useState(1);
+    const [method, setMethod] = useState(36);
     const [validStatus, setValidStatus] = useState(0);
     const [message, setMessage] = useState('');
     const { tg } = useTelegram();
@@ -83,7 +83,7 @@ function Deposit() {
             <div className="flex column gap-2">
                 <h3>Выберите способ оплаты</h3>
                 <div className="flex gap-1 align-items-center">
-                    <input checked={method === 1} id="card" name="type" type="radio" onChange={() => setMethod(1)}/>
+                    <input checked={method === 36} id="card" name="type" type="radio" onChange={() => setMethod(36)}/>
                     <label htmlFor="card">Картой (Kassa)</label>
                 </div>
                 <div className="flex gap-1 align-items-center">

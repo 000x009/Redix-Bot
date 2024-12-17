@@ -31,8 +31,6 @@ async def top_up(
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
     user_data: WebAppInitData = Depends(user_provider),
 ) -> Transaction:
-    print("PAYMENT METHOD", data.method)
-    print("IP", request.client.host)
     transaction = await transaction_service.add_transaction(
         user_id=user_data.user.id,
         type=TransactionType.DEPOSIT,
@@ -50,7 +48,6 @@ async def top_up(
 
     if response.get("type") == "success":
         payment_data = response
-        # payment_data['url'] = response['location']
         await transaction_service.update_transaction(id=transaction.id, payment_data=payment_data)
 
     updated_transaction = await transaction_service.get_one_transaction(id=transaction.id)

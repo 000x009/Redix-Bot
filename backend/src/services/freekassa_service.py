@@ -7,7 +7,7 @@ from typing import Optional, Dict
 from src.main.config import settings
 
 class PaymentMethod(enum.Enum):
-    CARD = 1
+    CARD = 36
     SBP = 44
 
 
