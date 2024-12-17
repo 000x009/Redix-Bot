@@ -70,7 +70,7 @@ class UserDAL:
         res = await self._get(**kwargs)
 
         if res:
-            db_user = res.scalar_one_or_none()
+            db_user = res.unique().scalar()
             return User(
                 user_id=db_user.user_id,
                 referral_code=db_user.referral_code,
