@@ -67,17 +67,17 @@ async def mailing_message_handler(
     event_chat: Chat,
     dialog_manager: DialogManager,
 ) -> None:
-    print("MEDIA GROUP", flush=True)
     album_photo = [message.photo[-1].file_id for message in album_message]
     await state.update_data(album_photo=album_photo, album_caption=album_message.caption)
     state_data = await state.get_data()
     await dialog_manager.start(
-        state=MailingSG.BUTTON,
+        state=MailingSG.CHECKOUT,
         data=state_data,
         mode=StartMode.RESET_STACK,
         show_mode=ShowMode.DELETE_AND_SEND,
     )
-    
+    await state.clear()
+
 
 @router.message(MailingSG.MESSAGE)
 async def mailing_message_handler(
@@ -85,17 +85,18 @@ async def mailing_message_handler(
     state: FSMContext,
     dialog_manager: DialogManager,
 ) -> None:
-    await state.update_data(message_id=message.message_id)
+    await state.update_data(message_id=message.message_id, message=message.text if message.text else message.caption)
     state_data = await state.get_data()
     if state_data.get("album_photo"):
         state_data.pop("album_photo")
 
     await dialog_manager.start(
-        MailingSG.BUTTON,
+        MailingSG.CHECKOUT,
         data=state_data,
         mode=StartMode.RESET_STACK,
         show_mode=ShowMode.DELETE_AND_SEND,
     )
+    await state.clear()
 
 
 #User Management

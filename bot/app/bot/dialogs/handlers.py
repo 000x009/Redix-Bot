@@ -612,7 +612,9 @@ async def confirm_mailing(
     users = await user_service.get_users()
     bot: Bot = dialog_manager.middleware_data.get("bot")
     message_id = dialog_manager.start_data.get("message_id")
+    button_title = dialog_manager.dialog_data.get("button_title")
     album_caption = dialog_manager.start_data.get("album_caption")
+    game_button_id = dialog_manager.dialog_data.get("game_button_id")
 
     for user in users:
         try: 
@@ -627,7 +629,7 @@ async def confirm_mailing(
                     message_id=message_id,
                     caption=album_caption,
                     from_chat_id=callback_query.message.chat.id,
-                    reply_markup=inline.web_app_button(dialog_manager.dialog_data["game_button_id"]),
+                    reply_markup=inline.web_app_button(game_button_id, button_title),
                 )
         except Exception as ex:
             print(ex)
@@ -649,3 +651,13 @@ async def cancel_mailing(
     await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
     await bot.send_message(chat_id=callback_query.message.chat.id, text="Рассылка успешно отменена")
     await dialog_manager.done()
+
+
+async def button_name_input(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+) -> None:
+    print("BUTTON NAME", flush=True)
+    dialog_manager.dialog_data["button_title"] = message.text
+    await dialog_manager.switch_to(MailingSG.BUTTON_REDIRECT)

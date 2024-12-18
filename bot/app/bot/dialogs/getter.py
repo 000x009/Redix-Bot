@@ -103,3 +103,19 @@ async def one_product_getter(
         ) if file else None,
         "product": product,
     }
+
+
+async def mailing_getter(
+    dialog_manager: DialogManager,
+    **kwargs,
+) -> dict:
+    message = dialog_manager.start_data.get("message")
+    album_caption = dialog_manager.start_data.get("album_caption")
+
+    print("START DATA", dialog_manager.start_data)
+
+    print(album_caption, flush=True)
+
+    return {
+        'message': message if message else album_caption,
+    }
