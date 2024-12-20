@@ -27,7 +27,7 @@ async def top_up(
     data: TopUpSchema,
     bilee_service: BileeService = Depends(Provide[Container.bilee_service]),
     transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
-    # user_data: WebAppInitData = Depends(user_provider),
+    user_data: WebAppInitData = Depends(user_provider),
 ) -> dict:
     response = bilee_service.create_invoice(amount=data.amount, method=data.method.value)
 
@@ -36,7 +36,7 @@ async def top_up(
         payment_data['url'] = response['url']
         await transaction_service.add_transaction(
             id=payment_data['uuid'],
-            user_id=6384960822,
+            user_id=user_data.user.id,
             type=TransactionType.DEPOSIT,
             cause=TransactionCause.DONATE,
             amount=payment_data['amount'],
