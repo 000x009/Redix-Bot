@@ -17,9 +17,8 @@ class TransactionDAL:
         self.session = session
 
     async def add(self, **kwargs) -> Transaction:
-        generated_id = uuid.uuid4()
         query = insert(TransactionModel).values(
-            id=generated_id,
+            id=kwargs.get('id'),
             user_id=kwargs.get('user_id'),
             type=kwargs.get('type'),
             cause=kwargs.get('cause'),
@@ -31,9 +30,7 @@ class TransactionDAL:
         await self.session.execute(query)
         await self.session.commit()
 
-        transaction = await self.get_one(id=generated_id)
-
-        print("unique_id", transaction.unique_id)
+        transaction = await self.get_one(id=kwargs.get('id'))
 
         return Transaction(
             id=transaction.id,
