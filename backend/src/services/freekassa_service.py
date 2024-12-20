@@ -15,8 +15,8 @@ class FreeKassaService:
     API_URL = 'https://api.freekassa.com/v1/'
 
     def __init__(self) -> None:
-        self.shop_id = settings.FREEKASSA_SHOP_ID
-        self.secret_key = settings.FREEKASSA_API_KEY
+        self.shop_id = None
+        self.secret_key = None
 
     def create_order(
         self,

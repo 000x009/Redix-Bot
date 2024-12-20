@@ -12,7 +12,7 @@ const DeficiencyDeposit = () => {
     const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [method, setMethod] = useState(36);
+    const [method, setMethod] = useState('card');
     const [amount, setAmount] = useState('');
     const [validStatus, setValidStatus] = useState(0);
     const [message, setMessage] = useState('');
@@ -57,7 +57,11 @@ const DeficiencyDeposit = () => {
 
     const handleMainButtonClick = useCallback(async () => {
         const response = await makeDeposit(amount, method, tg.initData);
-        navigate(`/payment/${response.id}`);
+        if (response.success) {
+            navigate(`/payment/${response.payment.uuid}`);
+        } else {
+            tg.showAlert('Произошла ошибка при создании платежа');
+        }
     }, [amount, method, tg, navigate]);
 
     useEffect(() => {
@@ -142,11 +146,11 @@ const DeficiencyDeposit = () => {
             <div className="flex column gap-2">
                 <h3>Выберите способ оплаты</h3>
                 <div className="flex gap-1 align-items-center">
-                    <input checked={method === 36} id="card" name="type" type="radio" onChange={() => setMethod(36)}/>
+                    <input checked={method === 'card'} id="card" name="type" type="radio" onChange={() => setMethod('card')}/>
                     <label htmlFor="card">Картой (Kassa)</label>
                 </div>
                 <div className="flex gap-1 align-items-center">
-                    <input id="sbp" name="type" type="radio" onChange={() => setMethod(44)}/>
+                    <input id="sbp" name="type" type="radio" onChange={() => setMethod('sbp')}/>
                     <label htmlFor="sbp">СБП (Kassa)</label>
                 </div>
             </div>

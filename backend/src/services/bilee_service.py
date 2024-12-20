@@ -16,8 +16,8 @@ class PaymentMethod(Enum):
 
 class BileeService():
     API_URL = 'https://paymentgate.bilee.ru/api'
-    SHOP_ID = None
-    PASSWORD = None
+    SHOP_ID = settings.BILEE_SHOP_ID
+    PASSWORD = settings.BILEE_PASSWORD
 
     def __init__(self) -> None:
         self.order_id: str = self._generate_order_id()

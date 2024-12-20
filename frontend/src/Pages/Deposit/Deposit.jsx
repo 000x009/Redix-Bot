@@ -7,7 +7,7 @@ import { useTelegram } from '../../hooks/useTelegram';
 function Deposit() {
     const navigate = useNavigate();
     const [amount, setAmount] = useState('');
-    const [method, setMethod] = useState(36);
+    const [method, setMethod] = useState('card');
     const [validStatus, setValidStatus] = useState(0);
     const [message, setMessage] = useState('');
     const { tg } = useTelegram();
@@ -51,7 +51,11 @@ function Deposit() {
             return;
         }
         const response = await makeDeposit(amount, method, tg.initData);
-        navigate(`/payment/${response.id}`, { replace: true });
+        if (response.success) {
+            navigate(`/payment/${response.payment.uuid}`, { replace: true });
+        } else {
+            tg.showAlert('Произошла ошибка при создании платежа');
+        }
     };
 
     useEffect(() => {
@@ -83,11 +87,11 @@ function Deposit() {
             <div className="flex column gap-2">
                 <h3>Выберите способ оплаты</h3>
                 <div className="flex gap-1 align-items-center">
-                    <input checked={method === 36} id="card" name="type" type="radio" onChange={() => setMethod(36)}/>
+                    <input checked={method === 'card'} id="card" name="type" type="radio" onChange={() => setMethod('card')}/>
                     <label htmlFor="card">Картой (Kassa)</label>
                 </div>
                 <div className="flex gap-1 align-items-center">
-                    <input id="sbp" name="type" type="radio" onChange={() => setMethod(44)}/>
+                    <input id="sbp" name="type" type="radio" onChange={() => setMethod('sbp')}/>
                     <label htmlFor="sbp">СБП (Kassa)</label>
                 </div>
             </div>

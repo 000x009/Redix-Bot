@@ -20,14 +20,14 @@ class Settings(BaseSettings):
     DB_PORT: str
     POSTGRES_PASSWORD: str
     BOT_URL: str
-    FREEKASSA_SHOP_ID: str
-    FREEKASSA_API_KEY: str
     BOT_TOKEN: str
     BRAWL_STARS_API_KEY: str
     CONFIG_PATH: str
     YANDEX_STORAGE_TOKEN: str
     YANDEX_STORAGE_SECRET: str
     YANDEX_STORAGE_BUCKET_NAME: str
+    BILEE_SHOP_ID: str
+    BILEE_PASSWORD: str
     
     model_config = SettingsConfigDict(env_file=".env")
 

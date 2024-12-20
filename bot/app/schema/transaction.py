@@ -19,6 +19,7 @@ class TransactionCause(Enum):
     PAYMENT = 'Оплата заказа'
     REFERRAL = 'Реферальный бонус'
 
+
 @dataclass(frozen=True)
 class Transaction:
     id: UUID

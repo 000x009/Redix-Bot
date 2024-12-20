@@ -44,8 +44,8 @@ services:
       - DB_HOST=redix_db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
-      - FREEKASSA_SHOP_ID=${FREEKASSA_SHOP_ID}
-      - FREEKASSA_API_KEY=${FREEKASSA_API_KEY}
+      - BILEE_SHOP_ID=${BILEE_SHOP_ID}
+      - BILEE_PASSWORD=${BILEE_PASSWORD}
       - BOT_TOKEN=${BOT_TOKEN}
       - BOT_URL=${BOT_URL}
       - CONFIG_PATH=${CONFIG_PATH}
@@ -76,8 +76,8 @@ services:
       - DB_HOST=redix_db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
-      - FREEKASSA_SHOP_ID=${FREEKASSA_SHOP_ID}
-      - FREEKASSA_API_KEY=${FREEKASSA_API_KEY}
+      - BILEE_SHOP_ID=${BILEE_SHOP_ID}
+      - BILEE_PASSWORD=${BILEE_PASSWORD}
       - BOT_TOKEN=${BOT_TOKEN}
       - BOT_URL=${BOT_URL}
       - CONFIG_PATH=${CONFIG_PATH}

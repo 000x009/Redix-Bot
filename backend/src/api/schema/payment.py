@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from src.services.freekassa_service import PaymentMethod
+from src.services.bilee_service import PaymentMethod
 
 
 class TopUpSchema(BaseModel):
