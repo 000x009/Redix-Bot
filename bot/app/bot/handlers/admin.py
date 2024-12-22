@@ -133,6 +133,7 @@ async def top_up_user_handler(
     
         await user_service.update_user(user_id=user_id, balance=user.balance + top_up_amount)
         await transaction_service.add_transaction(
+                id=uuid.uuid4(),
                 user_id=user_id,
                 type=TransactionType.DEPOSIT,
                 cause=TransactionCause.ADMIN_DEPOSIT,
@@ -173,6 +174,7 @@ async def lower_user_handler(
         try:
             await user_service.update_user(user_id=user_id, balance=total)
             await transaction_service.add_transaction(
+                id=uuid.uuid4(),
                 user_id=user_id,
                 type=TransactionType.DEBIT,
                 cause=TransactionCause.ADMIN_DEBIT,
