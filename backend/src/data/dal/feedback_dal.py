@@ -72,21 +72,22 @@ class FeedbackDAL:
 
     async def get_one(self, **kwargs: Optional[Any]) -> Optional[Feedback]:
         res = await self._get(**kwargs)
-        db_feedback = res.scalar_one_or_none()
 
-        if db_feedback:
-            return Feedback(
-                id=db_feedback.id,
-                product_id=db_feedback.product_id,
-                order_id=db_feedback.order_id,
-                user_id=db_feedback.user_id,
-                text=db_feedback.text,
-                stars=db_feedback.stars,
-                time=db_feedback.time,
-                is_active=db_feedback.is_active,
-                images=db_feedback.images,
-                message_url=db_feedback.message_url,
-            )
+        if res:
+            db_feedback = res.scalar_one_or_none()
+            if db_feedback:
+                return Feedback(
+                    id=db_feedback.id,
+                    product_id=db_feedback.product_id,
+                    order_id=db_feedback.order_id,
+                    user_id=db_feedback.user_id,
+                    text=db_feedback.text,
+                    stars=db_feedback.stars,
+                    time=db_feedback.time,
+                    is_active=db_feedback.is_active,
+                    images=db_feedback.images,
+                    message_url=db_feedback.message_url,
+                )
         return None
 
     async def get_all(self, **kwargs: Optional[Any]) -> Optional[List[Feedback]]:
