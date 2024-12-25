@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class CategoryModel(Base):
     __tablename__ = "category"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     game_id: Mapped[int] = mapped_column(Integer, ForeignKey('game.id', ondelete='CASCADE'), nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     image: Mapped[str] = mapped_column(String(255), nullable=True)
