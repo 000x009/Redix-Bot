@@ -1,4 +1,5 @@
 from typing import Optional, List, Any
+import uuid
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert, update, select, delete
@@ -12,7 +13,7 @@ class CategoryDAL:
         self.session = session
     
     async def add(self, **kwargs) -> None:
-        query = insert(CategoryModel).values(**kwargs)
+        query = insert(CategoryModel).values(id=uuid.uuid4(), **kwargs)
         await self.session.execute(query)
         await self.session.commit()
 

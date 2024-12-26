@@ -71,7 +71,7 @@ async def on_edit_category_required_fields(
     category_service: FromDishka[CategoryService],
 ) -> None:
     required_fields = [field.strip() for field in value.split(",")]
-    await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), required_fields=required_fields)
+    await category_service.update_category(category_id=dialog_manager.dialog_data["category_id"], required_fields=required_fields)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -104,7 +104,7 @@ async def delete_category(
     dialog_manager: DialogManager,
     category_service: FromDishka[CategoryService],
 ):
-    await category_service.delete_category(category_id=int(dialog_manager.dialog_data["category_id"]))
+    await category_service.delete_category(category_id=dialog_manager.dialog_data["category_id"])
     await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
 
 
@@ -116,7 +116,7 @@ async def on_edit_category_name(
     value: str,
     category_service: FromDishka[CategoryService],
 ):
-    await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), name=value)
+    await category_service.update_category(category_id=dialog_manager.dialog_data["category_id"], name=value)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -133,7 +133,7 @@ async def on_edit_photo_category(
         file = await bot.get_file(message.photo[-1].file_id)
         photo_bytes = await bot.download_file(file.file_path)
         image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
-        await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), image=image_url)
+        await category_service.update_category(category_id=dialog_manager.dialog_data["category_id"], image=image_url)
     finally:
         await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
@@ -164,7 +164,7 @@ async def hide_category(
     category_service: FromDishka[CategoryService],
 ):
     category_id = dialog_manager.dialog_data["category_id"]
-    await category_service.update_category(category_id=int(category_id), is_visible=False)
+    await category_service.update_category(category_id=category_id, is_visible=False)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -176,7 +176,7 @@ async def show_category(
     category_service: FromDishka[CategoryService],
 ):
     category_id = dialog_manager.dialog_data["category_id"]
-    await category_service.update_category(category_id=int(category_id), is_visible=True)
+    await category_service.update_category(category_id=category_id, is_visible=True)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -302,7 +302,7 @@ async def selected_category(
     item_id: str,
 ):
     dialog_manager.show_mode = ShowMode.EDIT
-    dialog_manager.dialog_data["category_id"] = item_id
+    dialog_manager.dialog_data["category_id"] = str(item_id)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -566,7 +566,7 @@ async def on_input_photo_new_product(
     
     await product_service.create_product(
         id=uuid.uuid4(),
-        category_id=int(dialog_manager.dialog_data["category_id"]),
+        category_id=dialog_manager.dialog_data["category_id"],
         name=dialog_manager.dialog_data["product_name"],
         description=dialog_manager.dialog_data["product_description"],
         instruction=dialog_manager.dialog_data["product_instruction"],

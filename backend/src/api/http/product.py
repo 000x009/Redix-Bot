@@ -46,7 +46,7 @@ async def search_products(
 @inject
 async def get_products(
     product_service: ProductService = Depends(Provide[Container.product_service]),
-    category_id: Optional[int] = None,
+    category_id: Optional[uuid.UUID] = None,
 ) -> List[Product]:
     if category_id:
         products = await product_service.get_products(category_id=category_id, is_visible=True)
