@@ -21,6 +21,11 @@ def get_order_info_text(
     product: Product,
     category: str,
 ) -> Optional[str]:
+    if product.game_name == 'Clash Royale':
+        product.game_name == 'Clash of Clans'
+    elif product.game_name == 'Clash of Clans':
+        product.game_name == 'Clash Royale'
+
     order_text = get_json_text('order_text').format(
         order_id=order_id,
         user_id=user_id,

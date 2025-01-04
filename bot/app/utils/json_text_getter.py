@@ -26,10 +26,15 @@ def get_json_text(key: str) -> Optional[str]:
 def get_order_info_text(
     user_id: int,
     order_id: uuid.UUID,
-    order_data: CreateOrderDTO | dict,
+    order_data: CreateOrderDTO,
     product: Product,
     category: str,
 ) -> Optional[str]:
+    if product.game_name == 'Clash Royale':
+        product.game_name == 'Clash of Clans'
+    elif product.game_name == 'Clash of Clans':
+        product.game_name == 'Clash Royale'
+
     order_text = get_json_text('order_text').format(
         order_id=order_id,
         user_id=user_id,
