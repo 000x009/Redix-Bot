@@ -46,6 +46,13 @@ def get_order_info_text(
         product_price=product.price
     )
 
+    if product.game_name == 'Clash of Clans':
+        order_text.replace('Clash of Clans', 'Clash Royale')
+    if product.game_name == 'Clash Royale':
+        order_text.replace('Clash Royale', 'Clash of Clans')
+    
+    print(order_text)
+
     additional_data_text = ""
     for key, value in order_data.items():
         additional_data_text += f"\n<b>{key}</b>: <code>{value}</code>"
