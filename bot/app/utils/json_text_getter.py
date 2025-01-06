@@ -30,12 +30,15 @@ def get_order_info_text(
     product: Product,
     category: str,
 ) -> Optional[str]:
-    print("gameName Bot", product.game_name, flush=True)
-    game_name = product.game_name
+    print("gameName bot", product.game_name, flush=True)
+    game_name = product.game_name.strip()
+    print(game_name == 'Clash Royale')
     if game_name == 'Clash Royale':
-        game_name == 'Clash of Clans'
-    elif game_name == 'Clash of Clans':
-        game_name == 'Clash Royale'
+        game_name = 'Clash of Clans'
+    if game_name == 'Clash of Clans':
+        game_name = 'Clash Royale'
+
+    print("GAME NAME NEW", game_name)
 
     order_text = get_json_text('order_text').format(
         order_id=order_id,
@@ -45,13 +48,6 @@ def get_order_info_text(
         product_name=product.name,
         product_price=product.price
     )
-
-    if product.game_name == 'Clash of Clans':
-        order_text.replace('Clash of Clans', 'Clash Royale')
-    if product.game_name == 'Clash Royale':
-        order_text.replace('Clash Royale', 'Clash of Clans')
-    
-    print(order_text)
 
     additional_data_text = ""
     for key, value in order_data.items():
