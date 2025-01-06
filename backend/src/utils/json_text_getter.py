@@ -22,10 +22,11 @@ def get_order_info_text(
     category: str,
 ) -> Optional[str]:
     print("gameName Bot", product.game_name, flush=True)
-    game_name = product.game_name
+    game_name = product.game_name.strip()
+    print(game_name == 'Clash Royale')
     if game_name == 'Clash Royale':
         game_name == 'Clash of Clans'
-    elif game_name == 'Clash of Clans':
+    if game_name == 'Clash of Clans':
         game_name == 'Clash Royale'
 
     print("GAME NAME NEW", game_name)
