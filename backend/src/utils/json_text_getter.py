@@ -21,6 +21,7 @@ def get_order_info_text(
     product: Product,
     category: str,
 ) -> Optional[str]:
+    print("gameName bot", product.game_name)
     game_name = product.game_name
     if game_name == 'Clash Royale':
         game_name == 'Clash of Clans'
