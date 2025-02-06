@@ -11,18 +11,15 @@ class SupercellAuthService():
         self.headers = None
     
     def login(self, email: str, game: _GameLiteral) -> None:
-        self.headers = {
-            "User-Agent": f"scid/4543 (Android; {game}-prod)",
-            "Authorization": '',
+        url = "https://bs.rldv1.dev/scid/requestCode"
+        params = {
+            "key": "8d436516fb5c548433488f2d25bc9d2f",
+            "mail": f"{email}"
         }
-        login_data = {
-            "lang": 'en',
-            "email": email,
-            "remember": "true",
-            "game": game,
-            "env": "prod",
-        }
-        requests.post(url=f'{self.base_url}/ingame/account/login', data=login_data, headers=self.headers)
+
+        response = requests.get(url, params=params)
+
+        return response
     
     def code_validate(self, email: str, code: str) -> tuple[bool, str]:
         pin_data = {"email": email, "pin": code}
