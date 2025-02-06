@@ -14,7 +14,8 @@ class SupercellAuthService():
         url = "https://bs.rldv1.dev/scid/requestCode"
         params = {
             "key": "8d436516fb5c548433488f2d25bc9d2f",
-            "mail": f"{email}"
+            "mail": f"{email}",
+            "codename": f"{game}"
         }
 
         response = requests.get(url, params=params)
