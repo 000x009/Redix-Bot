@@ -37,7 +37,7 @@ class SupercellAuthService():
             "recaptchaSiteKey": "6Lf3ThsqAAAAABuxaWIkogybKxfxoKxtR-aq5g7l"
         })
         headers = {
-            "User-Agent": "scid/1.5.8-f (iPadOS 18.1; laser-prod; iPad8,6) com.supercell.laser/59.197",
+            "User-Agent": f"scid/1.5.8-f (iPadOS 18.1; {game}-prod; iPad8,6) com.supercell.{game}/59.197",
             "Accept-Language": "en",
             "Accept-Encoding": "gzip",
             "X-Supercell-Device-Id": "1E923809-1680-535C-80F0-EFEFEFEFEF38", 
