@@ -1,4 +1,5 @@
 import uuid
+from decimal import Decimal
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
@@ -65,7 +66,7 @@ async def receive_payment(
 
         user = await user_service.get_one_user(user_id=payment.user_id)
         top_up_amount = payload.get('amount')
-        await user_service.update_user(user_id=user.user_id, balance=user.balance + top_up_amount)
+        await user_service.update_user(user_id=user.user_id, balance=user.balance + Decimal(top_up_amount))
         await transaction_service.update_transaction(id=payment_id, is_successful=True)
 
         try:
@@ -75,7 +76,7 @@ async def receive_payment(
             if user.referral_id:
                 referral = await user_service.get_one_user(user_id=user.referral_id)
                 reff_top_up_amount = round(top_up_amount * 0.02, 2)
-                await user_service.update_user(user_id=user.referral_id, balance=referral.balance + reff_top_up_amount)
+                await user_service.update_user(user_id=user.referral_id, balance=referral.balance + Decimal(reff_top_up_amount))
                 await transaction_service.add_transaction(
                     id=uuid.uuid4(),
                     user_id=referral.user_id,
