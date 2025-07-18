@@ -7,7 +7,7 @@ from .feedback_dal import FeedbackDAL
 from .game_dal import GameDAL
 from .category_dal import CategoryDAL
 from .admin_dal import AdminDAL
-
+from .stars import StarsDAL
 
 __all__ = [
     'UserDAL',
@@ -19,4 +19,5 @@ __all__ = [
     'GameDAL',
     'CategoryDAL',
     'AdminDAL',
+    'StarsDAL',
 ]

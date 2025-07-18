@@ -12,7 +12,7 @@ from .admin_service import AdminService
 from .supercell_client import SupercellClient
 from .freekassa_service import FreeKassaService
 from .bilee_service import BileeService
-
+from .fragment import FragmentAPI
 
 __all__ = [
     'ProductService',
@@ -29,4 +29,5 @@ __all__ = [
     'SupercellClient',
     'FreeKassaService',
     'BileeService',
+    'FragmentAPI',
 ]

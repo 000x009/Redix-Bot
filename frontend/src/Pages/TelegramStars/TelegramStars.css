@@ -1,0 +1,223 @@
+.telegram-stars-container {
+    padding: 16px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--tg-theme-bg-color, #17212b);
+    min-height: 100vh;
+    box-sizing: border-box;
+    color: var(--tg-theme-text-color, #fff);
+}
+
+.header {
+    margin-bottom: 24px;
+}
+
+.header h1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    margin: 0;
+    color: var(--tg-theme-text-color, #fff);
+}
+
+.header p {
+    color: var(--tg-theme-hint-color, #8e8e92);
+    margin: 4px 0 0 0;
+    font-size: 14px;
+}
+
+.current-rate {
+    color: var(--tg-theme-link-color, #2481cc);
+    margin-bottom: 24px;
+    font-size: 16px;
+}
+
+.recipient-section,
+.amount-section {
+    margin-bottom: 24px;
+}
+
+.recipient-section h3,
+.amount-section h3 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: var(--tg-theme-text-color, #fff);
+}
+
+.for-me-link {
+    color: var(--tg-theme-link-color, #2481cc);
+    cursor: pointer;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.username-input,
+.amount-input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    background: var(--tg-theme-secondary-bg-color, #232f3d);
+    color: var(--tg-theme-text-color, #fff);
+    box-sizing: border-box;
+}
+
+.username-input::placeholder,
+.amount-input::placeholder {
+    color: var(--tg-theme-hint-color, #8e8e92);
+}
+
+.error-message {
+    color: #ff4d4f;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.disclaimer {
+    margin: 24px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.disclaimer input[type="checkbox"] {
+    margin-top: 3px;
+}
+
+.disclaimer label {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #8e8e92);
+    line-height: 1.4;
+}
+
+/* Telegram Popup Styles */
+.popup-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.telegram-button.secondary {
+    background-color: var(--tg-theme-secondary-bg-color, #232f3d);
+    color: var(--tg-theme-link-color, #2481cc);
+}
+
+.telegram-button.secondary:hover {
+    background-color: var(--tg-theme-secondary-bg-color, #232f3d);
+    opacity: 0.8;
+}
+
+.telegram-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.telegram-popup-content {
+    cursor: default;
+    background-color: var(--tg-theme-bg-color, #17212b);
+    border-radius: 12px;
+    padding: 20px;
+    width: 90%;
+    max-width: 360px;
+    color: var(--tg-theme-text-color, #fff);
+    margin: 16px;
+}
+
+.telegram-popup-content h2 {
+    font-size: 18px;
+    margin: 0 0 16px 0;
+    text-align: center;
+}
+
+.stars-amount {
+    color: var(--tg-theme-hint-color, #8e8e92);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.recipient-message {
+    margin-bottom: 20px;
+}
+
+.recipient-message > p {
+    color: var(--tg-theme-hint-color, #8e8e92);
+    margin: 0 0 12px 0;
+    font-size: 14px;
+}
+
+.gift-message {
+    background-color: var(--tg-theme-secondary-bg-color, #232f3d);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.gift-message .sender {
+    color: var(--tg-theme-text-color, #fff);
+    font-weight: 500;
+    margin: 0 0 4px 0;
+}
+
+.gift-box {
+    background-color: var(--tg-theme-secondary-bg-color, #232f3d);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 12px;
+    text-align: center;
+}
+
+.gift-box img {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
+}
+
+.gift-box p {
+    margin: 4px 0;
+    color: var(--tg-theme-text-color, #fff);
+}
+
+.gift-description {
+    color: var(--tg-theme-hint-color, #8e8e92);
+    font-size: 14px;
+}
+
+.telegram-button {
+    width: 100%;
+    background-color: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #fff);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+.telegram-button:hover {
+    opacity: 0.9;
+}
+
+/* Fix for mobile */
+@media screen and (max-width: 480px) {
+    .telegram-stars-container {
+        padding: 12px;
+    }
+
+    .telegram-popup-content {
+        width: calc(100% - 32px);
+        padding: 16px;
+    }
+} 

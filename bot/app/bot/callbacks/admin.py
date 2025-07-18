@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timedelta
+from decimal import Decimal
 
 from aiogram import Router, Bot, F
 from aiogram.types import CallbackQuery, Chat, ReplyKeyboardRemove, Message
@@ -20,7 +21,8 @@ from app.schema.order import OrderStatus
 from app.bot.states.product import ProductManagementSG
 from app.utils import json_text_getter
 from app.bot.states.order import CancelOrderSG
-from app.bot.states.admin import AdminManagementSG, GiftOrderManagementSG
+from app.bot.states.admin import AdminManagementSG, GiftOrderManagementSG, ChangeStarsConfigSG
+from app.data.dal import StarsDAL
 
 
 router = Router()
@@ -488,3 +490,105 @@ async def admin_management_handler(
         mode=StartMode.RESET_STACK,
         show_mode=ShowMode.DELETE_AND_SEND,
     )
+
+
+@router.callback_query(F.data == 'stars_management')
+async def stars_management_handler(
+    query: CallbackQuery,
+    dal: FromDishka[StarsDAL],
+) -> None:
+    stars_config = await dal.get_one()
+    
+    await query.message.answer(text=f'Конфигурация звезд\n\n'
+                                f'Курс: <code>{stars_config.rate}₽</code>\n'
+                                f'API Hash: <code>{stars_config.api_hash}</code>\n'
+                                f'API Cookie: <code>{stars_config.api_cookie}</code>\n'
+                                f'Сид фразы: <code>{", ".join(stars_config.mnemonic)}</code>',
+        reply_markup=inline.change_stars_config_kb_markup()
+    )
+
+
+@router.callback_query(F.data == 'change_stars_rate')
+async def change_stars_rate_query_handler(
+    query: CallbackQuery,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    await query.message.answer('Введите новый курс')
+    await state.set_state(ChangeStarsConfigSG.RATE)
+
+
+@router.message(ChangeStarsConfigSG.RATE)
+async def change_stars_rate_handler(
+    message: Message,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    await dal.update(rate=Decimal(message.text))
+    await state.clear()
+    await message.answer('Курс успешно изменен')
+
+
+@router.callback_query(F.data == 'change_stars_api_hash')
+async def change_stars_api_hash_query_handler(
+    query: CallbackQuery,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    await query.message.answer('Введите новый API Hash')
+    await state.set_state(ChangeStarsConfigSG.API_HASH)
+
+
+@router.message(ChangeStarsConfigSG.API_HASH)
+async def change_stars_api_hash_handler(
+    message: Message,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    await dal.update(api_hash=message.text)
+    await state.clear()
+    await message.answer('API Hash успешно изменен')
+
+
+@router.callback_query(F.data == 'change_stars_api_cookie')
+async def change_stars_api_cookie_query_handler(
+    query: CallbackQuery,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    await query.message.answer('Введите новый API Cookie')
+    await state.set_state(ChangeStarsConfigSG.API_COOKIE)
+
+
+@router.message(ChangeStarsConfigSG.API_COOKIE)
+async def change_stars_api_cookie_message_handler(
+    message: Message,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    await dal.update(api_cookie=message.text)
+    await state.clear()
+    await message.answer('API Cookie успешно изменен')
+
+
+@router.callback_query(F.data == 'change_stars_mnemonic')
+async def change_stars_mnemonic_query_handler(
+    query: CallbackQuery,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    await query.message.answer('Введите новые сид фразы через запятую')
+    await state.set_state(ChangeStarsConfigSG.MNEMONIC)
+
+
+@router.message(ChangeStarsConfigSG.MNEMONIC)
+async def change_stars_mnemonic_handler(
+    message: Message,
+    dal: FromDishka[StarsDAL],
+    state: FSMContext,
+) -> None:
+    mnemonic = message.text.split(',')
+    mnemonic = [mnemonic.strip() for mnemonic in mnemonic]
+    await dal.update(mnemonic="|".join(mnemonic))
+    await state.clear()
+    await message.answer('Сид фразы успешно изменены')

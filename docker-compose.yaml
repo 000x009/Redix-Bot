@@ -19,7 +19,7 @@ services:
     image: postgres:15-alpine
     container_name: redix_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -31,11 +31,6 @@ services:
     restart: on-failure
     networks:
       - default
-    # healthcheck:
-    #   test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${DB_NAME}"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
 
   redix_backend:
     build:
@@ -64,8 +59,7 @@ services:
       - 8000:8000
     depends_on:
       - redix_db
-        # condition: service_healthy
-    command: sh -c "alembic upgrade head && uvicorn src.main.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: sh -c "alembic upgrade head && uvicorn src.main.main:app --host 0.0.0.0 --port 8000"
     networks:
       - default
 
@@ -94,8 +88,7 @@ services:
     command: "python -m app.main"
     depends_on:
       - redix_db
-        # condition: service_healthy
-    restart: on-failure
+    restart: no
     networks:
       - default
 

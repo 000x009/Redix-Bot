@@ -26,6 +26,7 @@ import OrderCreated from './Pages/OrderCreated/OrderCreated';
 import { SearchPage } from './Pages/Search/Search';
 import { useTelegram } from './hooks/useTelegram';
 import Category from './Pages/Category/Category';
+import TelegramStars from './Pages/TelegramStars/TelegramStars';
 
 function App() {
     const { expand } = useTelegram();
@@ -38,6 +39,7 @@ function App() {
         <WebAppProvider>
             <Router>
                 <Routes>
+                    <Route exact path="/telegram-stars" element={<TelegramStars/>}/>
                     <Route exact path="/search" element={<SearchProducts/>}/>
                     <Route exact path="/" element={<Main/>}/>
                     <Route exact path="/profile" element={<Profile/>}/>

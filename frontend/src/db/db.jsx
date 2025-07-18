@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = "https://redixshop.com/api";
+// const API_URL = "https://redixshop.com/api";
+const API_URL = "http://localhost:8000/api";
 
 export function getXPadding() {
     return "1.5rem";
@@ -466,5 +467,18 @@ export async function SupercellAuth(email, game) {
 
 export async function getAdmins() {
   const response = await axios.get(`${API_URL}/admin/admins`);
+  return response.data;
+}
+
+export async function getStarsConfig() {
+  const response = await axios.get(`${API_URL}/stars/rate`);
+  return response.data;
+}
+
+export async function buyStars(username, quantity) {
+  const response = await axios.post(`${API_URL}/stars/buy`, {
+    username: username,
+    quantity: quantity
+  });
   return response.data;
 }

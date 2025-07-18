@@ -4,11 +4,32 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessi
 
 from src.main.config import settings
 from src.services import (
-    UserService, ProductService, TransactionService, OrderService, PromoService,
-    SupercellAuthService, FeedbackService, FreeKassaService, GameService, YandexStorageClient, AdminService, CategoryService, SupercellClient, BileeService
+    UserService,
+    ProductService,
+    TransactionService,
+    OrderService, PromoService,
+    SupercellAuthService,
+    FeedbackService,
+    FreeKassaService,
+    GameService,
+    YandexStorageClient,
+    AdminService,
+    CategoryService,
+    SupercellClient,
+    BileeService,
+    FragmentAPI,
 )
 from src.data.dal import (
-    UserDAL, ProductDAL, TransactionDAL, OrderDAL, PromoDAL, FeedbackDAL, GameDAL, AdminDAL, CategoryDAL
+    UserDAL,
+    ProductDAL,
+    TransactionDAL,
+    OrderDAL,
+    PromoDAL,
+    FeedbackDAL,
+    GameDAL,
+    AdminDAL,
+    CategoryDAL,
+    StarsDAL,
 )
 
 class Database:
@@ -69,6 +90,7 @@ class Container(containers.DeclarativeContainer):
     game_dal = providers.Factory(GameDAL, session=async_session)
     admin_dal = providers.Factory(AdminDAL, session=async_session)
     category_dal = providers.Factory(CategoryDAL, session=async_session)
+    stars_dal = providers.Factory(StarsDAL, session=async_session)
 
     # Services
     user_service = providers.Factory(UserService, user_dal=user_dal)
@@ -84,6 +106,7 @@ class Container(containers.DeclarativeContainer):
     category_service = providers.Factory(CategoryService, category_dal=category_dal)
     supercell_client = providers.Factory(SupercellClient)
     bilee_service = providers.Factory(BileeService)
+    fragment_service = providers.Factory(FragmentAPI)
     
 
     yandex_storage_client = providers.Factory(

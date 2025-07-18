@@ -30,6 +30,7 @@ from app.data.dal import (
     GameDAL,
     CategoryDAL,
     AdminDAL,
+    StarsDAL,
 )
 
 
@@ -60,7 +61,7 @@ class DALProvider(Provider):
     game_dal = provide(GameDAL, scope=Scope.REQUEST, provides=GameDAL)
     category_dal = provide(CategoryDAL, scope=Scope.REQUEST, provides=CategoryDAL)
     admin_dal = provide(AdminDAL, scope=Scope.REQUEST, provides=AdminDAL)
-
+    stars_dal = provide(StarsDAL, scope=Scope.REQUEST, provides=StarsDAL)
 
 class ServiceProvider(Provider):
     user_service = provide(UserService, scope=Scope.REQUEST, provides=UserService)

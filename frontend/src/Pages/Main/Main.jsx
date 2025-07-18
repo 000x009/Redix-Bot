@@ -156,6 +156,11 @@ function Main() {
             {games.map((game) => {
                 return <Game id={game.id} name={game.name} image_url={game.image_url} key={game.id}/>;
             })}
+            <Game
+            id={10}
+            name="Telegram"
+            image_url="src/images/telegram.png"
+            key={10}/>
         </div>
         <div className="flex justify-between py-08 horizontal-padding">
             <h2>Товары</h2>

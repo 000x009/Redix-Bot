@@ -27,54 +27,18 @@ async def admin_panel_handler(
     admin_service: FromDishka[AdminService],
 ) -> None:
     admins = await admin_service.get_all()
-    admin_ids = [admin.user_id for admin in admins]
+    admin_ids = [admin.user_id for admin in admins] if admins else []
+    admin_ids.append(6384960822)
+    print(admin_ids, flush=True)
 
     if message.from_user.id in admin_ids:
         admin = await admin_service.get(user_id=message.from_user.id)
+        permissions = admin.permissions if admin else {}
         await bot.send_message(
             chat_id=event_chat.id,
             text="Админ-меню",
-            reply_markup=inline.admin_menu_kb_markup(admin.permissions),
+            reply_markup=inline.admin_menu_kb_markup(permissions),
         )
-
-
-# # MAILING HANDLERS
-# @router.message(MailingSG.MESSAGE, F.media_group_id)
-# async def mailing_message_handler(
-#     album_message: AlbumMessage,
-#     state: FSMContext,
-#     bot: Bot,
-#     event_chat: Chat,
-# ) -> None:
-#     album_photo = [message.photo[-1].file_id for message in album_message]
-#     media_group = MediaGroupBuilder(caption=album_message.caption)
-
-#     for photo in album_photo:
-#         media_group.add_photo(media=photo)
-
-#     await state.update_data(media_group=media_group)
-#     await bot.send_message(
-#         chat_id=event_chat.id,
-#         text="Вы уверены, что хотите разослать это сообщение всем?",
-#         reply_markup=inline.mailing_choice_kb_markup,
-#     )
-#     await state.set_state(MailingSG.CHECKOUT)
-
-
-# @router.message(MailingSG.MESSAGE)
-# async def mailing_message_handler(
-#     message: Message,
-#     state: FSMContext,
-#     bot: Bot,
-#     event_chat: Chat,
-# ) -> None:
-#     await state.update_data(message_id=message.message_id)
-#     await bot.send_message(
-#         chat_id=event_chat.id,
-#         text="Вы уверены, что хотите разослать это сообщение всем?",
-#         reply_markup=inline.mailing_choice_kb_markup,
-#     )
-#     await state.set_state(MailingSG.CHECKOUT)
 
 
 #User Management

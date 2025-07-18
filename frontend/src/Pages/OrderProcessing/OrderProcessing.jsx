@@ -478,7 +478,7 @@ const OrderForm = () => {
           borderRadius: '0.375rem',
           marginBottom: '1rem'
         }}>
-          {generalError || cooldownError}
+          {generalError}
         </div>
       )}
       <div style={{flexGrow: 1, display: 'flex', flexDirection: 'column'}}>

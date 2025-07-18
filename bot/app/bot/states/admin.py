@@ -14,3 +14,10 @@ class AdminManagementSG(StatesGroup):
 
 class GiftOrderManagementSG(StatesGroup):
     MESSAGE_TO_USER = State()
+
+
+class ChangeStarsConfigSG(StatesGroup):
+    RATE = State()
+    API_HASH = State()
+    API_COOKIE = State()
+    MNEMONIC = State()

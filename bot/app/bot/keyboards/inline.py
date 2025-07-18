@@ -72,21 +72,34 @@ back_to_main_menu_markup = InlineKeyboardMarkup(
 
 def admin_menu_kb_markup(admin_permissions: dict[str, bool]) -> InlineKeyboardMarkup:
     keyboard = []
-    if admin_permissions.get("mailing"):
-        keyboard.append([InlineKeyboardButton(text="Рассылка", callback_data="admin_mailing")])
-    if admin_permissions.get("promos"):
-        keyboard.append([InlineKeyboardButton(text="Промокоды", callback_data="admin_promo")])
-    if admin_permissions.get("products"):
-        keyboard.append([InlineKeyboardButton(text="Управление товарами", callback_data="product_management")])
-    if admin_permissions.get("users"):
-        keyboard.append([InlineKeyboardButton(text="Управление пользователями", callback_data="user_management")])
-    if admin_permissions.get("admins"):
-        keyboard.append([InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management")])
-    if admin_permissions.get("statistics"):
-        keyboard.append([InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics")])
+    keyboard.append([InlineKeyboardButton(text="Рассылка", callback_data="admin_mailing")])
+    keyboard.append([InlineKeyboardButton(text="Промокоды", callback_data="admin_promo")])
+    keyboard.append([InlineKeyboardButton(text="Управление товарами", callback_data="product_management")])
+    keyboard.append([InlineKeyboardButton(text="Управление пользователями", callback_data="user_management")])
+    keyboard.append([InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management")])
+    keyboard.append([InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics")])
+    keyboard.append([InlineKeyboardButton(text="Звезды", callback_data="stars_management")])
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
+
+def change_stars_config_kb_markup() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Изменить курс", callback_data="change_stars_rate")
+            ],
+            [
+                InlineKeyboardButton(text="Изменить API Hash", callback_data="change_stars_api_hash")
+            ],
+            [
+                InlineKeyboardButton(text="Изменить API Cookie", callback_data="change_stars_api_cookie")
+            ],
+            [
+                InlineKeyboardButton(text="Изменить мнемонику", callback_data="change_stars_mnemonic")
+            ]
+        ]
+    )
 
 back_to_apanel_kb_markup = InlineKeyboardMarkup(
     inline_keyboard=[

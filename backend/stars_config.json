@@ -1,0 +1,39 @@
+{
+    "API_KEY": "AGO5V4UG5EIUDRQAAAAMBAL56YZMLCRO7OKF4D6XT5IHRYI6NL23WD6KLQZWSSVTXLJ6S7I",
+    "IS_TESTNET": false,
+    "MNEMONIC": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ],
+    "DESTINATION_ADDRESS": "UQCFJEP4WZ_mpdo0_kMEmsTgvrMHG7K_tWY16pQhKHwoOtFz",
+    "fragment_api": {
+        "hash": null,
+        "cookie": null,
+        "url": "https://fragment.com/api"
+    },
+    "SHOW_SENDER": "0",
+    "MIN_STARS": 50,
+    "MAX_STARS": 1000000
+}

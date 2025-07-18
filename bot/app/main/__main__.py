@@ -49,7 +49,7 @@ async def main() -> None:
         )
     }
     scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone="Europe/Moscow", jobstores=jobstores))
-    bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(token="8177147045:AAFeGUtTrKrWZb6UpC1RjVgJm_0sbwsRwlA", default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dispatcher = Dispatcher(storage=storage, scheduler=scheduler)
     scheduler.ctx.add_instance(instance=bot, declared_class=Bot)
     TTLCacheAlbumMiddleware(router=dispatcher, latency=0.5)

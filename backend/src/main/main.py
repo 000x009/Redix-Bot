@@ -21,6 +21,7 @@ from src.api.http import (
     category,
     cloud_storage,
     admin,
+    stars,
 )
 from src.main.config import settings
 
@@ -87,3 +88,4 @@ app.include_router(game.router)
 app.include_router(category.router)
 app.include_router(cloud_storage.router)
 app.include_router(admin.router)
+app.include_router(stars.router)

@@ -8,6 +8,7 @@ from .transaction import TransactionModel
 from .game import GameModel
 from .category import CategoryModel
 from .admin import AdminModel
+from .stars import StarsModel
 
 
 __all__ = [
@@ -21,4 +22,5 @@ __all__ = [
     'GameModel',
     'CategoryModel',
     'AdminModel',
+    'StarsModel',
 ]
