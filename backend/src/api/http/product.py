@@ -46,14 +46,14 @@ async def search_products(
 @inject
 async def get_products(
     product_service: ProductService = Depends(Provide[Container.product_service]),
-    category_id: Optional[int] = None,
+    category_id: Optional[uuid.UUID] = None,
 ) -> List[Product]:
     if category_id:
         products = await product_service.get_products(category_id=category_id, is_visible=True)
     else:
         products = await product_service.get_products(is_visible=True)
 
-    return products
+    return products or []
 
 
 @router.get('/{product_id}', response_model=Product)
@@ -172,6 +172,7 @@ async def create_product(
         id=data.id,
         name=data.name,
         game_id=data.game_id,
+        category_id=data.category_id,  # Add this line
         description=data.description,
         price=data.price,
         instruction=data.instruction,

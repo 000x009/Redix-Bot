@@ -35,23 +35,24 @@ async def main() -> None:
         level=logging.INFO,
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
     )
-    storage = RedisStorage.from_url(
-        'redis://redis:6379/0',
-        key_builder=DefaultKeyBuilder(with_destiny=True),
-    )
-    jobstores = {
-        'default': RedisJobStore(
-            jobs_key='dispatched_trips_jobs',
-            run_times_key='dispatched_trips_running',
-            host='redis',
-            db=2,
-            port=6379
-        )
-    }
-    scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone="Europe/Moscow", jobstores=jobstores))
+    # storage = RedisStorage.from_url(
+    #     'redis://redis:6379/0',
+    #     key_builder=DefaultKeyBuilder(with_destiny=True),
+    # )
+    # jobstores = {
+    #     'default': RedisJobStore(
+    #         jobs_key='dispatched_trips_jobs',
+    #         run_times_key='dispatched_trips_running',
+    #         host='redis',
+    #         db=2,
+    #         port=6379
+    #     )
+    # }
+    # scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone="Europe/Moscow", jobstores=jobstores))
     bot = Bot(token="8177147045:AAFeGUtTrKrWZb6UpC1RjVgJm_0sbwsRwlA", default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dispatcher = Dispatcher(storage=storage, scheduler=scheduler)
-    scheduler.ctx.add_instance(instance=bot, declared_class=Bot)
+    # dispatcher = Dispatcher(storage=storage, scheduler=scheduler)
+    # scheduler.ctx.add_instance(instance=bot, declared_class=Bot)
+    dispatcher = Dispatcher()
     TTLCacheAlbumMiddleware(router=dispatcher, latency=0.5)
 
     dispatcher.include_routers(
@@ -68,11 +69,11 @@ async def main() -> None:
 
 
     try:
-        scheduler.start()
+        # scheduler.start()
         await bot.delete_webhook(drop_pending_updates=True)
         await dispatcher.start_polling(bot, skip_updates=True)
     finally:
-        scheduler.shutdown()
+        # scheduler.shutdown()
         await container.close()
         await bot.session.close()
 

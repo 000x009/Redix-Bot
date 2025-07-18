@@ -26,3 +26,7 @@ class ProductManagementSG(StatesGroup):
     ADD_PRODUCT_PRICE = State()
     ADD_PRODUCT_PHOTO = State()
     SET_AUTO_PURCHASE_TEXT = State()
+    ADD_GAME = State()
+    ADD_GAME_NAME = State()
+    ADD_GAME_IMAGE = State()
+    ADD_GAME_SUPERGROUP_ID = State()

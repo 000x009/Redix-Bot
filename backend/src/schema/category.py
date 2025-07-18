@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 from typing import List
-
+from uuid import UUID
 
 @dataclass()
 class Category:
-    id: int
+    id: UUID
     game_id: int
     name: str
     image: str = field(default=None)

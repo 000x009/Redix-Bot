@@ -12,7 +12,7 @@ class ProductModel(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
     game_id: Mapped[int] = mapped_column(Integer, ForeignKey('game.id', ondelete='CASCADE'), nullable=True)
-    category_id: Mapped[int] = mapped_column(Integer, ForeignKey('category.id', ondelete='CASCADE'), nullable=True)
+    category_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('category.id', ondelete='CASCADE'), nullable=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=False)
     price: Mapped[float] = mapped_column(DECIMAL, nullable=False)
@@ -29,7 +29,6 @@ class ProductModel(Base):
     instruction_image_url: Mapped[str] = mapped_column(String, nullable=True)
     is_visible: Mapped[bool] = mapped_column(Boolean, default=True)
     is_gift_purchase: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
-    
 
     orders = relationship('OrderModel', back_populates='product')
     feedbacks = relationship('FeedbackModel', back_populates='product')

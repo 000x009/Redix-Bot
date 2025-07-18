@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const API_URL = "https://redixshop.com/api";
-const API_URL = "http://localhost:8000/api";
+const API_URL = "http://localhost:8000";
 
 export function getXPadding() {
     return "1.5rem";
@@ -476,7 +476,7 @@ export async function getStarsConfig() {
 }
 
 export async function buyStars(username, quantity) {
-  const response = await axios.post(`${API_URL}/stars/buy`, {
+  const response = await axios.post(`${API_URL}/stars/buy-stars`, {
     username: username,
     quantity: quantity
   });

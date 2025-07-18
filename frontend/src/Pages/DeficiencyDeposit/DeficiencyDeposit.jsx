@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getOneProduct, getUser } from '../../db/db';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeDeposit } from '../../db/db';
@@ -10,6 +10,8 @@ import './DeficiencyDeposit.css';
 const DeficiencyDeposit = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const deficiencyAmount = location.state?.deficiencyAmount;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [method, setMethod] = useState('card');
@@ -21,6 +23,12 @@ const DeficiencyDeposit = () => {
 
     useEffect(() => {
         const fetchProduct = async () => {
+            // Если есть deficiencyAmount, не нужно загружать продукт
+            if (deficiencyAmount) {
+                setLoading(false);
+                return;
+            }
+            
             if (!id) {
                 console.error("Product ID is undefined");
                 setLoading(false);
@@ -36,14 +44,21 @@ const DeficiencyDeposit = () => {
             }
         }
         fetchProduct();
-    }, [id]);  
+    }, [id, deficiencyAmount]);  
     
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const response = await getUser(tg.initData);
                 setDbUser(response);
-                if (product) {
+                
+                // Если есть deficiencyAmount, используем его
+                if (deficiencyAmount) {
+                    setAmount(deficiencyAmount.toString());
+                    handleChangeAmount({ target: { value: deficiencyAmount.toString() } });
+                }
+                // Иначе используем цену продукта
+                else if (product) {
                     const requiredAmount = Math.max(product.price - response.balance, 0);
                     setAmount(requiredAmount.toString());
                     handleChangeAmount({ target: { value: requiredAmount.toString() } });
@@ -53,7 +68,7 @@ const DeficiencyDeposit = () => {
             }
         }
         fetchUser();
-    }, [product])
+    }, [product, deficiencyAmount])
 
     const handleMainButtonClick = useCallback(async () => {
         const response = await makeDeposit(amount, method, tg.initData);
@@ -126,7 +141,11 @@ const DeficiencyDeposit = () => {
                 <h2 style={{color: 'red'}}>Ой!</h2>
                 <p>❌ Недостаточно средств на балансе!</p>
                 <p>Ваш баланс: {dbUser.balance} ₽</p>
-                {product && <p>Необходимо пополнить баланс на {Math.max(product.price - dbUser.balance, 0)} ₽</p>}
+                {deficiencyAmount ? (
+                    <p>Необходимо пополнить баланс на {deficiencyAmount} ₽</p>
+                ) : product && (
+                    <p>Необходимо пополнить баланс на {Math.max(product.price - dbUser.balance, 0)} ₽</p>
+                )}
             </div>
             <label htmlFor="amount" className="subtitle">Введите сумму в рублях</label>
             <div className="flex column">

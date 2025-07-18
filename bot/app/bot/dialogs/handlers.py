@@ -13,7 +13,7 @@ from dishka import FromDishka
 
 from app.bot.states.product import ProductManagementSG
 from .inject_wrappers import inject_on_click
-from app.services import ProductService, YandexStorageClient, CategoryService, UserService
+from app.services import ProductService, YandexStorageClient, CategoryService, UserService, GameService
 from app.bot.states.mailing import MailingSG
 from app.bot.keyboards import inline
 
@@ -530,7 +530,7 @@ async def on_input_photo_new_product(
     
     await product_service.create_product(
         id=uuid.uuid4(),
-        category_id=int(dialog_manager.dialog_data["category_id"]),
+        category_id=uuid.UUID(dialog_manager.dialog_data["category_id"]),
         name=dialog_manager.dialog_data["product_name"],
         description=dialog_manager.dialog_data["product_description"],
         instruction=dialog_manager.dialog_data["product_instruction"],
@@ -613,3 +613,61 @@ async def cancel_mailing(
     await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
     await bot.send_message(chat_id=callback_query.message.chat.id, text="Рассылка успешно отменена")
     await dialog_manager.done()
+
+
+async def add_game(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+) -> None:
+    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME)
+
+async def on_game_name(
+    callback_query: CallbackQuery,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+):
+    dialog_manager.dialog_data["game_name"] = value
+    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_IMAGE)
+
+
+async def on_game_super_group_id(
+    callback_query: CallbackQuery,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    value: str,
+):
+    dialog_manager.dialog_data["game_super_group_id"] = value
+    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_SUPERGROUP_ID)
+
+
+async def on_input_photo_new_game(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+):
+    dialog_manager.dialog_data["game_image"] = message.photo[-1].file_id
+    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_SUPERGROUP_ID)
+
+
+async def on_game_super_group_id_new_game(
+    callback_query: CallbackQuery,
+    widget: TextInput,
+    dialog_manager: DialogManager,
+    game_service: FromDishka[GameService],
+    yandex_storage_client: FromDishka[YandexStorageClient],
+    value: str,
+) -> None:
+    dialog_manager.dialog_data["game_super_group_id"] = value
+    bot = dialog_manager.middleware_data.get("bot")
+    file = await bot.get_file(dialog_manager.dialog_data["game_image"])
+    photo_bytes = await bot.download_file(file.file_path)
+    image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{dialog_manager.dialog_data['game_image']}.jpg")
+    await game_service.create_game(
+        id=uuid.uuid4(),
+        name=dialog_manager.dialog_data["game_name"],
+        image_url=image_url,
+        super_group_id=int(dialog_manager.dialog_data["game_super_group_id"]),
+    )
+    await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)

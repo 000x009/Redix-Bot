@@ -21,7 +21,6 @@ const OrderForm = () => {
   const [tagVerificationSuccess, setTagVerificationSuccess] = useState(false);
   const [linkError, setLinkError] = useState('');
   const [generalError, setGeneralError] = useState('');
-  const [cooldownError, setCooldownError] = useState('');
  
   useEffect(() => {
     tg.BackButton.show();
@@ -35,12 +34,6 @@ const OrderForm = () => {
     };
   }, []);
 
-  const isCooldownPassed = (productId) => {
-    const lastOrderTime = localStorage.getItem(`lastOrder_${productId}`);
-    if (!lastOrderTime) return true;
-    const timePassed = Date.now() - parseInt(lastOrderTime);
-    return timePassed > 10000;
-  };
 
   const validateGameLink = (link, gameName) => {
     console.log('Validating game link:', link);
@@ -136,12 +129,6 @@ const OrderForm = () => {
 
   const handleSubmit = async () => {
     setGeneralError('');
-    setCooldownError('');
-    
-    if (isSubmitting || !isCooldownPassed(id)) {
-      setCooldownError('Пожалуйста, подождите. Заказ уже обрабатывается или не прошло 10 секунд с предыдущего заказа.');
-      return;
-    }
   
     const errors = {};
     let hasErrors = false;
@@ -470,7 +457,7 @@ const OrderForm = () => {
   return (
     <div style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '1rem', backgroundColor: 'var(--tg-theme-bg-color)', color: 'var(--tg-theme-text-color)', overflow: 'hidden', maxWidth: '100vw'}}>
       <h1 style={{fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem'}}>Оформление заказа</h1>
-      {(generalError || cooldownError) && (
+      {(generalError) && (
         <div style={{
           backgroundColor: '#fee2e2',
           color: '#ef4444',

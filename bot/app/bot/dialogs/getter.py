@@ -72,8 +72,8 @@ async def one_category_getter(
     **kwargs,
 ) -> dict:
     category_id = dialog_manager.dialog_data["category_id"]
-    category = await category_service.get_category(id=int(category_id))
-    products = await product_service.get_products(category_id=int(category_id))
+    category = await category_service.get_category(id=uuid.UUID(category_id))
+    products = await product_service.get_products(category_id=uuid.UUID(category_id))
 
     return {
         "category": category,

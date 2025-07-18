@@ -66,6 +66,7 @@ class Container(containers.DeclarativeContainer):
         'src.api.http.cloud_storage',
         'src.api.http.admin',
         'src.api.http.category',
+        'src.api.http.stars',  # Added stars module
     ])
     config = providers.Configuration()
 

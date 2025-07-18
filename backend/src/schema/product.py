@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 @dataclass(frozen=True)
 class Product:
     id: UUID
-    category_id: int
+    category_id: UUID
     name: str
     description: str
     price: Decimal

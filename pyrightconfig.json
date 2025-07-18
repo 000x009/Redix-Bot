@@ -1,0 +1,17 @@
+{
+    "include": [
+        "backend",
+        "frontend"
+    ],
+    "exclude": [
+        "**/node_modules",
+        "**/__pycache__",
+        "**/.*"
+    ],
+    "pythonVersion": "3.12",
+    "pythonPlatform": "Windows",
+    "venvPath": "backend/.venv",
+    "extraPaths": [
+        "backend"
+    ]
+} 

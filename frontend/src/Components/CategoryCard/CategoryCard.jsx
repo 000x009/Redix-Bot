@@ -15,7 +15,11 @@ function CategoryCard({item}) {
     } = item;
 
     return <div onClick={() => {
-        navigate(`/category?id=${id}`)
+        if (name === "Звезды") {
+            navigate('/telegram-stars');
+        } else {
+            navigate(`/category?id=${id}`)
+        }
     }} className='card horizontal-padding' >
         <div className="image_container">
             <img className='card__image' src={image} alt={name}/>

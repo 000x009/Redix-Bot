@@ -61,6 +61,10 @@ from .handlers import (
     turn_off_gift_purchase,
     delete_category,
     on_edit_category_name,
+    add_game,
+    on_game_name,
+    on_game_super_group_id,
+    on_input_photo_new_game,
 )
 
 
@@ -95,6 +99,11 @@ product_management_dialog = Dialog(
             NextPage(
                 scroll="game_group", text=Format("▶️"),
             ),
+        ),
+        Button(
+            id='add_game',
+            text=Format("Добавить игру"),
+            on_click=add_game,
         ),
         MessageInput(
             func=message_input_fixing
@@ -453,6 +462,25 @@ product_management_dialog = Dialog(
             on_success=on_edit_category_required_fields,
         ),
         state=ProductManagementSG.EDIT_CATEGORY_REQUIRED_FIELDS,
+    ),
+    Window(
+        Const("Введите название новой игры"),
+        TextInput(
+            id="add_game_name_text",
+            on_success=on_game_name,
+        ),
+    ),
+    Window(
+        Const("Введите ID темы в супергруппе телеграм. (Последнее число в ссылке после слэша на тему)"),
+        TextInput(
+            id="add_game_super_group_id_text",
+            on_success=on_game_super_group_id,
+        ),
+    ),
+    Window(
+        Const("Отправьте фото новой игры"),
+        MessageInput(on_input_photo_new_game, content_types=[ContentType.PHOTO]),
+        state=ProductManagementSG.ADD_GAME_IMAGE,
     ),
     on_process_result=close_dialog,
 )

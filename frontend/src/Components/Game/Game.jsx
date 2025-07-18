@@ -6,11 +6,7 @@ function Game({ id, name, image_url }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        if (name === "Telegram") {
-            navigate('/telegram-stars');
-        } else {
-            navigate(`/game?id=${id}`);
-        }
+        navigate(`/game?id=${id}`);
     };
 
     return (

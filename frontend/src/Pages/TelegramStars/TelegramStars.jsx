@@ -1,25 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import './TelegramStars.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useLaunchParams } from '@telegram-apps/sdk-react';
-import { getStarsConfig } from '../../db/db';
+import { getStarsConfig, getUser } from '../../db/db';
 import { buyStars } from '../../db/db';
+import { CircularProgress } from '@mui/material';
 
-const API_URL = "http://localhost:8000/api";
 const MIN_STARS = 50;
 const MAX_STARS = 1000000;
 
 function TelegramStars() {
     const {tg, user} = useTelegram();
     const [amount, setAmount] = useState();
-    const [rate, setRate] = useState(1.5);
+    const [rate, setRate] = useState(0);
     const [username, setUsername] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const { launchParams } = useLaunchParams();
+    const [dbUser, setDbUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchUser() {
+            try {
+                const userData = await getUser(tg.initData);
+                setDbUser(userData);
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchUser();
+    }, [tg]);
 
     useEffect(() => {
         tg.BackButton.show();
@@ -33,39 +48,11 @@ function TelegramStars() {
         };
     }, []);
 
-    // Эффект для управления MainButton
-    useEffect(() => {
-        tg.MainButton.setParams({
-            text: 'Купить Telegram Stars',
-            color: '#2481cc',
-        });
-
-        const isValid = !error && amount && amount >= MIN_STARS && amount <= MAX_STARS && username.trim();
-
-        if (isValid) {
-            tg.MainButton.show();
-        } else {
-            tg.MainButton.hide();
-        }
-
-        // Обработчик нажатия на MainButton
-        const handleMainButtonClick = () => {
-            setShowPopup(true);
-        };
-
-        tg.MainButton.onClick(handleMainButtonClick);
-
-        return () => {
-            tg.MainButton.offClick(handleMainButtonClick);
-            tg.MainButton.hide();
-        };
-    }, [amount, error, username]);
-
     useEffect(() => {
         const fetchRate = async () => {
             try {
                 const response = await getStarsConfig();
-                setRate(response.data.rate);
+                setRate(response.rate);
             } catch (error) {
                 console.error('Error fetching rate:', error);
             }
@@ -101,35 +88,78 @@ function TelegramStars() {
         setError('');
     };
 
-    const handleBuyClick = async () => {
-        try {
-            const response = await buyStars(username, amount);
-            
-            if (response.data.insufficient_balance) {
-                setShowPopup(false);
-                navigate('/deposit');
+    // Эффект для управления MainButton
+    useEffect(() => {
+        tg.MainButton.setParams({
+            text: 'Купить Telegram Stars',
+            color: '#2481cc',
+        });
+
+        const isValid = !error && amount && amount >= MIN_STARS && amount <= MAX_STARS && username.trim();
+
+        if (isValid) {
+            tg.MainButton.show();
+        } else {
+            tg.MainButton.hide();
+        }
+
+        // Обработчик нажатия на MainButton
+        const handleMainButtonClick = () => {
+            const totalCost = amount * rate;
+            if (dbUser && dbUser.balance < totalCost) {
+                const deficiencyAmount = totalCost - dbUser.balance;
+                navigate('/deficiency/1', { 
+                    state: { 
+                        deficiencyAmount: deficiencyAmount
+                    }
+                });
                 return;
             }
-            
-            // Закрываем попап после успешной покупки
+            setShowPopup(true);
+        };
+
+        tg.MainButton.onClick(handleMainButtonClick);
+
+        return () => {
+            tg.MainButton.offClick(handleMainButtonClick);
+            tg.MainButton.hide();
+        };
+    }, [amount, error, username, rate, dbUser, navigate]);
+
+    const handleBuyClick = async () => {
+        try {
+            const totalCost = amount * rate;
+            if (dbUser && dbUser.balance < totalCost) {
+                const deficiencyAmount = totalCost - dbUser.balance;
+                setShowPopup(false);
+                navigate('/deficiency-balance', { 
+                    state: { 
+                        deficiencyAmount: deficiencyAmount
+                    }
+                });
+                return;
+            }
+
+            const response = await buyStars(username, amount);
             setShowPopup(false);
-            // Можно добавить уведомление об успешной покупке
             tg.showAlert('Звезды успешно куплены!');
         } catch (error) {
             console.error('Error purchasing stars:', error);
-            if (error.response?.data?.insufficient_balance) {
-                setShowPopup(false);
-                navigate('/deposit');
-            } else {
-                // Показываем ошибку пользователю
-                tg.showAlert('Произошла ошибка при покупке звезд. Попробуйте позже.');
-            }
+            tg.showAlert('Произошла ошибка при покупке звезд. Попробуйте позже.');
         }
     };
 
     useEffect(() => {
         console.log("Launch params", launchParams);
     }, [launchParams]);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center align-items-center" style={{height: '100vh'}}>
+                <CircularProgress />
+            </div>
+        );
+    }
 
     return (
         <div className="telegram-stars-container">
@@ -166,6 +196,11 @@ function TelegramStars() {
                     className="amount-input"
                 />
                 {error && <div className="error-message">{error}</div>}
+                {amount && rate && (
+                    <div className="total-cost">
+                        Итого к оплате: {(amount * rate).toFixed(2)}₽
+                    </div>
+                )}
             </div>
 
             <div className="disclaimer">

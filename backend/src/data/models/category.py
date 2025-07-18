@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, List
+import uuid
 
-from sqlalchemy import String, ForeignKey, Integer, Boolean, JSON
+from sqlalchemy import UUID, String, Integer, Boolean, JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.data.models import Base
@@ -12,7 +13,7 @@ if TYPE_CHECKING:
 class CategoryModel(Base):
     __tablename__ = "category"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(UUID, primary_key=True)
     game_id: Mapped[int] = mapped_column(Integer, ForeignKey('game.id', ondelete='CASCADE'), nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     image: Mapped[str] = mapped_column(String(255), nullable=True)
