@@ -71,7 +71,7 @@ async def on_edit_category_required_fields(
     category_service: FromDishka[CategoryService],
 ) -> None:
     required_fields = [field.strip() for field in value.split(",")]
-    await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), required_fields=required_fields)
+    await category_service.update_category(category_id=uuid.UUID(dialog_manager.dialog_data["category_id"]), required_fields=required_fields)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -104,7 +104,7 @@ async def delete_category(
     dialog_manager: DialogManager,
     category_service: FromDishka[CategoryService],
 ):
-    await category_service.delete_category(category_id=int(dialog_manager.dialog_data["category_id"]))
+    await category_service.delete_category(category_id=uuid.UUID(dialog_manager.dialog_data["category_id"]))
     await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
 
 
@@ -116,7 +116,7 @@ async def on_edit_category_name(
     value: str,
     category_service: FromDishka[CategoryService],
 ):
-    await category_service.update_category(category_id=int(dialog_manager.dialog_data["category_id"]), name=value)
+    await category_service.update_category(category_id=uuid.UUID(dialog_manager.dialog_data["category_id"]), name=value)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -128,7 +128,7 @@ async def hide_category(
     category_service: FromDishka[CategoryService],
 ):
     category_id = dialog_manager.dialog_data["category_id"]
-    await category_service.update_category(category_id=int(category_id), is_visible=False)
+    await category_service.update_category(category_id=uuid.UUID(category_id), is_visible=False)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -140,7 +140,7 @@ async def show_category(
     category_service: FromDishka[CategoryService],
 ):
     category_id = dialog_manager.dialog_data["category_id"]
-    await category_service.update_category(category_id=int(category_id), is_visible=True)
+    await category_service.update_category(category_id=uuid.UUID(category_id), is_visible=True)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -249,6 +249,7 @@ async def on_category_thread_id(
 ):
     dialog_manager.dialog_data["category_thread_id"] = int(value)
     await category_service.add_category(
+        id=uuid.uuid4(),
         game_id=int(dialog_manager.dialog_data["game_id"]),
         name=dialog_manager.dialog_data["category_name"],
         is_visible=True,
@@ -508,6 +509,7 @@ async def on_input_photo_new_product(
     dialog_manager: DialogManager,
     product_service: FromDishka[ProductService],
     yandex_storage_client: FromDishka[YandexStorageClient],
+    game_service: FromDishka[GameService],
 ):  
     bot = dialog_manager.middleware_data.get("bot")
     file = await bot.get_file(message.photo[-1].file_id)
@@ -520,6 +522,7 @@ async def on_input_photo_new_product(
         "3": "Clash Royale",
         "4": "Hay Day",
     }
+    game = await game_service.get_game(id=int(dialog_manager.dialog_data["game_id"]))
     product_instruction_photo_file_id = dialog_manager.dialog_data.get("product_instruction_photo")
     instruction_image_url = None
     if product_instruction_photo_file_id:
@@ -527,6 +530,8 @@ async def on_input_photo_new_product(
         instruction_photo_bytes = await bot.download_file(instruction_file.file_path)
         instruction_image_url = await yandex_storage_client.upload_file(instruction_photo_bytes, object_name=f"{product_instruction_photo_file_id}.jpg")
     image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+    
+    game_name = games_dict.get(dialog_manager.dialog_data["game_id"]) or game.name
     
     await product_service.create_product(
         id=uuid.uuid4(),
@@ -537,7 +542,7 @@ async def on_input_photo_new_product(
         price=int(dialog_manager.dialog_data["product_price"]),
         image_url=image_url,
         game_id=int(dialog_manager.dialog_data["game_id"]),
-        game_name=games_dict[dialog_manager.dialog_data["game_id"]],
+        game_name=game_name,
         instruction_image_url=instruction_image_url,
     )
     await message.delete()
@@ -629,7 +634,7 @@ async def on_game_name(
     value: str,
 ):
     dialog_manager.dialog_data["game_name"] = value
-    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_IMAGE)
+    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_SUPERGROUP_ID)
 
 
 async def on_game_super_group_id(
@@ -639,35 +644,25 @@ async def on_game_super_group_id(
     value: str,
 ):
     dialog_manager.dialog_data["game_super_group_id"] = value
-    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_SUPERGROUP_ID)
+    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_IMAGE)
 
 
+@inject_on_click
 async def on_input_photo_new_game(
     message: Message,
     widget: MessageInput,
     dialog_manager: DialogManager,
-):
-    dialog_manager.dialog_data["game_image"] = message.photo[-1].file_id
-    await dialog_manager.switch_to(ProductManagementSG.ADD_GAME_SUPERGROUP_ID)
-
-
-async def on_game_super_group_id_new_game(
-    callback_query: CallbackQuery,
-    widget: TextInput,
-    dialog_manager: DialogManager,
     game_service: FromDishka[GameService],
     yandex_storage_client: FromDishka[YandexStorageClient],
-    value: str,
-) -> None:
-    dialog_manager.dialog_data["game_super_group_id"] = value
-    bot = dialog_manager.middleware_data.get("bot")
+):
+    dialog_manager.dialog_data["game_image"] = message.photo[-1].file_id
+    bot: Bot = dialog_manager.middleware_data.get("bot")
     file = await bot.get_file(dialog_manager.dialog_data["game_image"])
     photo_bytes = await bot.download_file(file.file_path)
     image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{dialog_manager.dialog_data['game_image']}.jpg")
     await game_service.create_game(
-        id=uuid.uuid4(),
         name=dialog_manager.dialog_data["game_name"],
         image_url=image_url,
-        super_group_id=int(dialog_manager.dialog_data["game_super_group_id"]),
+        supergroup_id=int(dialog_manager.dialog_data["game_super_group_id"]),
     )
-    await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
+    await dialog_manager.switch_to(ProductManagementSG.GAMES)

@@ -475,10 +475,16 @@ export async function getStarsConfig() {
   return response.data;
 }
 
-export async function buyStars(username, quantity) {
+export async function buyStars(username, quantity, category_id, initData) {
   const response = await axios.post(`${API_URL}/stars/buy-stars`, {
     username: username,
-    quantity: quantity
+    quantity: quantity,
+    category_id: category_id
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': initData
+    }
   });
   return response.data;
 }

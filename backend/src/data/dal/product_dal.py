@@ -207,3 +207,9 @@ class ProductDAL:
                 'all_time': await self.get_total_purchase_amount(None)
             }
         }
+    
+    async def get_stars_product_by_category_id(self, category_id: UUID) -> Optional[Product]:
+        query = select(ProductModel).where(ProductModel.category_id == category_id)
+        result = await self.session.execute(query)
+        return result.scalars().first()
+

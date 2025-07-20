@@ -41,3 +41,5 @@ class ProductService:
             "all_time": all_time
         }
 
+    async def get_stars_product_by_category_id(self, category_id: UUID) -> Optional[Product]:
+        return await self.__product_dal.get_stars_product_by_category_id(category_id=category_id)

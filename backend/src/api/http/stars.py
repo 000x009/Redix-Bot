@@ -1,21 +1,38 @@
+from uuid import UUID, uuid4
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from dependency_injector.wiring import inject, Provide
 
+from aiogram import Bot
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.utils.web_app import WebAppInitData
+
 from src.main.ioc import Container
-from src.services import FragmentAPI, UserService
+from src.services import (
+    FragmentAPI,
+    UserService,
+    ProductService,
+    GameService,
+    CategoryService,
+    OrderService,
+    TransactionService
+)
 from src.data.dal import StarsDAL
-from src.utils.user_provider import user_provider
-from src.data.models.user import WebAppInitData
+from src.api.dependencies import user_provider
 from src.utils import json_text_getter
 from src.main.config import settings
+from src.schema.transaction import TransactionCause, TransactionType
+from src.schema.order import OrderStatus
 
 
 class BuyStarsDTO(BaseModel):
     username: str
     quantity: int
+    category_id: UUID
 
 
 router = APIRouter(
@@ -32,6 +49,11 @@ async def buy_stars(
     fragment_service: FragmentAPI = Depends(Provide[Container.fragment_service]),
     user_service: UserService = Depends(Provide[Container.user_service]),
     user_data: WebAppInitData = Depends(user_provider),
+    product_service: ProductService = Depends(Provide[Container.product_service]),
+    game_service: GameService = Depends(Provide[Container.game_service]),
+    category_service: CategoryService = Depends(Provide[Container.category_service]),
+    order_service: OrderService = Depends(Provide[Container.order_service]),
+    transaction_service: TransactionService = Depends(Provide[Container.transaction_service]),
 ) -> JSONResponse:
     stars_config = await stars_dal.get_one()
     if not stars_config:
@@ -41,56 +63,57 @@ async def buy_stars(
     await fragment_service.buy_stars(data.username, data.quantity)
 
     user = await user_service.get_one_user(user_id=user_data.user.id)
-    product = await product_service.get_one_product(id=order_data.product_id)
+    product = await product_service.get_stars_product_by_category_id(category_id=data.category_id)
     game = await game_service.get_game(id=product.game_id)
-    category = await category_service.get_category(id=product.category_id)
+    category = await category_service.get_category(id=data.category_id)
+    price = data.quantity * stars_config.rate
 
     if not product:
         return JSONResponse(status_code=404, content='Product not found.')
     elif not user:
         return JSONResponse(status_code=404, content='User not found.')
-    elif user.balance < product.price:
+    elif user.balance < price:
         return JSONResponse(
             status_code=409,
             content=dict(
                 description='Insufficient funds on user balance',
                 user_balance=float(user.balance),
-                top_up_amount=float(product.price - user.balance),
+                top_up_amount=float(float(round(price, 2)) - float(user.balance)),
             )
         )
     
-    order_id = uuid.uuid4()
+    order_id = uuid4()
     await order_service.add_order(
         id=order_id,
         user_id=user.user_id,
-        product_id=order_data.product_id,
+        product_id=product.id,
         name=product.name,
-        price=product.price,
-        additional_data=order_data.additional_data,
+        price=price,
+        additional_data={"Звезды": data.quantity},
+        status=OrderStatus.COMPLETED,
     )
-    await user_service.update_user(user_id=user.user_id, balance=user.balance - product.price)
+    await user_service.update_user(user_id=user.user_id, balance=float(user.balance) - float(round(price, 2)))
     await transaction_service.add_transaction(
-        id=uuid.uuid4(),
+        id=uuid4(),
         user_id=user.user_id,
         type=TransactionType.DEBIT,
         cause=TransactionCause.PAYMENT,
-        amount=product.price,
+        amount=round(price, 2),
         is_successful=True,
     )
 
+    bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     try:
-        bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
         await bot.send_message(
             chat_id=game.supergroup_id,
             text=json_text_getter.get_order_info_text(
                 user_id=user.user_id,
                 order_id=order_id,
-                order_data=order_data.additional_data,
+                order_data={"Звезды": data.quantity},
                 product=product,
                 category=category.name,
             ),
             message_thread_id=category.thread_id,
-            reply_markup=take_order_kb_markup(order_id=order_id)
         )
     except Exception as e:
         print(e)

@@ -469,6 +469,7 @@ product_management_dialog = Dialog(
             id="add_game_name_text",
             on_success=on_game_name,
         ),
+        state=ProductManagementSG.ADD_GAME,
     ),
     Window(
         Const("Введите ID темы в супергруппе телеграм. (Последнее число в ссылке после слэша на тему)"),
@@ -476,6 +477,7 @@ product_management_dialog = Dialog(
             id="add_game_super_group_id_text",
             on_success=on_game_super_group_id,
         ),
+        state=ProductManagementSG.ADD_GAME_SUPERGROUP_ID,
     ),
     Window(
         Const("Отправьте фото новой игры"),

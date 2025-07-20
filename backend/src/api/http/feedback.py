@@ -96,7 +96,7 @@ async def post_feedback(
 @inject
 async def get_feedbacks(
     feedback_service: FeedbackService = Depends(Provide[Container.feedback_service]),
-) -> List[Feedback]:
+) -> Optional[List[Feedback]]:
     response = await feedback_service.get_feedbacks(is_active=True)
     return response
 

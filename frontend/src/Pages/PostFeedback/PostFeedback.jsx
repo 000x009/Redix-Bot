@@ -170,7 +170,7 @@ const PostFeedback = () => {
         <img src={product.image_url} alt={product.name} className="product-image" />
         <div className="product-details">
           <p className="product-name">{product.name}</p>
-          <p className="product-price">{product.price} ₽</p>
+          <p className="product-price">{order.price} ₽</p>
         </div>
       </div>
       {error && <p className="error-message">{error}</p>}

@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
@@ -27,7 +28,7 @@ async def get_categories(
 @router.get("/{id}")
 @inject
 async def get_one_category(
-    id: int,
+    id: UUID,
     category_service: CategoryService = Depends(Provide[Container.category_service]),
 ) -> Category:
     return await category_service.get_category(id=id)

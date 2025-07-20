@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './TelegramStars.css';
 import { useTelegram } from '../../hooks/useTelegram';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useLaunchParams } from '@telegram-apps/sdk-react';
 import { getStarsConfig, getUser } from '../../db/db';
 import { buyStars } from '../../db/db';
@@ -21,6 +21,8 @@ function TelegramStars() {
     const { launchParams } = useLaunchParams();
     const [dbUser, setDbUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
+    const categoryId = location.state?.categoryId;
 
     useEffect(() => {
         async function fetchUser() {
@@ -139,8 +141,8 @@ function TelegramStars() {
                 });
                 return;
             }
-
-            const response = await buyStars(username, amount);
+            console.log(categoryId)
+            const response = await buyStars(username, amount, categoryId, tg.initData);
             setShowPopup(false);
             tg.showAlert('Звезды успешно куплены!');
         } catch (error) {

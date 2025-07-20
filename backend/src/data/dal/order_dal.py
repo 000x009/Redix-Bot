@@ -64,9 +64,9 @@ class OrderDAL:
             return None
 
         if kwargs:
-            query = select(OrderModel).filter_by(**kwargs)
+            query = select(OrderModel).filter_by(**kwargs).order_by(OrderModel.time.desc())
         else:
-            query = select(OrderModel)
+            query = select(OrderModel).order_by(OrderModel.time.desc())
 
         result = await self.session.execute(query)
         return result
