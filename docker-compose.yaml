@@ -34,8 +34,8 @@ services:
       - POSTGRES_DB=${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./paradox.sql:/docker-entrypoint-initdb.d/paradox.sql
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      # - ./paradox.sql:/docker-entrypoint-initdb.d/paradox.sql
+      # - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     restart: on-failure
     networks:
       - default
