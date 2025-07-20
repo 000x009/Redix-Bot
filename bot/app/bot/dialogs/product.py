@@ -64,7 +64,10 @@ from .handlers import (
     add_game,
     on_game_name,
     on_game_super_group_id,
+    on_edit_photo_game,
     on_input_photo_new_game,
+    on_edit_photo_category,
+    on_input_photo_new_category
 )
 
 
