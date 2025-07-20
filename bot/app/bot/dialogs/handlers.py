@@ -704,3 +704,13 @@ async def on_input_photo_new_game(
         supergroup_id=int(dialog_manager.dialog_data["game_super_group_id"]),
     )
     await dialog_manager.switch_to(ProductManagementSG.GAMES)
+
+
+async def button_name_input(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+) -> None:
+    print("BUTTON NAME", flush=True)
+    dialog_manager.dialog_data["button_title"] = message.text
+    await dialog_manager.switch_to(MailingSG.BUTTON_REDIRECT)

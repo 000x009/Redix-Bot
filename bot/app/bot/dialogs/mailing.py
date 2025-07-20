@@ -20,7 +20,7 @@ from .handlers import (
     main_menu_button,
     confirm_mailing,
     cancel_mailing,
-    button_name_input,
+    button_name_input
 )
 
 
