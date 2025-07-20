@@ -1,6 +1,6 @@
 from typing import List, TYPE_CHECKING
 
-from sqlalchemy import String, Integer, BigInteger
+from sqlalchemy import String, Integer, BigInteger, Sequence
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.data.models import Base
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class GameModel(Base):
     __tablename__ = "game"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, Sequence("game_id_sequence", start=7), primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     image_url: Mapped[str] = mapped_column(String, nullable=False)
     web_app_place: Mapped[int] = mapped_column(Integer, nullable=True)
