@@ -1,7 +1,7 @@
 services:
   redis:
     image: redis:alpine
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
     expose:
