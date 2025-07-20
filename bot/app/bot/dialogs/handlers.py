@@ -285,7 +285,6 @@ async def on_category_thread_id(
 ):
     dialog_manager.dialog_data["category_thread_id"] = int(value)
     await category_service.add_category(
-        id=uuid.uuid4(),
         game_id=int(dialog_manager.dialog_data["game_id"]),
         name=dialog_manager.dialog_data["category_name"],
         is_visible=True,
