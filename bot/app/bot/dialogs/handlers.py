@@ -121,6 +121,42 @@ async def on_edit_category_name(
 
 
 @inject_on_click
+async def on_edit_photo_category(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+    yandex_storage_client: FromDishka[YandexStorageClient],
+    category_service: FromDishka[CategoryService],
+) -> None:
+    try:
+        bot = dialog_manager.middleware_data.get("bot")
+        file = await bot.get_file(message.photo[-1].file_id)
+        photo_bytes = await bot.download_file(file.file_path)
+        image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+        await category_service.update_category(category_id=dialog_manager.dialog_data["category_id"], image=image_url)
+    finally:
+        await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
+
+
+@inject_on_click
+async def on_edit_photo_game(
+    message: Message,
+    widget: MessageInput,
+    dialog_manager: DialogManager,
+    yandex_storage_client: FromDishka[YandexStorageClient],
+    game_service: FromDishka[GameService],
+) -> None:
+    try:
+        bot = dialog_manager.middleware_data.get("bot")
+        file = await bot.get_file(message.photo[-1].file_id)
+        photo_bytes = await bot.download_file(file.file_path)
+        image_url = await yandex_storage_client.upload_file(photo_bytes, object_name=f"{message.photo[-1].file_id}.jpg")
+        await game_service.update_game(game_id=int(dialog_manager.dialog_data["game_id"]), image_url=image_url)
+    finally:
+        await dialog_manager.switch_to(ProductManagementSG.GAME_MANAGEMENT)
+
+
+@inject_on_click
 async def hide_category(
     callback_query: CallbackQuery,
     widget: Button,
@@ -267,7 +303,7 @@ async def selected_category(
     item_id: str,
 ):
     dialog_manager.show_mode = ShowMode.EDIT
-    dialog_manager.dialog_data["category_id"] = item_id
+    dialog_manager.dialog_data["category_id"] = str(item_id)
     await dialog_manager.switch_to(ProductManagementSG.CATEGORY_MANAGEMENT)
 
 
@@ -581,7 +617,9 @@ async def confirm_mailing(
     users = await user_service.get_users()
     bot: Bot = dialog_manager.middleware_data.get("bot")
     message_id = dialog_manager.start_data.get("message_id")
+    button_title = dialog_manager.dialog_data.get("button_title")
     album_caption = dialog_manager.start_data.get("album_caption")
+    game_button_id = dialog_manager.dialog_data.get("game_button_id")
 
     for user in users:
         try: 
@@ -596,7 +634,7 @@ async def confirm_mailing(
                     message_id=message_id,
                     caption=album_caption,
                     from_chat_id=callback_query.message.chat.id,
-                    reply_markup=inline.web_app_button(dialog_manager.dialog_data["game_button_id"]),
+                    reply_markup=inline.web_app_button(game_button_id, button_title),
                 )
         except Exception as ex:
             print(ex)

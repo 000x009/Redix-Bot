@@ -136,7 +136,6 @@ class ProductDAL:
             .where(or_(
             func.lower(ProductModel.name).like(search_term),
             func.lower(ProductModel.game_name).like(search_term),
-            func.lower(ProductModel.category).like(search_term),
             func.lower(ProductModel.description).like(search_term),
             func.lower(ProductModel.instruction).like(search_term)
         )))

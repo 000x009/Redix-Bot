@@ -5,4 +5,5 @@ class MailingSG(StatesGroup):
     MESSAGE = State()
     SEND = State()
     CHECKOUT = State()
-    BUTTON = State()
+    BUTTON_REDIRECT = State()
+    BUTTON_NAME = State()

@@ -87,13 +87,35 @@ async def one_product_getter(
     product_service: FromDishka[ProductService],
     **kwargs,
 ) -> dict:
+    yandex_storage_client = YandexStorageClient(
+        token=settings.YANDEX_STORAGE_TOKEN,
+        bucket_name=settings.YANDEX_STORAGE_BUCKET_NAME,
+        secret=settings.YANDEX_STORAGE_SECRET,
+    )
     product_id = dialog_manager.dialog_data["product_id"]
     product = await product_service.get_one_product(id=uuid.UUID(product_id))
+    file = yandex_storage_client.get_file(object_url=product.image_url)
 
     return {
         "photo": MediaAttachment(
            url=product.image_url,
            type=ContentType.PHOTO,
-        ),
+        ) if file else None,
         "product": product,
+    }
+
+
+async def mailing_getter(
+    dialog_manager: DialogManager,
+    **kwargs,
+) -> dict:
+    message = dialog_manager.start_data.get("message")
+    album_caption = dialog_manager.start_data.get("album_caption")
+
+    print("START DATA", dialog_manager.start_data)
+
+    print(album_caption, flush=True)
+
+    return {
+        'message': message if message else album_caption,
     }

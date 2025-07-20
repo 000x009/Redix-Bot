@@ -35,8 +35,11 @@ export default function PaymentProcessing() {
         const fetchTransaction = async () => {
             try {
                 const response = await getOneTransaction(order_id, tg.initData)
-                if (response && !response.is_successful) {
+                if (response) {
                     setTransaction(response)
+                    if (response.is_successful) {
+                        setPaymentStatus('success')
+                    }
                 } else {
                     navigate('/deposit', { replace: true });
                 }
@@ -45,17 +48,19 @@ export default function PaymentProcessing() {
                 navigate('/deposit', { replace: true });
             }
         }
-        fetchTransaction()
-
+    
         const checkPaymentStatus = async () => {
             const updatedTransaction = await getOneTransaction(order_id, tg.initData)
+            console.log(updatedTransaction)
             if (updatedTransaction.is_successful) {
                 setPaymentStatus('success')
             }
         }
-
+    
+        fetchTransaction()
+    
         const statusInterval = setInterval(checkPaymentStatus, 5000)
-
+    
         const timer = setInterval(() => {
             setTimeLeft((prevTime) => {
                 const newTime = prevTime - 1;
@@ -69,13 +74,34 @@ export default function PaymentProcessing() {
                 return newTime
             })
         }, 1000)
-
+    
         return () => {
             clearInterval(statusInterval)
             clearInterval(timer)
             localStorage.removeItem(`timeLeft_${order_id}`);
         }
-    }, [order_id])
+    }, [order_id, tg.initData, navigate])
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (!document.hidden) {
+                const checkPaymentStatus = async () => {
+                    const updatedTransaction = await getOneTransaction(order_id, tg.initData)
+                    console.log(updatedTransaction)
+                    if (updatedTransaction.is_successful) {
+                        setPaymentStatus('success')
+                    }
+                }
+                checkPaymentStatus()
+            }
+        }
+    
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+    
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
+        }
+    }, [order_id, tg.initData])
 
     const handlePayment = () => {
         if (transaction && transaction.payment_data && transaction.payment_data.url) {

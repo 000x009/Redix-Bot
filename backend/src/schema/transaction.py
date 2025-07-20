@@ -1,5 +1,4 @@
 import datetime
-from uuid import UUID
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import Mapping, Any
@@ -19,9 +18,11 @@ class TransactionCause(Enum):
     PAYMENT = 'Оплата заказа'
     REFERRAL = 'Реферальный бонус'
 
+
 @dataclass(frozen=True)
 class Transaction:
-    id: UUID
+    id: int
+    unique_id: int
     user_id: int
     type: TransactionType
     cause: TransactionCause

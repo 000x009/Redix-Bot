@@ -19,7 +19,7 @@ class ProductModel(Base):
     instruction: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     purchase_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     game_name: Mapped[str] = mapped_column(String, nullable=True)
-    category: Mapped[str] = mapped_column(String, nullable=True)
+    # category: Mapped[str] = mapped_column(String, nullable=True)
     image_url: Mapped[str] = mapped_column(String, nullable=True)
     purchase_limit: Mapped[int] = mapped_column(Integer, nullable=True)
     is_auto_purchase: Mapped[bool] = mapped_column(Boolean, default=False)

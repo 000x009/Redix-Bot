@@ -26,7 +26,6 @@ class YandexStorageClient:
     def get_file(self, object_url: str) -> bytes:
         try:
             object_key = object_url.split('https://storage.yandexcloud.net/redix-shop/', 1)[-1]
-            print(object_key)
             response = self.s3.get_object(Bucket=self.bucket_name, Key=object_key)
             file_content = response['Body'].read()
             return file_content

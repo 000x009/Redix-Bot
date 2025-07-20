@@ -155,10 +155,37 @@ const OrderForm = () => {
         });
       }
     }
+
+    const validateEmail = (email) => {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(email.trim());
+    }
+
+    if (formFields.почта) {
+      const isValidEmail = validateEmail(formFields.почта.trim());
+      if (!isValidEmail) {
+        setFormErrors(prev => ({...prev, почта: true}));
+        setEmailError('Пожалуйста, предоставьте правильную почту');
+        hasErrors = true;
+      }
+    }
+
+    const validateCode = (code) => {
+      const codePattern = /^[0-9]{6}$/;
+      return codePattern.test(code.trim());
+    }
+
+    if (formFields.код) {
+      const isValidCode = validateCode(formFields.код.trim());
+      if (!isValidCode) {
+        setFormErrors(prev => ({...prev, код: true}));
+        hasErrors = true;
+      }
+    }
   
     if (hasErrors) {
       setFormErrors(errors);
-      setGeneralError('Пожалуйста, заполните все обязательные поля');
+      setGeneralError('Пожалуйста, заполните все обязательные поля правильно');
       return;
     }
   
@@ -429,30 +456,20 @@ const OrderForm = () => {
     );
   }
 
-  const makeLinksClickable = (text) => {
+  const renderInstruction = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const parts = text.split(urlRegex);
-    const matches = text.match(urlRegex) || [];
-    
-    return parts.reduce((acc, part, index) => {
-      if (index === 0) return [part];
-      
-      const link = matches[index - 1];
-      const linkElement = <a key={`link-${index}`} href={link} target="_blank" rel="noopener noreferrer">{link}</a>;
-      
-      return [...acc, linkElement, part];
-    }, []).map((element, index) => {
-      if (typeof element === 'string') {
-        return element.split('\n').map((line, i) => (
-          <React.Fragment key={`line-${index}-${i}`}>
-            {line}
-            {i < element.split('\n').length - 1 && <br />}
-          </React.Fragment>
-        ));
-      }
-      return element;
-    });
-  };
+    return text.split('\n').map((paragraph, paragraphIndex) => (
+        <p key={paragraphIndex}>
+            {paragraph.split(urlRegex).map((part, partIndex) => 
+                urlRegex.test(part) ? (
+                    <a key={partIndex} href={part} target="_blank" rel="noopener noreferrer">{part}</a>
+                ) : (
+                    part
+                )
+            )}
+        </p>
+    ));
+};
 
   return (
     <div style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', padding: '1rem', backgroundColor: 'var(--tg-theme-bg-color)', color: 'var(--tg-theme-text-color)', overflow: 'hidden', maxWidth: '100vw'}}>
@@ -481,7 +498,7 @@ const OrderForm = () => {
             <div className="word-pre" style={{ 
               marginTop: product.instruction_image_url ? '1rem' : '0',
             }}>
-              {product.instruction}
+              {renderInstruction(product.instruction)}
             </div>
           )}
         </div>

@@ -27,7 +27,7 @@ def cancel_without_reason_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
     )
 
 
-def web_app_button(game_id: int) -> InlineKeyboardMarkup:
+def web_app_button(game_id: int, button_title: str) -> InlineKeyboardMarkup:
     if int(game_id) > 0:
         url = f"https://redixshop.com/game?id={game_id}"
     elif int(game_id) == -1:
@@ -36,7 +36,7 @@ def web_app_button(game_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="КУПИТЬ", web_app=WebAppInfo(url=url))
+                InlineKeyboardButton(text=button_title, web_app=WebAppInfo(url=url))
             ]
         ]
     )

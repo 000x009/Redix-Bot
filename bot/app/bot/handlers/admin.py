@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from aiogram import Router, Bot, F
@@ -17,6 +18,8 @@ from app.schema.transaction import TransactionCause, TransactionType
 
 
 router = Router()
+
+logger = logging.getLogger(__name__)
 
 
 @router.message(Command("admin"))
