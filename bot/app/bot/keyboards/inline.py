@@ -72,13 +72,20 @@ back_to_main_menu_markup = InlineKeyboardMarkup(
 
 def admin_menu_kb_markup(admin_permissions: dict[str, bool]) -> InlineKeyboardMarkup:
     keyboard = []
-    keyboard.append([InlineKeyboardButton(text="Рассылка", callback_data="admin_mailing")])
-    keyboard.append([InlineKeyboardButton(text="Промокоды", callback_data="admin_promo")])
-    keyboard.append([InlineKeyboardButton(text="Управление товарами", callback_data="product_management")])
-    keyboard.append([InlineKeyboardButton(text="Управление пользователями", callback_data="user_management")])
-    keyboard.append([InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management")])
-    keyboard.append([InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics")])
-    keyboard.append([InlineKeyboardButton(text="Звезды", callback_data="stars_management")])
+    if admin_permissions.get("mailing"):
+        keyboard.append([InlineKeyboardButton(text="Рассылка", callback_data="admin_mailing")])
+    if admin_permissions.get("promos"):
+        keyboard.append([InlineKeyboardButton(text="Промокоды", callback_data="admin_promo")])
+    if admin_permissions.get("products"):
+        keyboard.append([InlineKeyboardButton(text="Управление товарами", callback_data="product_management")])
+    if admin_permissions.get("users"):
+        keyboard.append([InlineKeyboardButton(text="Управление пользователями", callback_data="user_management")])
+    if admin_permissions.get("admins"):
+        keyboard.append([InlineKeyboardButton(text="Управление администраторами", callback_data="admin_management")])
+    if admin_permissions.get("statistics"):
+        keyboard.append([InlineKeyboardButton(text="Статистика бота", callback_data="bot_statistics")])
+    if admin_permissions.get("stars"):
+        keyboard.append([InlineKeyboardButton(text="Telegram Stars", callback_data="stars_management")])
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 

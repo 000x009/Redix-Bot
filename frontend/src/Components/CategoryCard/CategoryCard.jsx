@@ -15,7 +15,7 @@ function CategoryCard({item}) {
     } = item;
 
     return <div onClick={() => {
-        if (name === "Звезды") {
+        if (name === "Telegram Stars") {
             navigate('/telegram-stars', {state: {categoryId: id}});
         } else {
             navigate(`/category?id=${id}`)

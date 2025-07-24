@@ -18,6 +18,7 @@ from src.services import (
     SupercellClient,
     BileeService,
     FragmentAPI,
+    CryptopayClientImpl,
 )
 from src.data.dal import (
     UserDAL,
@@ -74,7 +75,7 @@ class Container(containers.DeclarativeContainer):
         'src.api.http.cloud_storage',
         'src.api.http.admin',
         'src.api.http.category',
-        'src.api.http.stars',  # Added stars module
+        'src.api.http.stars',
     ])
     config = providers.Configuration()
 
@@ -123,4 +124,8 @@ class Container(containers.DeclarativeContainer):
         token=config.YANDEX_STORAGE_TOKEN,
         secret=config.YANDEX_STORAGE_SECRET,
         bucket_name=config.YANDEX_STORAGE_BUCKET_NAME
+    )
+
+    cryptopay_client = providers.Factory(
+        CryptopayClientImpl,
     )

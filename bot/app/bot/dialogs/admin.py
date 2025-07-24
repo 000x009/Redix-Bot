@@ -27,6 +27,7 @@ from .admin_handlers import (
     switch_promos_permission,
     switch_statistics_permission,
     switch_admins_permission,
+    switch_stars_permission,
 )
 from .admin_getter import admins_getter, one_admin_getter
 
@@ -139,6 +140,16 @@ admin_management_dialog = Dialog(
             id="admins_permission",
             text=Format("🟢 Управление администраторами", when=F['permissions']['admins']),
             on_click=switch_admins_permission,
+        ),
+        Button(
+            id="stars_permission",
+            text=Format("🔴 Управление звездами", when=~F['permissions']['stars']),
+            on_click=switch_stars_permission,
+        ),
+        Button(
+            id="stars_permission",
+            text=Format("🟢 Управление звездами", when=F['permissions']['stars']),
+            on_click=switch_stars_permission,
         ),
         Button(
             id='remove_admin',

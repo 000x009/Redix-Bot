@@ -29,19 +29,22 @@ async def admin_panel_handler(
     event_chat: Chat,
     admin_service: FromDishka[AdminService],
 ) -> None:
-    admins = await admin_service.get_all()
-    admin_ids = [admin.user_id for admin in admins] if admins else []
-    admin_ids.append(6384960822)
-    print(admin_ids, flush=True)
+    try:
+        admins = await admin_service.get_all()
+        admin_ids = [admin.user_id for admin in admins]
 
-    if message.from_user.id in admin_ids:
-        admin = await admin_service.get(user_id=message.from_user.id)
-        permissions = admin.permissions if admin else {}
-        await bot.send_message(
-            chat_id=event_chat.id,
-            text="Админ-меню",
-            reply_markup=inline.admin_menu_kb_markup(permissions),
-        )
+        if message.from_user.id in admin_ids:
+            admin = await admin_service.get(user_id=message.from_user.id)
+            await bot.send_message(
+                chat_id=event_chat.id,
+                text="Админ-меню",
+                reply_markup=inline.admin_menu_kb_markup(admin.permissions),
+            )
+        else:
+            logger.error("User is not admin!")
+    except Exception as e:
+        logger.error(f"Error in admin handler: {str(e)}")
+        logger.exception(e)
 
 
 #User Management

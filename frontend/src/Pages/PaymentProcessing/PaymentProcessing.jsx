@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getOneTransaction } from "../../db/db";
 import { useTelegram } from "../../hooks/useTelegram";
 import { CircularProgress } from '@mui/material';
@@ -11,6 +11,8 @@ import { motion } from 'framer-motion';
 export default function PaymentProcessing() {
     const navigate = useNavigate()
     const { order_id } = useParams()
+    const { state } = useLocation()
+    const crypto_url = state.url
     const [transaction, setTransaction] = useState(null)
     const [paymentStatus, setPaymentStatus] = useState('pending')
     const [timeLeft, setTimeLeft] = useState(() => {
@@ -105,7 +107,11 @@ export default function PaymentProcessing() {
 
     const handlePayment = () => {
         if (transaction && transaction.payment_data && transaction.payment_data.url) {
-            tg.openLink(transaction.payment_data.url);
+            if (crypto_url) {
+                tg.openLink(crypto_url);
+            } else {
+                tg.openLink(transaction.payment_data.url);
+            }
         } else {
             console.error('Payment URL not available');
         }

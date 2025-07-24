@@ -487,3 +487,17 @@ export async function buyStars(username, quantity, category_id, initData) {
   });
   return response.data;
 }
+
+
+export async function createCryptoPayInvoice(amount, initData) {
+  const response = await axios.post(`${API_URL}/crypto-pay/top-up`, {
+    amount: amount,
+    initData: initData
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': initData
+    }
+  });
+  return response.data;
+}

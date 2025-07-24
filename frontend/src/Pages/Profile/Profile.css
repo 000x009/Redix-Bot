@@ -3,3 +3,65 @@
     border-radius: 50%;
     aspect-ratio: 1;
 }
+
+.profile-header {
+    display: flex;
+    padding: 1rem 1.5rem;
+}
+
+.profile-user-info {
+    display: flex;
+    padding: 1rem 1.5rem;
+    align-items: center;
+}
+
+.profile-avatar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.profile-avatar {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.profile-user-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1.5rem;
+}
+
+.profile-username {
+    color: #6b7280;
+}
+
+.profile-balance {
+    display: flex;
+    padding: 0 1.5rem;
+    justify-content: space-between;
+}
+
+.profile-deposit-link {
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+.profile-buttons {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.5rem;
+    gap: 0.25rem;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}

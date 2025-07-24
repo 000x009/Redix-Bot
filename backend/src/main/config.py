@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     YANDEX_STORAGE_TOKEN: str
     YANDEX_STORAGE_SECRET: str
     YANDEX_STORAGE_BUCKET_NAME: str
+    CRYPTO_PAY_API_KEY: str
     
     model_config = SettingsConfigDict(env_file=".env")
 

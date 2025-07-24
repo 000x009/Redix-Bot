@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     YANDEX_STORAGE_BUCKET_NAME: str
     BILEE_SHOP_ID: str
     BILEE_PASSWORD: str
+    CRYPTO_PAY_API_KEY: str
     
     model_config = SettingsConfigDict(env_file=".env")
 

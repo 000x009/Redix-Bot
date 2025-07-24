@@ -116,6 +116,20 @@ async def switch_products_permission(
 
 
 @inject_on_click
+async def switch_stars_permission(
+    callback_query: CallbackQuery,
+    widget: Button,
+    dialog_manager: DialogManager,
+    admin_service: FromDishka[AdminService],
+) -> None:
+    admin_permissions = dialog_manager.dialog_data["permissions"]
+    admin_permissions["stars"] = True if admin_permissions["stars"] is False else False
+    await admin_service.update(user_id=int(dialog_manager.dialog_data["admin_user_id"]), permissions=admin_permissions)
+
+    await callback_query.answer("Разрешение на управление звездами изменено", show_alert=True)
+
+
+@inject_on_click
 async def switch_users_permission(
     callback_query: CallbackQuery,
     widget: Button,

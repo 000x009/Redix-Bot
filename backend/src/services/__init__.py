@@ -13,12 +13,14 @@ from .supercell_client import SupercellClient
 from .freekassa_service import FreeKassaService
 from .bilee_service import BileeService
 from .fragment import FragmentAPI
+from .cryptopay import CryptopayClientImpl
 
 __all__ = [
     'ProductService',
     'UserService',
     'OrderService',
     'TransactionService',
+    'CryptopayClientImpl',
     'PromoService',
     'SupercellAuthService',
     'FeedbackService',

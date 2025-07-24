@@ -89,7 +89,7 @@ async def buy_stars(
         product_id=product.id,
         name=product.name,
         price=price,
-        additional_data={"Звезды": data.quantity},
+        additional_data={"Telegram Stars": data.quantity},
         status=OrderStatus.COMPLETED,
     )
     await user_service.update_user(user_id=user.user_id, balance=float(user.balance) - float(round(price, 2)))
@@ -109,7 +109,7 @@ async def buy_stars(
             text=json_text_getter.get_order_info_text(
                 user_id=user.user_id,
                 order_id=order_id,
-                order_data={"Звезды": data.quantity},
+                order_data={"Telegram Stars": data.quantity},
                 product=product,
                 category=category.name,
             ),

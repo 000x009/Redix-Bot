@@ -166,7 +166,7 @@ function TelegramStars() {
     return (
         <div className="telegram-stars-container">
             <div className="header">
-                <h1>⭐ REDIX</h1>
+                <h1>⭐ Redix Shop</h1>
                 <p>Покупайте Telegram Stars дешевле</p>
             </div>
 
@@ -223,7 +223,7 @@ function TelegramStars() {
                                 <p className="sender">Кое-кто</p>
                                 <p>отправил вам подарок</p>
                                 <div className="gift-box">
-                                    <img src="/telegram-gift-box.png" alt="Подарок" />
+                                    <img src="/src/images/tg_gift.svg" alt="Подарок" width="100" height="100"/>
                                     <p>{amount} Telegram Stars</p>
                                     <p className="gift-description">для активации контента и сервисов</p>
                                 </div>
@@ -250,4 +250,4 @@ function TelegramStars() {
     );
 }
 
-export default TelegramStars; 
+export default TelegramStars;

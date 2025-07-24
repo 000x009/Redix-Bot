@@ -24,7 +24,7 @@
 .header p {
     color: var(--tg-theme-hint-color, #8e8e92);
     margin: 4px 0 0 0;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .current-rate {
