@@ -135,7 +135,7 @@ async def crypto_top_up(
 
     return JSONResponse(
         status_code=200,
-        content={"url": url, "success": True, "payment_id": transaction_id}
+        content={"url": url, "success": True, "payment_id": str(transaction_id)}
     )
 
 

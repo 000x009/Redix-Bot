@@ -52,8 +52,9 @@ function Deposit() {
         }
         if (method === 'crypto-pay') {
             const response = await createCryptoPayInvoice(amount, tg.initData);
+            console.log("response", response)
             if (response.success) {
-                navigate(`/payment/${response.payment.uuid}`,
+                navigate(`/payment/${response.payment_id}`,
                     { replace: true },
                     { state: { url: response.url } });
             } else {

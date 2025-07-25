@@ -12,7 +12,7 @@ export default function PaymentProcessing() {
     const navigate = useNavigate()
     const { order_id } = useParams()
     const { state } = useLocation()
-    const crypto_url = state.url
+    const crypto_url = state?.url
     const [transaction, setTransaction] = useState(null)
     const [paymentStatus, setPaymentStatus] = useState('pending')
     const [timeLeft, setTimeLeft] = useState(() => {
