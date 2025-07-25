@@ -1,5 +1,5 @@
 from aiocryptopay import AioCryptoPay, Networks
-from aiocryptopay.models.rates import ExchangeRate
+from aiocryptopay.models.invoice import Assets
 from src.main.config import settings
 
 class CryptopayClientImpl:
@@ -22,6 +22,7 @@ class CryptopayClientImpl:
             currency_type=str(currency_type),
             fiat=str(fiat),
             payload=str(payload),
+            swap_to="USDT",
         )
         await crypto.close()
 

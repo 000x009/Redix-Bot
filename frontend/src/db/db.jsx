@@ -489,10 +489,11 @@ export async function buyStars(username, quantity, category_id, initData) {
 }
 
 
-export async function createCryptoPayInvoice(amount, initData) {
+export async function createCryptoPayInvoice(amount, initData, cryptocurrency) {
   const response = await axios.post(`${API_URL}/payment/crypto-pay/top-up`, {
     amount: amount,
-    initData: initData
+    initData: initData,
+    asset: cryptocurrency
   }, {
     headers: {
       'Content-Type': 'application/json',
