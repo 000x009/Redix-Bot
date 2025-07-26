@@ -504,7 +504,7 @@ const OrderForm = () => {
         </div>
         {renderFormFields()}
       </div>
-      <MainButton text={isSubmitting ? "Обработка..." : "Продолжить"} onClick={handleSubmit} disabled={isSubmitting} />
+      <MainButton text={isSubmitting ? "Обработка..." : "Продолжить"} onClick={handleSubmit}/>
     </div>
   );
 }
