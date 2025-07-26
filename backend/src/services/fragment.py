@@ -175,6 +175,9 @@ class FragmentAPI:
         }
         
         try:
+            print(payload_search, flush=True)
+            print(self.api_url, flush=True)
+            print(self.headers, flush=True)
             response_search = requests.post(self.api_url, headers=self.headers, data=payload_search)
             response_search.raise_for_status()
             
