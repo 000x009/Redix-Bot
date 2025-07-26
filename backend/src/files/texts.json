@@ -1,4 +1,4 @@
 {
-    "order_text": "<b>Заказ:</b><code> {order_id}</code>\n<b>ID пользователя:</b> {user_id}\n<b>Профиль пользователя:</b> <a href='tg://user?id={user_id}'>USER</a>\n<b>Username:</b> @{username}\n\n<b>Игра</b>: {game}\n<b>Категория</b>: {category}\n<b>Товар</b>: {product_name}\n<b>Цена</b>: {product_price} ₽\n",
-    "order_text_stars": "<b>Заказ:</b><code> {order_id}</code>\n<b>ID пользователя:</b> {user_id}\n<b>Профиль пользователя:</b> <a href='tg://user?id={user_id}'>USER</a>\n<b>Username:</b> @{username}\n\n<b>Игра</b>: {game}\n<b>Категория</b>: {category}\n<b>Товар</b>: {product_name}\n<b>Цена</b>: {product_price} ₽\n\n<b>Для:</b> @{username}\n"
+    "order_text": "<b>Заказ:</b><code> {order_id}</code>\n<b>ID пользователя:</b> <code>{user_id}</code>\n<b>Профиль пользователя:</b> <a href='tg://user?id={user_id}'>USER</a>\n<b>Username:</b> @{username}\n\n<b>Игра</b>: {game}\n<b>Категория</b>: {category}\n<b>Товар</b>: {product_name}\n<b>Цена</b>: {product_price} ₽\n",
+    "order_text_stars": "<b>Заказ:</b><code> {order_id}</code>\n<b>ID пользователя:</b> <code>{user_id}</code>\n<b>Профиль пользователя:</b> <a href='tg://user?id={user_id}'>USER</a>\n<b>Username:</b> @{username}\n\n<b>Игра</b>: {game}\n<b>Категория</b>: {category}\n<b>Товар</b>: {product_name}\n<b>Цена</b>: {product_price} ₽\n\n<b>Для:</b> @{username}\n"
 }
