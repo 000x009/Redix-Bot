@@ -17,7 +17,7 @@ class CryptopayClientImpl:
         exchange_rate = await crypto.get_exchange_rates()
         response = await crypto.create_invoice(
             amount=round(amount / exchange_rate[0].rate, 2),
-            currency_type=str(currency_type),
+            currency_type="fiat",
             payload=str(payload),
             accepted_assets=[
                 Assets.BTC,
