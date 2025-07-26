@@ -144,6 +144,7 @@ async def purchase_product(
                     product=product,
                     category=category.name,
                     username=user_data.user.username,
+                    fullname=user_data.user.first_name,
                 ),
                 message_thread_id=category.thread_id,
                 reply_markup=take_order_kb_markup(order_id=order_id)

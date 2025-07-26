@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './TelegramStars.css';
 import { useTelegram } from '../../hooks/useTelegram';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -6,6 +6,8 @@ import { useLaunchParams } from '@telegram-apps/sdk-react';
 import { getStarsConfig, getUser } from '../../db/db';
 import { buyStars } from '../../db/db';
 import { CircularProgress } from '@mui/material';
+import Lottie from "lottie-react"
+import GiftAnimation from "../../images/gift.json"
 
 const MIN_STARS = 50;
 const MAX_STARS = 1000000;
@@ -23,6 +25,7 @@ function TelegramStars() {
     const [loading, setLoading] = useState(true);
     const location = useLocation();
     const categoryId = location.state?.categoryId;
+    const starRef = useRef(null);
 
     useEffect(() => {
         async function fetchUser() {
@@ -223,7 +226,22 @@ function TelegramStars() {
                                 <p className="sender">Кое-кто</p>
                                 <p>отправил вам подарок</p>
                                 <div className="gift-box">
-                                    <img src="/src/images/tg_gift.svg" alt="Подарок" width="100" height="100"/>
+                                    <Lottie
+                                        animationData={GiftAnimation}
+                                        lottieRef={starRef}
+                                        loop={false}
+                                        autoplay={true}
+                                        style={{
+                                            width: "150px",
+                                            height: "150px",
+                                            cursor: "pointer",
+                                            // transform: "translateX(50%)",
+                                            marginLeft: "66px",
+                                        }}
+                                        onClick={() => {
+                                            starRef.current.goToAndPlay(0);
+                                        }}
+                                    />
                                     <p>{amount} Telegram Stars</p>
                                     <p className="gift-description">для активации контента и сервисов</p>
                                 </div>

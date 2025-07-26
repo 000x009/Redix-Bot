@@ -18,6 +18,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.3.19",
+    "lottie-react": "^2.4.1",
     "nodemon": "^3.1.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

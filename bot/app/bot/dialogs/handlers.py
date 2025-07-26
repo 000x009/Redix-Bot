@@ -612,6 +612,7 @@ async def confirm_mailing(
     dialog_manager: DialogManager,
     user_service: FromDishka[UserService],
 ) -> None:
+    print("MAILING", flush=True)
     album_photo = dialog_manager.start_data.get("album_photo")
     users = await user_service.get_users()
     bot: Bot = dialog_manager.middleware_data.get("bot")
@@ -633,7 +634,7 @@ async def confirm_mailing(
                     message_id=message_id,
                     caption=album_caption,
                     from_chat_id=callback_query.message.chat.id,
-                    reply_markup=inline.web_app_button(game_button_id, button_title),
+                    reply_markup=inline.web_app_button(game_button_id, button_title) if game_button_id and button_title else None,
                 )
         except Exception as ex:
             print(ex)

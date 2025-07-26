@@ -21,6 +21,7 @@ def get_order_info_text(
     product: Product,
     category: str,
     username: str | None = None,
+    fullname: str | None = None,
 ) -> str:
     game_name = product.game_name.strip()
     if game_name == 'Clash Royale':
@@ -28,6 +29,7 @@ def get_order_info_text(
     elif game_name == 'Clash of Clans':
         game_name = 'Clash Royale'
 
+    username = '@' + username if username else fullname
     order_text = get_json_text('order_text').format(
         order_id=order_id,
         username=username,
