@@ -121,6 +121,14 @@ async def buy_stars(username: str, quantity: int, hash: str, cookie: str, mnemon
     }
     
     try:
+        print(hash, flush=True)
+        print(cookie, flush=True)
+        print(mnemonic, flush=True)
+
+        print("\n\n", flush=True)
+        print(payload_search, flush=True)
+        print(url, flush=True)
+        print(headers, flush=True)
         response_search = requests.post(url, headers=headers, data=payload_search)
         response_search.raise_for_status()
         
