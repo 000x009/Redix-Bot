@@ -21,6 +21,7 @@ from src.schema import Feedback
 from src.api.dependencies import user_provider
 from src.api.http.exceptions import MethodNotAllowedError
 from src.schema import User
+from src.data.dal import StarsDAL
 from src.main.config import settings
 
 router = APIRouter(
@@ -37,6 +38,7 @@ async def post_feedback(
     yandex_storage_client: YandexStorageClient = Depends(Provide[Container.yandex_storage_client]),
     order_service: OrderService = Depends(Provide[Container.order_service]),
     user_data: WebAppInitData = Depends(user_provider),
+    stars_dal: StarsDAL = Depends(Provide[Container.stars_dal]),
 ) -> JSONResponse:
     feedback_id = uuid.uuid4()
     feedback_group_id = -1001968045101
@@ -45,11 +47,26 @@ async def post_feedback(
     orders = await order_service.get_orders()
     order_one = await order_service.get_one_order(id=data.order_id)
     feedbacks_count = len(feedbacks) if feedbacks else 0
+    stars_config = await stars_dal.get_one()
+
     
     rating = "★ " * data.stars + "☆ " * (5 - data.stars)
     text = f"""
 Отзыв №{feedbacks_count + 1}
 Покупка №{len(orders) + 1 if orders else 1}: {order_one.name} на {order_one.price}₽
+Рейтинг: {rating}
+Покупатель: {'@' + user_data.user.username if user_data.user.username else user_data.user.first_name + ' ' + user_data.user.last_name}
+Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}
+
+{'Отзыв:' if data.text else ''}
+{f'<blockquote>{data.text}</blockquote>' if data.text else ''}
+"""
+    if order_one.name == "Telegram Stars":
+        rate = stars_config.rate
+        amount = order_one.price / rate
+        text = f"""
+Отзыв №{feedbacks_count + 1}
+Покупка №{len(orders) + 1 if orders else 1}: {amount} {order_one.name} по курсу {rate} на {order_one.price}₽
 Рейтинг: {rating}
 Покупатель: {'@' + user_data.user.username if user_data.user.username else user_data.user.first_name + ' ' + user_data.user.last_name}
 Дата: {datetime.now().strftime("%d.%m.%Y %H:%M")}

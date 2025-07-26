@@ -110,12 +110,13 @@ async def buy_stars(
 
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     try:
+        print("SEND MESSAGE", flush=True)
         await bot.send_message(
             chat_id=game.supergroup_id,
-            text=json_text_getter.get_order_info_text(
+            text=json_text_getter.get_order_info_text_stars(
                 user_id=user.user_id,
                 order_id=order_id,
-                order_data={"Telegram Stars": data.quantity, "Для Username: @": data.username},
+                order_data={"Telegram Stars": data.quantity},
                 product=product,
                 category=category.name,
                 username=data.username,
