@@ -23,6 +23,7 @@ function TelegramStars() {
     const { launchParams } = useLaunchParams();
     const [dbUser, setDbUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [buyLoading, setBuyLoading] = useState(false);
     const location = useLocation();
     const categoryId = location.state?.categoryId;
     const starRef = useRef(null);
@@ -132,11 +133,15 @@ function TelegramStars() {
     }, [amount, error, username, rate, dbUser, navigate]);
 
     const handleBuyClick = async () => {
+        if (buyLoading) return; // Prevent multiple clicks
+        
+        setBuyLoading(true);
         try {
             const totalCost = amount * rate;
             if (dbUser && dbUser.balance < totalCost) {
                 const deficiencyAmount = totalCost - dbUser.balance;
                 setShowPopup(false);
+                setBuyLoading(false);
                 navigate('/deficiency-balance', { 
                     state: { 
                         deficiencyAmount: deficiencyAmount
@@ -151,6 +156,8 @@ function TelegramStars() {
         } catch (error) {
             console.error('Error purchasing stars:', error);
             tg.showAlert('Произошла ошибка при покупке звезд. Попробуйте позже.');
+        } finally {
+            setBuyLoading(false);
         }
     };
 
@@ -251,8 +258,13 @@ function TelegramStars() {
                             <button 
                                 className="telegram-button"
                                 onClick={handleBuyClick}
+                                disabled={buyLoading}
+                                style={{
+                                    opacity: buyLoading ? 0.6 : 1,
+                                    cursor: buyLoading ? 'not-allowed' : 'pointer'
+                                }}
                             >
-                                Купить звёзды для @{username}
+                                {buyLoading ? 'Обработка...' : `Купить звёзды для @${username}`}
                             </button>
                             <button 
                                 className="telegram-button secondary"
