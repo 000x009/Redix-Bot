@@ -8,15 +8,9 @@ function Deposit() {
     const navigate = useNavigate();
     const [amount, setAmount] = useState('');
     const [method, setMethod] = useState('card');
-    const [cryptocurrency, setCryptocurrency] = useState('USDT');
     const [validStatus, setValidStatus] = useState(0);
     const [message, setMessage] = useState('');
     const { tg } = useTelegram();
-
-    const availableCryptocurrencies = [
-        'BTC', 'TON', 'ETH', 'USDT', 'USDC', 'BNB', 'TRX', 'LTC', 
-        'GRAM', 'NOT', 'MY', 'SOL', 'DOGS', 'HMSTR', 'CATI', 'DOGE'
-    ];
 
     useEffect(() => {
         document.querySelector('meta[http-equiv="Cache-Control"]').setAttribute("content", "no-cache, no-store, must-revalidate");
@@ -57,7 +51,7 @@ function Deposit() {
             return;
         }
         if (method === 'crypto-pay') {
-            const response = await createCryptoPayInvoice(amount, tg.initData, cryptocurrency);
+            const response = await createCryptoPayInvoice(amount, tg.initData);
             console.log("response", response)
             if (response.success) {
                 navigate(`/payment/${response.payment_id}`,
@@ -88,7 +82,7 @@ function Deposit() {
             tg.MainButton.offClick(onSubmit);
             tg.MainButton.hide();
         };
-    }, [amount, method, cryptocurrency, validStatus]);
+    }, [amount, method, validStatus]);
 
     return <div>
         <div className="flex horizontal-padding vertical-padding">
@@ -116,21 +110,6 @@ function Deposit() {
                     <input id="crypto-pay" name="type" type="radio" onChange={() => setMethod('crypto-pay')}/>
                     <label htmlFor="crypto-pay">Крипто (CryptoPay)</label>
                 </div>
-                {method === 'crypto-pay' && (
-                    <div className="flex column gap-1">
-                        <label htmlFor="cryptocurrency" className="subtitle">Выберите криптовалюту</label>
-                        <select 
-                            id="cryptocurrency" 
-                            value={cryptocurrency} 
-                            onChange={(e) => setCryptocurrency(e.target.value)}
-                            className="input-text"
-                        >
-                            {availableCryptocurrencies.map(crypto => (
-                                <option key={crypto} value={crypto}>{crypto}</option>
-                            ))}
-                        </select>
-                    </div>
-                )}
             </div>
         </div>
     </div>
