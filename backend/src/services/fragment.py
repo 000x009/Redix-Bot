@@ -154,7 +154,7 @@ class FragmentAPI:
         self.config["fragment_api"]["cookie"] = cookie
         self.config["MNEMONIC"] = mnemonic
 
-    async def buy_stars(self, username: str, quantity: int) -> Tuple[bool, str]:
+    async def buy_stars(self, username: str, quantity: int, cookie: str, hash: str, mnemonic: list[str]) -> Tuple[bool, str]:
         """Buy Telegram Stars for a user."""
         min_stars = self.config.get("MIN_STARS", 50)
         max_stars = self.config.get("MAX_STARS", 1000000)
@@ -168,6 +168,7 @@ class FragmentAPI:
         logger.info(f"Покупаем {quantity} Stars для пользователя: {clean_username}")
         
         # Get recipient
+        self.set_hash_and_cookie(hash, cookie, mnemonic)
         payload_search = {
             "query": clean_username,
             "quantity": quantity,
@@ -175,6 +176,7 @@ class FragmentAPI:
         }
         
         try:
+            print(self.config, flush=True)
             print(payload_search, flush=True)
             print(self.api_url, flush=True)
             print(self.headers, flush=True)

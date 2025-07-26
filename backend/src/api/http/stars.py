@@ -60,7 +60,7 @@ async def buy_stars(
         return JSONResponse(status_code=400, content=dict(message='Stars config not found'))
     
     fragment_service.set_hash_and_cookie(stars_config.api_hash, stars_config.api_cookie, stars_config.mnemonic)
-    await fragment_service.buy_stars(data.username, data.quantity)
+    await fragment_service.buy_stars(data.username, data.quantity, stars_config.api_cookie, stars_config.api_hash, stars_config.mnemonic)
 
     user = await user_service.get_one_user(user_id=user_data.user.id)
     product = await product_service.get_stars_product_by_category_id(category_id=data.category_id)
