@@ -109,24 +109,24 @@ async def buy_stars(
     )
 
     bot = Bot(token=settings.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    try:
-        print("SEND MESSAGE", flush=True)
-        await bot.send_message(
-            chat_id=game.supergroup_id,
-            text=json_text_getter.get_order_info_text_stars(
-                user_id=user.user_id,
-                order_id=order_id,
-                order_data={"Telegram Stars": data.quantity},
-                product=product,
-                category=category.name,
-                username=data.username,
-            ),
-            message_thread_id=category.thread_id,
-        )
-    except Exception as e:
-        print(e, flush=True)
-    finally:
-        await bot.session.close()
+    # try:
+    print("SEND MESSAGE", flush=True)
+    await bot.send_message(
+        chat_id=game.supergroup_id,
+        text=json_text_getter.get_order_info_text_stars(
+            user_id=user.user_id,
+            order_id=order_id,
+            order_data={"Telegram Stars": data.quantity},
+            product=product,
+            category=category.name,
+            username=data.username,
+        ),
+        message_thread_id=category.thread_id,
+    )
+    # except Exception as e:
+    #     print(e, flush=True)
+    # finally:
+    await bot.session.close()
 
     return JSONResponse(status_code=200, content=dict(message="success"))
 
