@@ -505,7 +505,7 @@ product_management_dialog = Dialog(
         state=ProductManagementSG.ADD_GAME,
     ),
     Window(
-        Const("Введите ID темы в супергруппе телеграм. (Последнее число в ссылке после слэша на тему)"),
+        Const("Введите ID супергруппы телеграм."),
         TextInput(
             id="add_game_super_group_id_text",
             on_success=on_game_super_group_id,
