@@ -7,7 +7,11 @@ function Card({item}) {
     const navigate = useNavigate();
 
     return <div onClick={() => {
-        navigate(`/product/${item.id}`)
+        if (item.name === "Telegram Stars") {
+            navigate('/telegram-stars', {state: {categoryId: item.id}});
+        } else {
+            navigate(`/product/${item.id}`)
+        }
     }} className='card horizontal-padding' >
         <div className="image_container">
             <img className='card__image' src={item.image_url} alt={item.name}/>
