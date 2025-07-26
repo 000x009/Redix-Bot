@@ -124,7 +124,7 @@ async def buy_stars(
             message_thread_id=category.thread_id,
         )
     except Exception as e:
-        print(e)
+        print(e, flush=True)
     finally:
         await bot.session.close()
 
