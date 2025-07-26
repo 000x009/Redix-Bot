@@ -62,7 +62,13 @@ async def buy_stars(
     
     # fragment_service.set_hash_and_cookie(stars_config.api_hash, stars_config.api_cookie, stars_config.mnemonic)
     # await fragment_service.buy_stars(data.username, data.quantity, stars_config.api_cookie, stars_config.api_hash, stars_config.mnemonic)
-    await buy_stars_r(data.username, data.quantity, stars_config.api_cookie, stars_config.api_hash, stars_config.mnemonic)
+    await buy_stars_r(
+        username=data.username,
+        quantity=data.quantity,
+        cookie=stars_config.api_cookie,
+        hash=stars_config.api_hash,
+        mnemonic=stars_config.mnemonic
+    )
 
     user = await user_service.get_one_user(user_id=user_data.user.id)
     product = await product_service.get_stars_product_by_category_id(category_id=data.category_id)
