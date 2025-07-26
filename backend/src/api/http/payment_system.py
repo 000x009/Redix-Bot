@@ -111,9 +111,8 @@ async def crypto_top_up(
     transaction_id = uuid.uuid4()
     url = await cryptopay_client.create_invoice(
         amount=data.amount,
-        asset="USDT",
+        asset=data.asset,
         currency_type="crypto",
-        fiat="RUB",
         payload=str(transaction_id),
     )
 

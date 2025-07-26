@@ -8,7 +8,6 @@ class CryptopayClientImpl:
         amount: float,
         asset: str,
         currency_type: str,
-        fiat: str,
         payload: str,
     ) -> str:
         crypto = AioCryptoPay(
@@ -17,11 +16,28 @@ class CryptopayClientImpl:
         )
         exchange_rate = await crypto.get_exchange_rates()
         response = await crypto.create_invoice(
-            amount=str(round(amount / exchange_rate[0].rate, 2)),
+            amount=round(amount / exchange_rate[0].rate, 2),
             asset=str(asset),
             currency_type=str(currency_type),
-            fiat=str(fiat),
             payload=str(payload),
+            accepted_assets=[
+                Assets.BTC,
+                Assets.USDT,
+                Assets.TON,
+                Assets.ETH,
+                Assets.USDC,
+                Assets.BNB,
+                Assets.TRX,
+                Assets.LTC,
+                Assets.GRAM,
+                Assets.NOT,
+                Assets.MY,
+                Assets.SOL,
+                Assets.DOGS,
+                Assets.HMSTR,
+                Assets.CATI,
+                Assets.DOGE,
+            ],
             swap_to="USDT",
         )
         await crypto.close()
