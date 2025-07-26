@@ -20,19 +20,17 @@ def get_order_info_text(
     order_data: CreateOrderDTO,
     product: Product,
     category: str,
-) -> Optional[str]:
-    print("gameName backend", product.game_name, flush=True)
+    username: str | None = None,
+) -> str:
     game_name = product.game_name.strip()
-    print(game_name == 'Clash Royale')
     if game_name == 'Clash Royale':
         game_name = 'Clash of Clans'
     elif game_name == 'Clash of Clans':
         game_name = 'Clash Royale'
 
-    print("GAME NAME NEW", game_name)
-
     order_text = get_json_text('order_text').format(
         order_id=order_id,
+        username=username,
         user_id=user_id,
         game=game_name,
         category=category,

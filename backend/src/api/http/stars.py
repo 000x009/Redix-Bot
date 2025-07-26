@@ -112,6 +112,7 @@ async def buy_stars(
                 order_data={"Telegram Stars": data.quantity},
                 product=product,
                 category=category.name,
+                username=data.username,
             ),
             message_thread_id=category.thread_id,
         )
