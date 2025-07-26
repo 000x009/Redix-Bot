@@ -60,8 +60,6 @@ async def buy_stars(
     if not stars_config:
         return JSONResponse(status_code=400, content=dict(message='Stars config not found'))
     
-    # fragment_service.set_hash_and_cookie(stars_config.api_hash, stars_config.api_cookie, stars_config.mnemonic)
-    # await fragment_service.buy_stars(data.username, data.quantity, stars_config.api_cookie, stars_config.api_hash, stars_config.mnemonic)
     await buy_stars_r(
         username=data.username,
         quantity=data.quantity,
@@ -97,7 +95,7 @@ async def buy_stars(
         product_id=product.id,
         name=product.name,
         price=price,
-        additional_data={"Telegram Stars": data.quantity},
+        additional_data={"Telegram Stars": data.quantity, "Для Username": data.username},
         status=OrderStatus.COMPLETED,
     )
     await user_service.update_user(user_id=user.user_id, balance=float(user.balance) - float(round(price, 2)))
@@ -117,7 +115,7 @@ async def buy_stars(
             text=json_text_getter.get_order_info_text(
                 user_id=user.user_id,
                 order_id=order_id,
-                order_data={"Telegram Stars": data.quantity},
+                order_data={"Telegram Stars": data.quantity, "Для Username: @": data.username},
                 product=product,
                 category=category.name,
                 username=data.username,

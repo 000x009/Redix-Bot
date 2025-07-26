@@ -150,12 +150,14 @@
 
 .recipient-message {
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .recipient-message > p {
     color: var(--tg-theme-hint-color, #8e8e92);
     margin: 0 0 12px 0;
     font-size: 14px;
+    text-align: center;
 }
 
 .gift-message {
