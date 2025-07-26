@@ -1,3 +1,4 @@
+from decimal import Decimal
 import json
 import os
 import uuid
@@ -29,7 +30,7 @@ def get_order_info_text(
     elif game_name == 'Clash of Clans':
         game_name = 'Clash Royale'
 
-    username = '@' + username if username else fullname
+    username = username if username else fullname
     order_text = get_json_text('order_text').format(
         order_id=order_id,
         username=username,
@@ -52,6 +53,7 @@ def get_order_info_text_stars(
     order_id: uuid.UUID,
     order_data: CreateOrderDTO,
     product: Product,
+    price: Decimal,
     category: str,
     username: str | None = None,
     fullname: str | None = None,
@@ -62,7 +64,7 @@ def get_order_info_text_stars(
     elif game_name == 'Clash of Clans':
         game_name = 'Clash Royale'
 
-    username = '@' + username if username else fullname
+    username = username if username else fullname
     order_text = get_json_text('order_text_stars').format(
         order_id=order_id,
         username=username,
@@ -70,7 +72,7 @@ def get_order_info_text_stars(
         game=game_name,
         category=category,
         product_name=product.name,
-        product_price=product.price
+        product_price=price
     )
 
     additional_data_text = ""

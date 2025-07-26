@@ -38,7 +38,7 @@ def get_order_info_text(
     elif game_name == 'Clash of Clans':
         game_name = 'Clash Royale'
 
-    username = '@' + username if username else fullname
+    username = username if username else fullname
     order_text = get_json_text('order_text').format(
         order_id=order_id,
         username=username,
@@ -71,7 +71,7 @@ def get_order_info_text_stars(
     elif game_name == 'Clash of Clans':
         game_name = 'Clash Royale'
 
-    username = '@' + username if username else fullname
+    username = username if username else fullname
     order_text = get_json_text('order_text_stars').format(
         order_id=order_id,
         username=username,
