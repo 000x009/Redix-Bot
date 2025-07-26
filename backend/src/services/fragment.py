@@ -158,6 +158,9 @@ class FragmentAPI:
         """Buy Telegram Stars for a user."""
         min_stars = self.config.get("MIN_STARS", 50)
         max_stars = self.config.get("MAX_STARS", 1000000)
+        print(hash, flush=True)
+        print(cookie, flush=True)
+        print(mnemonic, flush=True)
         
         if quantity < min_stars or quantity > max_stars:
             error_msg = f"Недопустимое количество Stars: {quantity}. Разрешено от {min_stars} до {max_stars}."
