@@ -210,5 +210,26 @@ class ProductDAL:
     async def get_stars_product_by_category_id(self, category_id: UUID) -> Optional[Product]:
         query = select(ProductModel).where(ProductModel.category_id == category_id)
         result = await self.session.execute(query)
-        return result.scalars().first()
+        db_product = result.scalars().first()
+
+        return Product(
+            id=db_product.id,
+            game_id=db_product.game_id,
+            name=db_product.name,
+            description=db_product.description,
+            price=db_product.price,
+            instruction=db_product.instruction,
+            purchase_count=db_product.purchase_count,
+            game_name=db_product.game_name,
+            category_id=db_product.category_id,
+            purchase_limit=db_product.purchase_limit,
+            is_auto_purchase=db_product.is_auto_purchase,
+            is_manual=db_product.is_manual,
+            auto_purchase_text=db_product.auto_purchase_text,
+            image_url=db_product.image_url,
+            instruction_image_url=db_product.instruction_image_url,
+            is_visible=db_product.is_visible,
+            auto_purchase_image_url=db_product.auto_purchase_image_url,
+            is_gift_purchase=db_product.is_gift_purchase,
+        )
 
