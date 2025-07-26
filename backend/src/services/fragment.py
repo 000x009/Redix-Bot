@@ -179,11 +179,11 @@ class FragmentAPI:
         }
         
         try:
+            api_url = f"{self.config['fragment_api']['url']}?hash={self.config['fragment_api']['hash']}"
             print(self.config, flush=True)
             print(payload_search, flush=True)
-            print(self.api_url, flush=True)
+            print(api_url, flush=True)
             print(self.headers, flush=True)
-            api_url = f"{self.config['fragment_api']['url']}?hash={self.config['fragment_api']['hash']}"
             response_search = requests.post(api_url, headers=self.headers, data=payload_search)
             response_search.raise_for_status()
             
