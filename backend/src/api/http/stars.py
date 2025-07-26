@@ -136,7 +136,7 @@ async def buy_stars(
         message_thread_id=category.thread_id,
     )
     await bot.send_message(
-        chat_id=order.user_id,
+        chat_id=user.user_id,
         text='✅ Ваш заказ выполнен! Спасибо за покупку, буду рад увидеться снова, могли бы оставить отзыв по кнопке снизу 👇',
         reply_markup=post_feedback_kb_markup(order_id=order_id),
     )
