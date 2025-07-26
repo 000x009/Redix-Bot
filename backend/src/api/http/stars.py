@@ -10,6 +10,7 @@ from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.utils.web_app import WebAppInitData
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 from src.main.ioc import Container
 from src.services import (
@@ -40,6 +41,16 @@ router = APIRouter(
     prefix="/stars",
     tags=["Stars"],
 )
+
+def post_feedback_kb_markup(order_id: UUID) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+        [
+                InlineKeyboardButton(text='👀 Оставить отзыв', web_app=WebAppInfo(url=f'https://redixshop.com/post-feedback/{order_id}'))
+            ]
+        ]
+    )
+
 
 
 @router.post("/buy-stars")
@@ -123,6 +134,11 @@ async def buy_stars(
             username=data.username,
         ),
         message_thread_id=category.thread_id,
+    )
+    await bot.send_message(
+        chat_id=order.user_id,
+        text='✅ Ваш заказ выполнен! Спасибо за покупку, буду рад увидеться снова, могли бы оставить отзыв по кнопке снизу 👇',
+        reply_markup=post_feedback_kb_markup(order_id=order_id),
     )
     # except Exception as e:
     #     print(e, flush=True)
