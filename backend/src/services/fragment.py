@@ -183,7 +183,8 @@ class FragmentAPI:
             print(payload_search, flush=True)
             print(self.api_url, flush=True)
             print(self.headers, flush=True)
-            response_search = requests.post(self.api_url, headers=self.headers, data=payload_search)
+            api_url = f"{self.config['fragment_api']['url']}?hash={self.config['fragment_api']['hash']}"
+            response_search = requests.post(api_url, headers=self.headers, data=payload_search)
             response_search.raise_for_status()
             
             if not response_search.text:
@@ -218,7 +219,7 @@ class FragmentAPI:
         }
         
         try:
-            response_init = requests.post(self.api_url, headers=self.headers, data=payload_init)
+            response_init = requests.post(api_url, headers=self.headers, data=payload_init)
             response_init.raise_for_status()
             text_init = response_init.json()
             logger.info(f"Ответ инициализации покупки: {text_init}")
@@ -252,7 +253,7 @@ class FragmentAPI:
         }
         
         try:
-            response_link = requests.post(self.api_url, headers=self.headers, data=payload_link)
+            response_link = requests.post(api_url, headers=self.headers, data=payload_link)
             response_link.raise_for_status()
             text_link = response_link.json()
             logger.info(f"Ответ получения ссылки на покупку: {text_link}")
