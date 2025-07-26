@@ -3,7 +3,7 @@ import { getOneProduct, getUser } from '../../db/db';
 import { useParams, useLocation } from 'react-router-dom';
 import { useTelegram } from '../../hooks/useTelegram';
 import CircularProgress from '@mui/material/CircularProgress';
-import { makeDeposit } from '../../db/db';
+import { makeDeposit, createCryptoPayInvoice } from '../../db/db';
 import { useNavigate } from 'react-router-dom';
 import './DeficiencyDeposit.css';
 
@@ -71,6 +71,17 @@ const DeficiencyDeposit = () => {
     }, [product, deficiencyAmount])
 
     const handleMainButtonClick = useCallback(async () => {
+        if (method === 'crypto-pay') {
+            const response = await createCryptoPayInvoice(amount, tg.initData);
+            if (response.success) {
+                navigate(`/payment/${response.payment_id}`,
+                    { replace: true },
+                    { state: { url: response.url } });
+            } else {
+                tg.showAlert('Произошла ошибка при создании платежа');
+            }
+            return;
+        }
         const response = await makeDeposit(amount, method, tg.initData);
         if (response.success) {
             navigate(`/payment/${response.payment.uuid}`);
@@ -171,6 +182,10 @@ const DeficiencyDeposit = () => {
                 <div className="flex gap-1 align-items-center">
                     <input id="sbp" name="type" type="radio" onChange={() => setMethod('sbp')}/>
                     <label htmlFor="sbp">СБП (Kassa)</label>
+                </div>
+                <div className="flex gap-1 align-items-center">
+                    <input id="crypto-pay" name="type" type="radio" onChange={() => setMethod('crypto-pay')}/>
+                    <label htmlFor="crypto-pay">Крипто (CryptoPay)</label>
                 </div>
             </div>
         </div>
