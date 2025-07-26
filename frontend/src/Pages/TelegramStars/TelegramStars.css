@@ -162,12 +162,14 @@
     background-color: var(--tg-theme-secondary-bg-color, #232f3d);
     border-radius: 12px;
     padding: 16px;
+    text-align: center;
 }
 
 .gift-message .sender {
     color: var(--tg-theme-text-color, #fff);
     font-weight: 500;
     margin: 0 0 4px 0;
+    text-align: center;
 }
 
 .gift-box {
