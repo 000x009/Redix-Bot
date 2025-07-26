@@ -176,11 +176,12 @@ async def receive_payment(
                     bot = Bot(token=settings.BOT_TOKEN)
                     await bot.send_message(chat_id=user.user_id, text=f"✅ Баланс пополнен на {reff_top_up_amount} рублей")
             except Exception as e:
-                pass
+                print("ERROR", e, flush=True)
             finally:
                 await bot.session.close()
 
             return JSONResponse(status_code=200, content={"success": True})
 
     except Exception as e:
+        print("ERROR", e, flush=True)
         return JSONResponse(status_code=500, content={"error": str(e)})
